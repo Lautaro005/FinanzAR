@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* --- Paleta Obligatoria FinanzAR --- */
+  --color-primary: #1B2A4A;
+  --color-primary-hover: #142038;
+  --color-primary-light: #2A3F6D;
+  
+  --color-accent: #C89B3C;
+  --color-accent-hover: #B2872F;
+  --color-accent-subtle: #F6EEDC;
+  
+  --color-bg: #F7F4EC;
+  --color-surface: #FFFDF8;
+  --color-surface-hover: #FDFBF4;
+  --color-surface-muted: #F0EAE1;
+  
+  --color-text: #26262B;
+  --color-text-secondary: #8B8478;
+  --color-text-muted: #A39D92;
+  
+  --color-positive: #2F5FA8;
+  --color-positive-bg: #EBF2FA;
+  --color-positive-border: #C2D6EE;
+  
+  --color-negative: #B5502E;
+  --color-negative-bg: #FDF1ED;
+  --color-negative-border: #F0C4B6;
+
+  --color-border: #DBD3C2;
+  --color-border-subtle: #E8E2D5;
+  --color-border-strong: #8B8478;
+
+  /* --- Tipografía --- */
+  --font-serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* --- Radios de Borde (Sobrios y Estructurados) --- */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-full: 9999px;
+
+  /* --- Sombras (Cálidas y Sutiles) --- */
+  --shadow-sm: 0 1px 2px rgba(27, 42, 74, 0.04);
+  --shadow-md: 0 4px 12px -2px rgba(27, 42, 74, 0.06), 0 2px 4px -1px rgba(27, 42, 74, 0.03);
+  --shadow-lg: 0 10px 24px -4px rgba(27, 42, 74, 0.08), 0 4px 8px -2px rgba(27, 42, 74, 0.04);
+  --shadow-drawer: 0 -8px 24px -4px rgba(27, 42, 74, 0.12);
+}
+
+@layer base {
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: var(--font-serif);
+  }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: #DBD3C2;
+  border-radius: var(--radius-sm);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}
+
