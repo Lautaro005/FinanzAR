@@ -15,7 +15,7 @@ interface InstrumentChartProps {
   titulo?: string;
   subtitulo?: string;
   valorActual?: number;
-  unidad?: string;
+  unidad?: "TNA" | "precio_ars" | "precio_usd";
   variacion?: number;
   activeRange?: RangoTemporal;
   onRangeChange?: (range: RangoTemporal) => void;
@@ -26,7 +26,7 @@ export default function InstrumentChart({
   titulo,
   subtitulo,
   valorActual,
-  unidad = "%",
+  unidad = "TNA",
   variacion,
   activeRange = "30d",
   onRangeChange,
@@ -48,6 +48,23 @@ export default function InstrumentChart({
 
   const hasVariation = variacion !== undefined && variacion !== null;
   const isPositive = hasVariation && variacion! >= 0;
+
+  // Formateo único para header y tooltip: evita que un `unidad` inesperado
+  // (ej. un símbolo "$" pasado por error en vez del código interno) caiga
+  // en un formato roto tipo "410425.00% $".
+  const formatValue = (val: number): string => {
+    if (unidad === "precio_ars") {
+      return new Intl.NumberFormat("es-AR", {
+        style: "currency",
+        currency: "ARS",
+        maximumFractionDigits: val < 100 ? 2 : 0,
+      }).format(val);
+    }
+    if (unidad === "precio_usd") {
+      return `US$ ${val.toLocaleString("es-AR", { minimumFractionDigits: 2 })}`;
+    }
+    return `${val.toFixed(2)}% TNA`;
+  };
 
   // Filtrar o simular slice de datos según rango si hay datos
   const displayedData = data && data.length > 0 ? data : [
@@ -77,11 +94,7 @@ export default function InstrumentChart({
           {valorActual !== undefined && (
             <div className="flex items-baseline space-x-3 mt-1.5">
               <span className="font-serif text-3xl sm:text-4xl font-bold text-finanzar-primary tabular-nums tracking-tight">
-                {unidad === "precio_ars"
-                  ? new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(valorActual)
-                  : unidad === "precio_usd"
-                  ? `US$ ${valorActual.toLocaleString("es-AR", { minimumFractionDigits: 2 })}`
-                  : `${valorActual.toFixed(2)}% ${unidad}`}
+                {formatValue(valorActual)}
               </span>
 
               {hasVariation && (
@@ -143,7 +156,7 @@ export default function InstrumentChart({
                     <div className="bg-finanzar-surface border border-finanzar-border p-3 rounded-md shadow-md text-xs">
                       <p className="text-finanzar-textSecondary font-medium mb-1">{label}</p>
                       <p className="text-finanzar-primary font-serif text-base font-bold tabular-nums">
-                        {Number(payload[0].value).toFixed(2)} {unidad}
+                        {formatValue(Number(payload[0].value))}
                       </p>
                     </div>
                   );

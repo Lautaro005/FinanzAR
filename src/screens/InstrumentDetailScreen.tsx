@@ -1,7 +1,8 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { Instrumento, RangoTemporal } from "../types";
+import { Instrumento, RangoTemporal, PuntoHistorico } from "../types";
 import InstrumentChart from "../components/InstrumentChart";
+import { fetchInstrumentHistory } from "../lib/history";
 
 interface InstrumentDetailScreenProps {
   instruments: Instrumento[];
@@ -17,11 +18,31 @@ export default function InstrumentDetailScreen({
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [range, setRange] = useState<RangoTemporal>("30d");
+  const [historyState, setHistoryState] = useState<{
+    data: PuntoHistorico[];
+    isEstimate: boolean;
+    loading: boolean;
+  }>({ data: [], isEstimate: true, loading: true });
 
   const decodedId = decodeURIComponent(id || "");
   const instrument = useMemo(() => {
     return instruments.find((item) => item.id === decodedId);
   }, [instruments, decodedId]);
+
+  useEffect(() => {
+    if (!instrument) return;
+    let cancelled = false;
+    setHistoryState((prev) => ({ ...prev, loading: true }));
+
+    fetchInstrumentHistory(instrument).then((result) => {
+      if (cancelled) return;
+      setHistoryState({ data: result.data, isEstimate: result.isEstimate, loading: false });
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [instrument]);
 
   // Instrumentos relacionados de la misma categoría
   const relatedInstruments = useMemo(() => {
@@ -54,9 +75,10 @@ export default function InstrumentDetailScreen({
   const hasVariation = instrument.variacion24h !== undefined && instrument.variacion24h !== null;
   const isPositive = hasVariation && instrument.variacion24h! >= 0;
 
-  // Estadísticas del histórico
-  const minVal = instrument.historico.length > 0 ? Math.min(...instrument.historico.map((h) => h.valor)) : instrument.tasaORendimientoActual;
-  const maxVal = instrument.historico.length > 0 ? Math.max(...instrument.historico.map((h) => h.valor)) : instrument.tasaORendimientoActual;
+  // Estadísticas del histórico (a partir del histórico real, no del sintético)
+  const displayHistory = historyState.data.length > 0 ? historyState.data : instrument.historico;
+  const minVal = displayHistory.length > 0 ? Math.min(...displayHistory.map((h) => h.valor)) : instrument.tasaORendimientoActual;
+  const maxVal = displayHistory.length > 0 ? Math.max(...displayHistory.map((h) => h.valor)) : instrument.tasaORendimientoActual;
 
   const formatCurrencyOrRate = (val: number) => {
     if (instrument.unidad === "TNA") return `${val.toFixed(2)}% TNA`;
@@ -185,11 +207,17 @@ export default function InstrumentDetailScreen({
       <div className="mb-8">
         <InstrumentChart
           titulo={`Evolución Histórica — ${instrument.nombre}`}
-          subtitulo={`Frecuencia oficial ${instrument.entidadOFuente}`}
+          subtitulo={
+            historyState.loading
+              ? "Cargando histórico…"
+              : historyState.isEstimate
+              ? "Estimación — sin histórico oficial gratuito disponible para este instrumento"
+              : `Histórico oficial — ${instrument.entidadOFuente}`
+          }
           valorActual={instrument.tasaORendimientoActual}
-          unidad={instrument.unidad === "TNA" ? "TNA" : instrument.unidad === "precio_usd" ? "US$" : "$"}
+          unidad={instrument.unidad}
           variacion={instrument.variacion24h}
-          data={instrument.historico}
+          data={displayHistory}
           activeRange={range}
           onRangeChange={(newRange) => setRange(newRange)}
         />

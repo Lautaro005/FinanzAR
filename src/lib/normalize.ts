@@ -160,7 +160,8 @@ export function normalizeData912Quotes(
       const meta = ASSET_NAMES[q.symbol];
       const nombre = meta?.nombre || `${q.symbol} (${categoria.toUpperCase()})`;
       const entidad = meta?.entidad || "BYMA";
-      const isUsd = q.symbol.endsWith("D") || categoria === "eeuu";
+      // CEDEARs/acciones/bonos cotizan en pesos en BYMA; solo "eeuu" (acciones de EE.UU.) está en USD.
+      const isUsd = categoria === "eeuu";
       const unidad = isUsd ? "precio_usd" : "precio_ars";
 
       return {

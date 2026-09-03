@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate, Link } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -8,8 +8,9 @@ import InstrumentChart from "./components/InstrumentChart";
 import CompareDrawer, { COMPARISON_COLORS } from "./components/CompareDrawer";
 import InstrumentDetailScreen from "./screens/InstrumentDetailScreen";
 import AboutScreen from "./screens/AboutScreen";
-import { Categoria, Instrumento } from "./types";
+import { Categoria, Instrumento, PuntoHistorico } from "./types";
 import { useInstruments } from "./hooks/useInstruments";
+import { fetchInstrumentHistory } from "./lib/history";
 import {
   LineChart,
   Line,
@@ -44,6 +45,24 @@ function Home({
   const navigate = useNavigate();
   const [tab, setTab] = useState<Categoria>("pesos");
   const [detailInstrument, setDetailInstrument] = useState<Instrumento | null>(null);
+  const [quickHistory, setQuickHistory] = useState<{
+    data: PuntoHistorico[];
+    isEstimate: boolean;
+  } | null>(null);
+
+  useEffect(() => {
+    if (!detailInstrument) {
+      setQuickHistory(null);
+      return;
+    }
+    let cancelled = false;
+    fetchInstrumentHistory(detailInstrument).then((res) => {
+      if (!cancelled) setQuickHistory(res);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [detailInstrument]);
 
   // Filtrar instrumentos por categoría activa
   const categoryInstruments = useMemo(() => {
@@ -203,11 +222,17 @@ function Home({
           </div>
           <InstrumentChart
             titulo={detailInstrument.nombre}
-            subtitulo={detailInstrument.entidadOFuente}
+            subtitulo={
+              !quickHistory
+                ? "Cargando histórico…"
+                : quickHistory.isEstimate
+                ? "Estimación — sin histórico oficial gratuito disponible"
+                : `Histórico oficial — ${detailInstrument.entidadOFuente}`
+            }
             valorActual={detailInstrument.tasaORendimientoActual}
-            unidad={detailInstrument.unidad === "TNA" ? "TNA" : detailInstrument.unidad === "precio_usd" ? "US$" : "$"}
+            unidad={detailInstrument.unidad}
             variacion={detailInstrument.variacion24h}
-            data={detailInstrument.historico}
+            data={quickHistory?.data || detailInstrument.historico}
           />
         </div>
       )}
@@ -261,13 +286,37 @@ function CompareScreen({
     ].filter(Boolean) as Instrumento[];
   }, [instruments, selectedCompareIds]);
 
+  // Histórico real (data912 / CoinGecko) por instrumento activo en el comparador.
+  // Cae a la estimación de cada instrumento si la fuente gratuita no tiene
+  // serie histórica para esa categoría (ver lib/history.ts).
+  const [historyMap, setHistoryMap] = useState<Record<string, PuntoHistorico[]>>({});
+
+  useEffect(() => {
+    let cancelled = false;
+
+    Promise.all(
+      activeCompareInstruments.map((inst) =>
+        fetchInstrumentHistory(inst).then((res) => [inst.id, res.data] as const)
+      )
+    ).then((entries) => {
+      if (cancelled) return;
+      setHistoryMap(Object.fromEntries(entries));
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeCompareInstruments]);
+
+  const historyFor = (inst: Instrumento): PuntoHistorico[] => historyMap[inst.id] || inst.historico;
+
   // Generar datos normalizados base 0% (% de variación relativa en el período)
   const normalizedData = useMemo(() => {
     if (activeCompareInstruments.length === 0) return [];
 
     const dateSet = new Set<string>();
     activeCompareInstruments.forEach((inst) => {
-      inst.historico.forEach((p) => dateSet.add(p.fecha));
+      historyFor(inst).forEach((p) => dateSet.add(p.fecha));
     });
     const dates = Array.from(dateSet);
 
@@ -275,8 +324,9 @@ function CompareScreen({
       const row: Record<string, any> = { fecha: date };
 
       activeCompareInstruments.forEach((inst) => {
-        const basePoint = inst.historico[0];
-        const point = inst.historico.find((p) => p.fecha === date) || basePoint;
+        const hist = historyFor(inst);
+        const basePoint = hist[0];
+        const point = hist.find((p) => p.fecha === date) || basePoint;
         if (point && basePoint && basePoint.valor !== 0) {
           const pct = ((point.valor - basePoint.valor) / basePoint.valor) * 100;
           row[inst.id] = Number(pct.toFixed(2));
@@ -287,7 +337,7 @@ function CompareScreen({
 
       return row;
     });
-  }, [activeCompareInstruments]);
+  }, [activeCompareInstruments, historyMap]);
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[80vh]">
@@ -447,8 +497,9 @@ function CompareScreen({
         {activeCompareInstruments.map((inst, index) => {
           const color = COMPARISON_COLORS[index % COMPARISON_COLORS.length];
 
-          const baseVal = inst.historico[0]?.valor || inst.tasaORendimientoActual;
-          const lastVal = inst.historico[inst.historico.length - 1]?.valor || inst.tasaORendimientoActual;
+          const hist = historyFor(inst);
+          const baseVal = hist[0]?.valor || inst.tasaORendimientoActual;
+          const lastVal = hist[hist.length - 1]?.valor || inst.tasaORendimientoActual;
           const netChangePct = baseVal > 0 ? ((lastVal - baseVal) / baseVal) * 100 : 0;
 
           return (

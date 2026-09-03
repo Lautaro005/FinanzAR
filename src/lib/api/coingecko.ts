@@ -66,10 +66,11 @@ export const getTopCryptoPrices = async (): Promise<CoinGeckoPricesResponse> => 
 
 export const getCryptoMarketChart = async (
   coinId: string,
-  days: number = 30
+  days: number = 90,
+  vsCurrency: "usd" | "ars" = "ars"
 ): Promise<CoinGeckoMarketChartResponse> => {
   return fetchCoingecko<CoinGeckoMarketChartResponse>(
-    `/coins/${coinId}/market_chart?vs_currency=usd&days=${days}&interval=daily`
+    `/coins/${coinId}/market_chart?vs_currency=${vsCurrency}&days=${days}&interval=daily`
   );
 };
 

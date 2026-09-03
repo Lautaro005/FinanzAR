@@ -22,34 +22,39 @@ export function useInstruments(): UseInstrumentsResult {
   const isLive = !loading && (argDatos.instruments.length > 0 || coinGecko.instruments.length > 0 || data912.instruments.length > 0);
 
   const instruments = useMemo(() => {
-    // Comenzamos con una copia de los instrumentos de prueba como base sólida
     const map = new Map<string, Instrumento>();
 
-    // 1. Cargar mocks de base
+    // Categorías que ya tienen datos en vivo cargados: los mocks de esas
+    // categorías se descartan por completo (no solo se "pisan" por id, que
+    // fallaba cuando el id del mock no coincidía con el id real y quedaban
+    // ambos listados — ej. Bitcoin/Ethereum duplicados con precios distintos).
+    const liveCategoriesLoaded = new Set<Categoria>();
+    argDatos.instruments.forEach((item) => liveCategoriesLoaded.add(item.categoria));
+    if (coinGecko.instruments.length > 0) liveCategoriesLoaded.add("cripto");
+    data912.instruments.forEach((item) => liveCategoriesLoaded.add(item.categoria));
+
+    // 1. Mocks: solo como placeholder para categorías sin datos en vivo todavía
+    //    (primer render / fuente caída), nunca conviven con datos reales.
     MOCK_INSTRUMENTOS.forEach((item) => {
+      if (!liveCategoriesLoaded.has(item.categoria)) {
+        map.set(item.id, item);
+      }
+    });
+
+    // 2. Datos en vivo: ArgentinaDatos (Plazos fijos, FCI, Criptopesos)
+    argDatos.instruments.forEach((item) => {
       map.set(item.id, item);
     });
 
-    // 2. Sobrescribir / complementar con ArgentinaDatos (Plazos fijos, FCI, Criptopesos)
-    if (argDatos.instruments.length > 0) {
-      argDatos.instruments.forEach((item) => {
-        map.set(item.id, item);
-      });
-    }
+    // 3. Datos en vivo: CoinGecko
+    coinGecko.instruments.forEach((item) => {
+      map.set(item.id, item);
+    });
 
-    // 3. Sobrescribir / complementar con CoinGecko
-    if (coinGecko.instruments.length > 0) {
-      coinGecko.instruments.forEach((item) => {
-        map.set(item.id, item);
-      });
-    }
-
-    // 4. Sobrescribir / complementar con Data912 (CEDEARs, Acciones, Bonos, EE.UU.)
-    if (data912.instruments.length > 0) {
-      data912.instruments.forEach((item) => {
-        map.set(item.id, item);
-      });
-    }
+    // 4. Datos en vivo: Data912 (CEDEARs, Acciones, Bonos, EE.UU.)
+    data912.instruments.forEach((item) => {
+      map.set(item.id, item);
+    });
 
     return Array.from(map.values());
   }, [argDatos.instruments, coinGecko.instruments, data912.instruments]);

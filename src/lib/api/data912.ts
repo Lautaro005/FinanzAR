@@ -88,3 +88,25 @@ export const getLiveUsaStocks = async (): Promise<Data912QuoteRaw[]> => {
   return fetchData912<Data912QuoteRaw[]>("/live/usa_stocks");
 };
 
+// --- Histórico oficial (BYMA vía data912) ---
+export interface Data912HistoricalRaw {
+  date: string;
+  o?: number | null;
+  h?: number | null;
+  l?: number | null;
+  c: number | null;
+  v?: number | null;
+}
+
+export const getHistoricalCedear = async (ticker: string): Promise<Data912HistoricalRaw[]> => {
+  return fetchData912<Data912HistoricalRaw[]>(`/historical/cedears/${ticker}`);
+};
+
+export const getHistoricalArgStock = async (ticker: string): Promise<Data912HistoricalRaw[]> => {
+  return fetchData912<Data912HistoricalRaw[]>(`/historical/stocks/${ticker}`);
+};
+
+export const getHistoricalArgBond = async (ticker: string): Promise<Data912HistoricalRaw[]> => {
+  return fetchData912<Data912HistoricalRaw[]>(`/historical/bonds/${ticker}`);
+};
+
