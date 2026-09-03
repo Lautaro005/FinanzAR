@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   LineChart,
   Line,
@@ -9,6 +9,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import { PuntoHistorico, RangoTemporal } from "../types";
+import { sliceByRange } from "../lib/dateRange";
 
 interface InstrumentChartProps {
   data: PuntoHistorico[];
@@ -66,14 +67,24 @@ export default function InstrumentChart({
     return `${val.toFixed(2)}% TNA`;
   };
 
-  // Filtrar o simular slice de datos según rango si hay datos
-  const displayedData = data && data.length > 0 ? data : [
+  const FALLBACK_DATA: PuntoHistorico[] = [
     { fecha: "01/08", valor: 36.5 },
     { fecha: "08/08", valor: 37.0 },
     { fecha: "15/08", valor: 37.2 },
     { fecha: "22/08", valor: 38.0 },
     { fecha: "30/08", valor: 38.5 },
   ];
+
+  // Recorte real por rango: antes el selector 7D/30D/90D/1A/MÁX solo
+  // cambiaba de estilo visualmente pero siempre graficaba la serie completa.
+  const displayedData = useMemo(() => {
+    const base = data && data.length > 0 ? data : FALLBACK_DATA;
+    return sliceByRange(base, selectedRange);
+  }, [data, selectedRange]);
+
+  // Con series largas (histórico real de 90-365 puntos) no queremos un
+  // tick por cada punto: se muestran ~8 etiquetas como máximo en el eje X.
+  const xAxisInterval = Math.max(0, Math.ceil(displayedData.length / 8) - 1);
 
   return (
     <div className="w-full bg-finanzar-surface rounded-md border border-finanzar-border p-5 sm:p-6 shadow-sm mb-6">
@@ -141,6 +152,8 @@ export default function InstrumentChart({
               tickLine={false}
               axisLine={{ stroke: "#DBD3C2" }}
               tick={{ fill: "#8B8478", fontSize: 11, fontFamily: "Plus Jakarta Sans" }}
+              interval={xAxisInterval}
+              minTickGap={24}
             />
             <YAxis
               tickLine={false}

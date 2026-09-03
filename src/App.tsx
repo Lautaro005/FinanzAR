@@ -11,6 +11,7 @@ import AboutScreen from "./screens/AboutScreen";
 import { Categoria, Instrumento, PuntoHistorico } from "./types";
 import { useInstruments } from "./hooks/useInstruments";
 import { fetchInstrumentHistory } from "./lib/history";
+import { sliceByRange } from "./lib/dateRange";
 import {
   LineChart,
   Line,
@@ -308,7 +309,11 @@ function CompareScreen({
     };
   }, [activeCompareInstruments]);
 
-  const historyFor = (inst: Instrumento): PuntoHistorico[] => historyMap[inst.id] || inst.historico;
+  // El comparador se etiqueta como "Período 30 Días": se recorta cada serie
+  // a los últimos 30 puntos para que la comparación sea real y consistente,
+  // en vez de mezclar históricos de largos muy distintos entre instrumentos.
+  const historyFor = (inst: Instrumento): PuntoHistorico[] =>
+    sliceByRange(historyMap[inst.id] || inst.historico, "30d");
 
   // Generar datos normalizados base 0% (% de variación relativa en el período)
   const normalizedData = useMemo(() => {

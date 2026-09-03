@@ -21,7 +21,11 @@ const memoryCache = new Map<string, HistoryResult>();
 function formatFecha(dateLike: string | number): string {
   const d = typeof dateLike === "number" ? new Date(dateLike) : new Date(dateLike);
   if (isNaN(d.getTime())) return String(dateLike);
-  return d.toLocaleDateString("es-AR", { day: "2-digit", month: "2-digit" });
+  // Se incluye el año: los históricos reales (CEDEARs, acciones, bonos, cripto)
+  // pueden abarcar varios años, y "dd/mm" sin año generaba fechas ambiguas
+  // que se repetían en el eje X (ej. "1/9" de años distintos apareciendo
+  // varias veces seguidas, fuera de orden visual).
+  return d.toLocaleDateString("es-AR", { day: "2-digit", month: "2-digit", year: "2-digit" });
 }
 
 function fromData912Historical(rows: Data912HistoricalRaw[]): PuntoHistorico[] {
@@ -34,7 +38,9 @@ function fromData912Historical(rows: Data912HistoricalRaw[]): PuntoHistorico[] {
 async function fetchLiveHistory(instrument: Instrumento): Promise<PuntoHistorico[] | null> {
   if (instrument.categoria === "cripto" && instrument.id.startsWith("crypto-")) {
     const coinId = instrument.id.replace(/^crypto-/, "");
-    const chart = await getCryptoMarketChart(coinId, 90, "ars");
+    // 365 días (máximo del tier gratuito de CoinGecko) para poder soportar
+    // el rango "1A" del selector; rangos más cortos se recortan en el cliente.
+    const chart = await getCryptoMarketChart(coinId, 365, "ars");
     if (!chart?.prices?.length) return null;
     return chart.prices.map(([ts, price]) => ({
       fecha: formatFecha(ts),
