@@ -289,18 +289,28 @@ function CompareScreen({
     "/comparar"
   );
 
-  // Instrumentos activos para comparar (o benchmark inicial si aún no seleccionó)
+  // Instrumentos activos para comparar: únicamente los que el usuario eligió
+  // a mano (sin benchmark ni preselección automática).
   const activeCompareInstruments = useMemo(() => {
-    if (selectedCompareIds.length >= 2) {
-      return instruments.filter((item) => selectedCompareIds.includes(item.id));
-    }
-    // Benchmark por defecto para ver la comparativa instantánea
-    return [
-      instruments.find((i) => i.id === "pf-bna" || (i.categoria === "pesos" && i.unidad === "TNA")),
-      instruments.find((i) => i.id === "cedear-spy" || i.id === "cedears-spy"),
-      instruments.find((i) => i.id === "crypto-bitcoin" || i.id === "crypto-btc"),
-    ].filter(Boolean) as Instrumento[];
+    return instruments.filter((item) => selectedCompareIds.includes(item.id));
   }, [instruments, selectedCompareIds]);
+
+  // Buscador para agregar instrumentos al comparador
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchResults = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return [];
+    return instruments
+      .filter(
+        (i) =>
+          !selectedCompareIds.includes(i.id) &&
+          (i.nombre.toLowerCase().includes(q) ||
+            i.entidadOFuente.toLowerCase().includes(q) ||
+            i.categoria.toLowerCase().includes(q) ||
+            (i.ticker && i.ticker.toLowerCase().includes(q)))
+      )
+      .slice(0, 8);
+  }, [instruments, searchQuery, selectedCompareIds]);
 
   // Histórico real (data912 / CoinGecko) por instrumento activo en el comparador.
   // Cae a la estimación de cada instrumento si la fuente gratuita no tiene
@@ -388,35 +398,82 @@ function CompareScreen({
         )}
       </div>
 
-      {/* Selector de Chips Rápido */}
+      {/* Buscador para agregar instrumentos */}
       <div className="bg-finanzar-surface border border-finanzar-border rounded-md p-4 mb-6">
         <p className="text-xs font-semibold uppercase tracking-wider text-finanzar-textSecondary mb-3">
-          Activos disponibles para comparar (haga clic para agregar o quitar, máx 6):
+          Agregar instrumentos a comparar (buscá por empresa, fondo, ticker o entidad; máx 6):
         </p>
-        <div className="flex flex-wrap gap-2">
-          {instruments.slice(0, 16).map((inst) => {
-            const isIncluded = activeCompareInstruments.some((i) => i.id === inst.id);
-            const index = activeCompareInstruments.findIndex((i) => i.id === inst.id);
-            const color = index !== -1 ? COMPARISON_COLORS[index % COMPARISON_COLORS.length] : undefined;
 
-            return (
-              <button
-                key={inst.id}
-                onClick={() => onToggleCompare(inst.id)}
-                className={`inline-flex items-center space-x-2 px-3 py-1.5 rounded text-xs font-medium border transition-colors ${
-                  isIncluded
-                    ? "bg-finanzar-bg border-finanzar-primary text-finanzar-primary shadow-xs font-semibold"
-                    : "bg-finanzar-surface border-finanzar-borderSubtle text-finanzar-textSecondary hover:text-finanzar-primary hover:border-finanzar-border"
-                }`}
-              >
-                {color && (
-                  <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
-                )}
-                <span className="truncate max-w-[160px]">{inst.nombre}</span>
-              </button>
-            );
-          })}
+        <div className="relative max-w-md mb-3">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Ej: Apple, Banco Macro, GGAL, plazo fijo..."
+            disabled={activeCompareInstruments.length >= 6}
+            className="w-full pl-9 pr-4 py-2 bg-finanzar-bg border border-finanzar-border rounded text-sm text-finanzar-textMain placeholder-finanzar-textSecondary focus:outline-none focus:ring-1 focus:ring-finanzar-accent disabled:opacity-50"
+          />
+          <span className="absolute left-3 top-2.5 text-finanzar-textSecondary text-xs">🔍</span>
+
+          {searchQuery.trim() && (
+            <div className="absolute z-20 mt-1 w-full bg-finanzar-surface border border-finanzar-border rounded-md shadow-md overflow-hidden">
+              {searchResults.length === 0 ? (
+                <p className="px-3 py-2.5 text-xs text-finanzar-textSecondary">Sin resultados.</p>
+              ) : (
+                searchResults.map((inst) => (
+                  <button
+                    key={inst.id}
+                    onClick={() => {
+                      onToggleCompare(inst.id);
+                      setSearchQuery("");
+                    }}
+                    className="w-full text-left px-3 py-2 text-xs hover:bg-finanzar-surfaceHover flex items-center justify-between gap-2 border-b border-finanzar-borderSubtle last:border-b-0"
+                  >
+                    <span className="truncate">
+                      <span className="font-medium text-finanzar-textMain">{inst.nombre}</span>
+                      {inst.ticker && (
+                        <span className="ml-2 font-mono text-[10px] text-finanzar-textSecondary">{inst.ticker}</span>
+                      )}
+                    </span>
+                    <span className="text-finanzar-accent text-[11px] font-semibold flex-shrink-0">+ Agregar</span>
+                  </button>
+                ))
+              )}
+            </div>
+          )}
         </div>
+
+        {activeCompareInstruments.length >= 6 && (
+          <p className="text-[11px] text-finanzar-textSecondary mb-3">Alcanzaste el máximo de 6 instrumentos. Quitá uno para agregar otro.</p>
+        )}
+
+        {activeCompareInstruments.length > 0 ? (
+          <div className="flex flex-wrap gap-2">
+            {activeCompareInstruments.map((inst, index) => {
+              const color = COMPARISON_COLORS[index % COMPARISON_COLORS.length];
+              return (
+                <span
+                  key={inst.id}
+                  className="inline-flex items-center space-x-2 px-3 py-1.5 rounded text-xs font-semibold border bg-finanzar-bg border-finanzar-primary text-finanzar-primary"
+                >
+                  <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
+                  <span className="truncate max-w-[160px]">{inst.nombre}</span>
+                  <button
+                    onClick={() => onToggleCompare(inst.id)}
+                    className="text-finanzar-textSecondary hover:text-finanzar-negative"
+                    aria-label={`Quitar ${inst.nombre} del comparador`}
+                  >
+                    ✕
+                  </button>
+                </span>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="text-xs text-finanzar-textSecondary">
+            Todavía no agregaste ningún instrumento. Usá el buscador de arriba para empezar.
+          </p>
+        )}
       </div>
 
       {/* Gráfico Normalizado Recharts */}
@@ -435,6 +492,11 @@ function CompareScreen({
           </span>
         </div>
 
+        {activeCompareInstruments.length === 0 ? (
+          <div className="h-96 w-full flex items-center justify-center text-sm text-finanzar-textSecondary">
+            Agregá al menos un instrumento arriba para ver el gráfico comparativo.
+          </div>
+        ) : (
         <div className="h-96 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={normalizedData} margin={{ top: 20, right: 24, left: -10, bottom: 10 }}>
@@ -510,6 +572,7 @@ function CompareScreen({
             </LineChart>
           </ResponsiveContainer>
         </div>
+        )}
       </div>
 
       {/* Fichas Resumen Comparativas */}

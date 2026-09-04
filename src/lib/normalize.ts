@@ -92,7 +92,7 @@ export function normalizeFCIs(
       return {
         id: `fci-${slugify(f.fondo)}`,
         nombre: `FCI ${f.fondo}`,
-        categoria: "pesos" as Categoria,
+        categoria: "fci" as Categoria,
         entidadOFuente: `CAFCI / ${categoriaLabel}`,
         tasaORendimientoActual: tasa,
         variacion24h: 0,

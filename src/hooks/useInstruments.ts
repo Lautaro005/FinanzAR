@@ -62,6 +62,7 @@ export function useInstruments(): UseInstrumentsResult {
   const categoryCounts = useMemo(() => {
     const counts: Record<Categoria, number> = {
       pesos: 0,
+      fci: 0,
       cripto: 0,
       cedears: 0,
       acciones: 0,

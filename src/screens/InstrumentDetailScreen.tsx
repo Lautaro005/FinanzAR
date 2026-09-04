@@ -206,7 +206,7 @@ export default function InstrumentDetailScreen({
           <div>
             <span className="text-finanzar-textSecondary block">Mercado / Liquidez</span>
             <span className="font-semibold text-finanzar-textMain mt-0.5 block">
-              {instrument.categoria === "pesos" ? "Inmediata / 30 Días" : "Mercado Abierto (T+1)"}
+              {instrument.categoria === "pesos" || instrument.categoria === "fci" ? "Inmediata / 30 Días" : "Mercado Abierto (T+1)"}
             </span>
           </div>
         </div>

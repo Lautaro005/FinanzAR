@@ -85,6 +85,8 @@ export default function InstrumentTable({
     switch (categoria) {
       case "pesos":
         return "bg-[#EAF0F8] text-[#1B2A4A] border border-[#CBDCEE]";
+      case "fci":
+        return "bg-[#EFEAF5] text-[#4A3B70] border border-[#D9CDEB]";
       case "cripto":
         return "bg-[#ECEAE4] text-[#26262B] border border-[#D6D2C4]";
       case "cedears":
@@ -145,9 +147,9 @@ export default function InstrumentTable({
           No se encontraron alternativas que coincidan con la búsqueda.
         </div>
       ) : (
-        <div className="overflow-x-auto">
+        <div className="overflow-auto max-h-[1500px]">
           <table className="w-full text-left border-collapse text-sm">
-            <thead>
+            <thead className="sticky top-0 z-10">
               <tr className="border-b border-finanzar-borderSubtle bg-finanzar-bg text-xs font-semibold uppercase tracking-wider text-finanzar-textSecondary select-none">
                 {onToggleCompare && (
                   <th scope="col" className="w-12 px-4 py-3.5 text-center">

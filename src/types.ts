@@ -1,4 +1,4 @@
-export type Categoria = "pesos" | "cripto" | "cedears" | "acciones" | "bonos" | "eeuu";
+export type Categoria = "pesos" | "fci" | "cripto" | "cedears" | "acciones" | "bonos" | "eeuu";
 
 export interface PuntoHistorico {
   fecha: string;

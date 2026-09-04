@@ -9,7 +9,8 @@ interface TabConfig {
 
 const TABS: TabConfig[] = [
   { id: "todos", label: "Todos" },
-  { id: "pesos", label: "Pesos" },
+  { id: "pesos", label: "Plazos Fijos" },
+  { id: "fci", label: "FCI" },
   { id: "cripto", label: "Cripto" },
   { id: "cedears", label: "CEDEARs" },
   { id: "acciones", label: "Acciones" },

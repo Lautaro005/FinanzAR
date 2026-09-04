@@ -60,7 +60,7 @@ async function fetchLiveHistory(instrument: Instrumento): Promise<PuntoHistorico
     return fromData912Historical(await getHistoricalArgBond(instrument.ticker));
   }
 
-  // "pesos" (plazo fijo / FCI / criptopesos) y "eeuu" (acciones de EE.UU.):
+  // "pesos" (plazo fijo / criptopesos), "fci" y "eeuu" (acciones de EE.UU.):
   // las APIs gratuitas usadas hoy no exponen histórico por instrumento.
   return null;
 }
