@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Instrumento } from "../types";
 
@@ -22,6 +22,8 @@ export default function InstrumentTable({
   const [searchTerm, setSearchTerm] = useState("");
   const [sortField, setSortField] = useState<SortField>("tasaORendimientoActual");
   const [sortAsc, setSortAsc] = useState(false);
+  const PAGE_SIZE = 100;
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -60,6 +62,18 @@ export default function InstrumentTable({
 
     return result;
   }, [data, searchTerm, sortField, sortAsc]);
+
+  // Renderizar miles de filas de una sola vez es lo que trababa la página con
+  // categorías grandes (Todos, EE.UU., FCI); se muestran de a tandas y se
+  // reinicia la tanda cada vez que cambia el filtro/orden/dataset de base.
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [data, searchTerm, sortField, sortAsc]);
+
+  const displayedData = useMemo(
+    () => filteredAndSortedData.slice(0, visibleCount),
+    [filteredAndSortedData, visibleCount]
+  );
 
   const formatValue = (item: Instrumento) => {
     if (item.unidad === "TNA") {
@@ -202,7 +216,7 @@ export default function InstrumentTable({
               </tr>
             </thead>
             <tbody className="divide-y divide-finanzar-borderSubtle bg-finanzar-surface">
-              {filteredAndSortedData.map((item) => {
+              {displayedData.map((item) => {
                 const isSelected = selectedIds.includes(item.id);
                 const hasVariation = item.variacion24h !== undefined && item.variacion24h !== null;
                 const isPositive = hasVariation && item.variacion24h! >= 0;
@@ -312,6 +326,18 @@ export default function InstrumentTable({
               })}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {!loading && visibleCount < filteredAndSortedData.length && (
+        <div className="p-4 text-center border-t border-finanzar-borderSubtle">
+          <button
+            onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+            className="px-4 py-2 text-xs font-semibold rounded border border-finanzar-border text-finanzar-primary hover:bg-finanzar-bg transition-colors"
+          >
+            Cargar {Math.min(PAGE_SIZE, filteredAndSortedData.length - visibleCount)} más
+            (mostrando {displayedData.length} de {filteredAndSortedData.length})
+          </button>
         </div>
       )}
     </div>

@@ -64,11 +64,20 @@ export const getFCIUltimo = async (categoria: FCICategoria): Promise<FCIRaw[]> =
   return fetchArgDatos<FCIRaw[]>(`/finanzas/fci/${categoria}/ultimo`);
 };
 
-// Fecha en formato YYYY/MM/DD. Se usa para reconstruir un punto de comparación
-// pasado (ej. ~30 días atrás) y así calcular un rendimiento anualizado real
-// a partir de la variación de la cuotaparte, en vez de una estimación.
+// Fecha en formato YYYY/MM/DD.
 export const getFCIPorFecha = async (categoria: FCICategoria, fecha: string): Promise<FCIRaw[]> => {
   return fetchArgDatos<FCIRaw[]>(`/finanzas/fci/${categoria}/${fecha}`);
+};
+
+// El penúltimo valor informado de cuotaparte por fondo (normalmente el día
+// hábil anterior a "ultimo"). A diferencia de pedir una fecha calendario
+// puntual —que en esta API solo trae los fondos que reportaron JUSTO ese
+// día y suele estar casi vacía—, "ultimo" y "penultimo" son, cada uno, "el
+// dato más reciente de cada fondo" y "el segundo más reciente de cada
+// fondo", por lo que cubren prácticamente el 100% de los fondos y sirven
+// como el par de puntos confiable para calcular un rendimiento real.
+export const getFCIPenultimo = async (categoria: FCICategoria): Promise<FCIRaw[]> => {
+  return fetchArgDatos<FCIRaw[]>(`/finanzas/fci/${categoria}/penultimo`);
 };
 
 // Alias retrocompatible.

@@ -1,7 +1,7 @@
 import { Instrumento, Categoria, PuntoHistorico } from "../types";
 import { PlazoFijoRaw, FCIRaw, CriptoPesoRaw } from "./api/argentinaDatos";
 import { CoinGeckoPricesResponse, COIN_METADATA } from "./api/coingecko";
-import { Data912QuoteRaw, ASSET_NAMES } from "./api/data912";
+import { Data912QuoteRaw, ASSET_NAMES, USA_DIRECT_NAMES, USA_DIRECT_ALLOWED } from "./api/data912";
 
 // Helper para limpiar nombres de bancos
 function cleanBankName(raw: string): string {
@@ -73,10 +73,19 @@ export function normalizePlazosFijos(items: PlazoFijoRaw[]): Instrumento[] {
 // Normaliza FCI (cualquiera de las 6 categorías que expone la CNV vía
 // ArgentinaDatos: mercadoDinero, rentaFija, rentaVariable, rentaMixta,
 // retornoTotal, otros). El rendimiento mostrado es un cálculo propio —
-// variación real de la cuotaparte (VCP) anualizada sobre ~30 días reales—
-// en vez de una estimación sintética; los fondos sin al menos 30 días de
-// historial (o sin dato reciente comparable) directamente no se muestran,
-// para no inventar un número.
+// variación real de la cuotaparte (VCP) entre el último y el penúltimo
+// dato informado de cada fondo, anualizada — en vez de una estimación
+// sintética; los fondos sin un par de datos reciente comparable
+// directamente no se muestran, para no inventar un número.
+//
+// Entre las 6 categorías la CNV publica varios miles de "fondos" (en
+// realidad son clases —A, B, C, institucional, etc.— del mismo fondo base,
+// muchas casi sin patrimonio). Mostrar todo haría la tabla enorme y lenta,
+// así que se listan solo los de mayor patrimonio administrado por
+// categoría: son los que un inversor real puede encontrar en su banco/ALyC.
+const FCI_MAX_POR_CATEGORIA = 60;
+const FCI_PATRIMONIO_MINIMO = 50_000_000; // ARS 50M: filtra clases dormidas/institucionales residuales
+
 export function normalizeFCIs(
   items: FCIRaw[],
   categoriaLabel: string,
@@ -85,7 +94,15 @@ export function normalizeFCIs(
   if (!Array.isArray(items)) return [];
 
   return items
-    .filter((f) => f.fondo && f.vcp > 0 && rendimientos.has(f.fondo))
+    .filter(
+      (f) =>
+        f.fondo &&
+        f.vcp > 0 &&
+        rendimientos.has(f.fondo) &&
+        (f.patrimonio || 0) >= FCI_PATRIMONIO_MINIMO
+    )
+    .sort((a, b) => (b.patrimonio || 0) - (a.patrimonio || 0))
+    .slice(0, FCI_MAX_POR_CATEGORIA)
     .map((f) => {
       const rend = rendimientos.get(f.fondo)!;
       const tasa = Number(rend.tasaAnualizada.toFixed(2));
@@ -164,8 +181,14 @@ export function normalizeData912Quotes(
 
   return quotes
     .filter((q) => q.symbol && q.c > 0)
+    // data912 expone miles de tickers de EE.UU. (incluyendo microcaps casi
+    // ilíquidos que nadie busca); se acota esa categoría a una lista curada
+    // de ETFs indexados y acciones ampliamente reconocidas (ver
+    // USA_DIRECT_ALLOWED en api/data912.ts) para que la sección "EE.UU."
+    // sea manejable y relevante en vez de renderizar ~3000 filas.
+    .filter((q) => categoria !== "eeuu" || USA_DIRECT_ALLOWED.has(q.symbol))
     .map((q) => {
-      const meta = ASSET_NAMES[q.symbol];
+      const meta = categoria === "eeuu" ? USA_DIRECT_NAMES[q.symbol] : ASSET_NAMES[q.symbol];
       const nombre = meta?.nombre || `${q.symbol} (${categoria.toUpperCase()})`;
       const entidad = meta?.entidad || "BYMA";
       // CEDEARs/acciones/bonos cotizan en pesos en BYMA; solo "eeuu" (acciones de EE.UU.) está en USD.
@@ -181,9 +204,11 @@ export function normalizeData912Quotes(
         variacion24h: Number((q.pct_change || 0).toFixed(2)),
         unidad,
         historico: generateSyntheticHistory(q.c, (q.pct_change || 1) * 2),
-        actualizadoEn: "En vivo BYMA",
+        actualizadoEn: isUsd ? "En vivo NYSE/Nasdaq" : "En vivo BYMA",
         ticker: q.symbol,
-        descripcion: `Instrumento negociado en el mercado formal argentino bajo supervisión de CNV.`,
+        descripcion: isUsd
+          ? `Cotización en dólares del mercado estadounidense (NYSE/Nasdaq), para referencia comparativa.`
+          : `Instrumento negociado en el mercado formal argentino bajo supervisión de CNV.`,
       };
     });
 }

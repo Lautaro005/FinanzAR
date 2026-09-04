@@ -27,7 +27,7 @@ export const useArgentinaDatos = (): ArgentinaDatosState => {
     setLoading(true);
     setError(null);
 
-    const cacheKey = "arg_datos_combined_v2";
+    const cacheKey = "arg_datos_combined_v3";
     const cached = getCachedData<{
       plazosFijos: PlazoFijoRaw[];
       fcis: FCIRaw[];

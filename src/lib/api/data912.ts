@@ -444,11 +444,69 @@ export const ASSET_NAMES: Record<string, { nombre: string; entidad: string }> = 
   GD41: { nombre: "Bono Global Rep. Argentina 2041 (GD41, ley NY)", entidad: "Tesoro Nacional / BYMA" },
   T2X5: { nombre: "Bono del Tesoro en Pesos Cero Cupón (T2X5)", entidad: "Tesoro Nacional / BYMA" },
 
-  // ===== ETFs / acciones de EE.UU. listadas directas (mercado USA) =====
-  VOO: { nombre: "Vanguard S&P 500 ETF", entidad: "Vanguard Global / NYSE Arca" },
-  IVV: { nombre: "iShares Core S&P 500 ETF", entidad: "BlackRock / NYSE Arca" },
-  VTI: { nombre: "Vanguard Total Stock Market ETF", entidad: "Vanguard / NYSE Arca" },
 };
+
+// ===== Mercado EE.UU. (listado directo en NYSE/Nasdaq, no CEDEAR) =====
+// data912 expone miles de tickers de EE.UU. (incluyendo microcaps ilíquidos
+// que casi nadie busca), lo que hacía la categoría "EE.UU." enorme y lenta
+// de renderizar. Se muestra una lista acotada de ETFs indexados de
+// referencia (S&P 500, Nasdaq, mercado total) y acciones ampliamente
+// reconocidas, en línea con el objetivo original de la sección
+// (benchmark tipo S&P 500), en vez de todo el universo de EE.UU.
+export const USA_DIRECT_NAMES: Record<string, { nombre: string; entidad: string }> = {
+  VOO: { nombre: "Vanguard S&P 500 ETF", entidad: "Vanguard / NYSE Arca" },
+  IVV: { nombre: "iShares Core S&P 500 ETF", entidad: "BlackRock / NYSE Arca" },
+  SPY: { nombre: "SPDR S&P 500 ETF Trust", entidad: "State Street / NYSE Arca" },
+  VTI: { nombre: "Vanguard Total Stock Market ETF", entidad: "Vanguard / NYSE Arca" },
+  QQQ: { nombre: "Invesco QQQ Trust (Nasdaq 100)", entidad: "Invesco / Nasdaq" },
+  DIA: { nombre: "SPDR Dow Jones Industrial Average ETF", entidad: "State Street / NYSE Arca" },
+  AAPL: { nombre: "Apple Inc.", entidad: "Apple / Nasdaq" },
+  MSFT: { nombre: "Microsoft Corporation", entidad: "Microsoft / Nasdaq" },
+  GOOGL: { nombre: "Alphabet Inc. Clase A (Google)", entidad: "Alphabet / Nasdaq" },
+  AMZN: { nombre: "Amazon.com Inc.", entidad: "Amazon / Nasdaq" },
+  NVDA: { nombre: "NVIDIA Corporation", entidad: "NVIDIA / Nasdaq" },
+  META: { nombre: "Meta Platforms Inc.", entidad: "Meta / Nasdaq" },
+  TSLA: { nombre: "Tesla Inc.", entidad: "Tesla / Nasdaq" },
+  BRKB: { nombre: "Berkshire Hathaway Inc. Clase B", entidad: "Berkshire Hathaway / NYSE" },
+  JPM: { nombre: "JPMorgan Chase & Co.", entidad: "JPMorgan Chase / NYSE" },
+  JNJ: { nombre: "Johnson & Johnson", entidad: "Johnson & Johnson / NYSE" },
+  V: { nombre: "Visa Inc.", entidad: "Visa / NYSE" },
+  MA: { nombre: "Mastercard Incorporated", entidad: "Mastercard / NYSE" },
+  WMT: { nombre: "Walmart Inc.", entidad: "Walmart / NYSE" },
+  PG: { nombre: "Procter & Gamble", entidad: "Procter & Gamble / NYSE" },
+  HD: { nombre: "The Home Depot", entidad: "Home Depot / NYSE" },
+  KO: { nombre: "The Coca-Cola Company", entidad: "Coca-Cola / NYSE" },
+  PEP: { nombre: "PepsiCo Inc.", entidad: "PepsiCo / Nasdaq" },
+  DIS: { nombre: "The Walt Disney Company", entidad: "Disney / NYSE" },
+  NFLX: { nombre: "Netflix Inc.", entidad: "Netflix / Nasdaq" },
+  ADBE: { nombre: "Adobe Inc.", entidad: "Adobe / Nasdaq" },
+  CRM: { nombre: "Salesforce Inc.", entidad: "Salesforce / NYSE" },
+  ORCL: { nombre: "Oracle Corporation", entidad: "Oracle / NYSE" },
+  INTC: { nombre: "Intel Corporation", entidad: "Intel / Nasdaq" },
+  CSCO: { nombre: "Cisco Systems", entidad: "Cisco / Nasdaq" },
+  PFE: { nombre: "Pfizer Inc.", entidad: "Pfizer / NYSE" },
+  ABBV: { nombre: "AbbVie Inc.", entidad: "AbbVie / NYSE" },
+  MRK: { nombre: "Merck & Co.", entidad: "Merck / NYSE" },
+  XOM: { nombre: "Exxon Mobil Corporation", entidad: "ExxonMobil / NYSE" },
+  CVX: { nombre: "Chevron Corporation", entidad: "Chevron / NYSE" },
+  BAC: { nombre: "Bank of America", entidad: "Bank of America / NYSE" },
+  WFC: { nombre: "Wells Fargo & Company", entidad: "Wells Fargo / NYSE" },
+  GS: { nombre: "Goldman Sachs", entidad: "Goldman Sachs / NYSE" },
+  MCD: { nombre: "McDonald's Corporation", entidad: "McDonald's / NYSE" },
+  NKE: { nombre: "Nike Inc.", entidad: "Nike / NYSE" },
+  SBUX: { nombre: "Starbucks Corporation", entidad: "Starbucks / Nasdaq" },
+  QCOM: { nombre: "Qualcomm Incorporated", entidad: "Qualcomm / Nasdaq" },
+  TXN: { nombre: "Texas Instruments", entidad: "Texas Instruments / Nasdaq" },
+  AMD: { nombre: "Advanced Micro Devices", entidad: "AMD / Nasdaq" },
+  BA: { nombre: "Boeing Company", entidad: "Boeing / NYSE" },
+  UNH: { nombre: "UnitedHealth Group", entidad: "UnitedHealth / NYSE" },
+  T: { nombre: "AT&T Inc.", entidad: "AT&T / NYSE" },
+  VZ: { nombre: "Verizon Communications", entidad: "Verizon / NYSE" },
+  PYPL: { nombre: "PayPal Holdings", entidad: "PayPal / Nasdaq" },
+  UPS: { nombre: "United Parcel Service", entidad: "UPS / NYSE" },
+};
+
+export const USA_DIRECT_ALLOWED = new Set(Object.keys(USA_DIRECT_NAMES));
 
 
 export const fetchData912 = async <T = any>(endpoint: string): Promise<T> => {

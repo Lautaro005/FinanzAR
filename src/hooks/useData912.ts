@@ -34,7 +34,7 @@ export const useData912 = (): Data912State => {
     setLoading(true);
     setError(null);
 
-    const cacheKey = "data912_quotes";
+    const cacheKey = "data912_quotes_v2";
     const cached = getCachedData<{
       cedears: Instrumento[];
       acciones: Instrumento[];

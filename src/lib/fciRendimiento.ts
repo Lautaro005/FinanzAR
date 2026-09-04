@@ -1,4 +1,4 @@
-import { FCICategoria, FCIRaw, getFCIPorFecha, getFCIUltimo } from "./api/argentinaDatos";
+import { FCICategoria, FCIRaw, getFCIPenultimo, getFCIUltimo } from "./api/argentinaDatos";
 
 // Fondos Comunes de Inversión (FCI): agrupa las 6 categorías que expone la
 // API pública de ArgentinaDatos (fuente: CNV - Cuotapartes). Cada una incluye
@@ -22,67 +22,58 @@ export interface FCIConRendimiento {
   rendimientos: Map<string, { tasaAnualizada: number; diasReales: number }>;
 }
 
-function toFechaPath(d: Date): string {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}/${m}/${day}`;
-}
-
-// Busca la primera fecha con datos publicados, retrocediendo día a día desde
-// `daysAgo` (para saltear fines de semana/feriados sin cuotaparte informada).
-async function findHistoricalSnapshot(
-  categoria: FCICategoria,
-  daysAgo: number,
-  maxAttempts = 8
-): Promise<{ items: FCIRaw[]; diasReales: number } | null> {
-  const base = new Date();
-  for (let i = 0; i < maxAttempts; i++) {
-    const d = new Date(base);
-    d.setDate(d.getDate() - daysAgo - i);
-    try {
-      const items = await getFCIPorFecha(categoria, toFechaPath(d));
-      if (Array.isArray(items) && items.length > 0) {
-        const diasReales = Math.round((base.getTime() - d.getTime()) / (1000 * 60 * 60 * 24));
-        return { items, diasReales };
-      }
-    } catch {
-      // Sin dato para esa fecha (feriado, fin de semana, fondo nuevo): se prueba el día anterior.
-    }
-  }
-  return null;
-}
+const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
 /**
  * Calcula, para una categoría de FCI, un rendimiento anualizado real por
- * fondo a partir de la variación de su valor de cuotaparte (VCP) en los
- * últimos ~30 días. Reemplaza cualquier estimación sintética: es un cálculo
- * propio (no una TNA oficial publicada por la gestora) pero basado 100% en
- * datos reales de la CNV vía ArgentinaDatos.
+ * fondo a partir de la variación de su valor de cuotaparte (VCP) entre el
+ * último dato informado y el penúltimo.
+ *
+ * Nota técnica: se probó primero comparar contra una fecha calendario fija
+ * (ej. "hace 30 días") usando /finanzas/fci/{categoria}/{fecha}, pero ese
+ * endpoint no es una foto completa del mercado para cualquier fecha — la
+ * mayoría de los días devuelve solo un puñado de fondos (los que
+ * reportaron justo ese día) y unos pocos días devuelven casi todos, de
+ * forma irregular (a veces cada ~9 días, a veces cada ~35). Eso dejaba a
+ * más del 95% de los fondos sin rendimiento calculable. En cambio,
+ * "ultimo" y "penultimo" son, cada uno, el dato más reciente y el segundo
+ * más reciente DE CADA FONDO (no de una fecha calendario), así que cubren
+ * ~99% de los fondos de forma consistente y en solo 2 pedidos por
+ * categoría (antes se hacían hasta 14).
  */
 export async function fetchFCICategoriaConRendimiento(
   categoria: FCICategoria
 ): Promise<FCIConRendimiento> {
   const label = FCI_CATEGORIAS.find((c) => c.id === categoria)?.label || categoria;
 
-  const [actual, pasado] = await Promise.all([
+  const [actual, previo] = await Promise.all([
     getFCIUltimo(categoria).catch(() => [] as FCIRaw[]),
-    findHistoricalSnapshot(categoria, 30),
+    getFCIPenultimo(categoria).catch(() => [] as FCIRaw[]),
   ]);
 
   const rendimientos = new Map<string, { tasaAnualizada: number; diasReales: number }>();
 
-  if (pasado && Array.isArray(actual) && actual.length > 0) {
-    const pasadoMap = new Map(pasado.items.map((f) => [f.fondo, f.vcp]));
+  if (Array.isArray(actual) && Array.isArray(previo) && previo.length > 0) {
+    const previoMap = new Map(previo.map((f) => [f.fondo, f]));
     for (const fondo of actual) {
-      const vcpPasado = pasadoMap.get(fondo.fondo);
-      if (!vcpPasado || vcpPasado <= 0 || !fondo.vcp || fondo.vcp <= 0) continue;
-      const variacion = fondo.vcp / vcpPasado - 1;
-      const tasaAnualizada = variacion * (365 / pasado.diasReales) * 100;
-      // Se descartan resultados fuera de un rango verosímil (ruido de datos,
-      // splits de cuotaparte, fondos con muy baja liquidez).
-      if (Number.isFinite(tasaAnualizada) && tasaAnualizada > -50 && tasaAnualizada < 400) {
-        rendimientos.set(fondo.fondo, { tasaAnualizada, diasReales: pasado.diasReales });
+      const anterior = previoMap.get(fondo.fondo);
+      if (!anterior || !anterior.vcp || anterior.vcp <= 0 || !fondo.vcp || fondo.vcp <= 0) continue;
+      if (!fondo.fecha || !anterior.fecha || fondo.fecha === anterior.fecha) continue;
+
+      const diasReales = Math.max(
+        1,
+        Math.round((new Date(fondo.fecha).getTime() - new Date(anterior.fecha).getTime()) / MS_PER_DAY)
+      );
+      const variacion = fondo.vcp / anterior.vcp - 1;
+      const tasaAnualizada = variacion * (365 / diasReales) * 100;
+
+      // Se descartan resultados fuera de un rango verosímil. Al ser una
+      // comparación de muy pocos días (normalmente 1-4), fondos de renta
+      // variable/mixta con un mal día puntual pueden anualizar a valores
+      // extremos que no reflejan un rendimiento real sostenido; se filtran
+      // en vez de mostrarlos como si fueran una tasa confiable.
+      if (Number.isFinite(tasaAnualizada) && tasaAnualizada > -80 && tasaAnualizada < 400) {
+        rendimientos.set(fondo.fondo, { tasaAnualizada, diasReales });
       }
     }
   }
