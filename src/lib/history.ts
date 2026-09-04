@@ -6,6 +6,7 @@ import {
   getHistoricalArgBond,
   Data912HistoricalRaw,
 } from "./api/data912";
+import { getDolarHistorico, DolarRaw } from "./api/argentinaDatos";
 
 // Histórico real por instrumento, con fallback honesto a una estimación
 // cuando la fuente gratuita no ofrece serie histórica para esa categoría
@@ -35,7 +36,25 @@ function fromData912Historical(rows: Data912HistoricalRaw[]): PuntoHistorico[] {
     .map((r) => ({ fecha: formatFecha(r.date), valor: Number(r.c!.toFixed(2)) }));
 }
 
+function fromDolarHistorico(rows: DolarRaw[]): PuntoHistorico[] {
+  if (!Array.isArray(rows)) return [];
+  return rows
+    .filter((r) => r && r.fecha && typeof r.venta === "number" && r.venta > 0)
+    .map((r) => ({ fecha: formatFecha(r.fecha), valor: Number(r.venta.toFixed(2)) }));
+}
+
+// Casas de dólar que argentinadatos.com expone con histórico real. El resto
+// de "divisas" (mayorista, tarjeta, euro, real) no tiene fuente histórica
+// gratuita hoy, así que cae honestamente a la estimación sintética
+// (isEstimate: true), igual que ya ocurre con pesos/FCI/EE.UU.
+const DOLAR_HISTORICO_CASAS = new Set(["oficial", "blue", "bolsa", "contadoconliqui", "cripto"]);
+
 async function fetchLiveHistory(instrument: Instrumento): Promise<PuntoHistorico[] | null> {
+  if (instrument.categoria === "divisas" && instrument.ticker && DOLAR_HISTORICO_CASAS.has(instrument.ticker)) {
+    const rows = await getDolarHistorico(instrument.ticker as any);
+    return fromDolarHistorico(rows);
+  }
+
   if (instrument.categoria === "cripto" && instrument.id.startsWith("crypto-")) {
     const coinId = instrument.id.replace(/^crypto-/, "");
     // 365 días (máximo del tier gratuito de CoinGecko) para poder soportar
@@ -60,7 +79,8 @@ async function fetchLiveHistory(instrument: Instrumento): Promise<PuntoHistorico
     return fromData912Historical(await getHistoricalArgBond(instrument.ticker));
   }
 
-  // "pesos" (plazo fijo / criptopesos), "fci" y "eeuu" (acciones de EE.UU.):
+  // "pesos" (plazo fijo / criptopesos), "fci", "eeuu" (acciones de EE.UU.) y
+  // las variantes de "divisas" sin cobertura de argentinadatos.com (arriba):
   // las APIs gratuitas usadas hoy no exponen histórico por instrumento.
   return null;
 }

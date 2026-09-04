@@ -110,6 +110,8 @@ export default function InstrumentTable({
         return "bg-[#ECEEF2] text-[#2C3E50] border border-[#CBD2DD]";
       case "eeuu":
         return "bg-[#E5ECF6] text-[#1E3A63] border border-[#B8CEEA]";
+      case "divisas":
+        return "bg-[#E3F1EA] text-[#1E5C3F] border border-[#BEE0CD]";
       default:
         return "bg-finanzar-bg text-finanzar-textSecondary border border-finanzar-border";
     }

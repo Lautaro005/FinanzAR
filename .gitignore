@@ -4,3 +4,6 @@ dist/
 *.local
 .env
 .env.*
+
+# Artefactos temporales que a veces deja Vite al cargar la config (ESM interop)
+vite.config.*.timestamp-*.mjs

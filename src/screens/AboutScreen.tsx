@@ -70,6 +70,15 @@ export default function AboutScreen() {
       frecuencia: "Horario de negociación NYSE/Nasdaq",
       descripcion: "ETFs indexados (SPY, VOO, QQQ) y acciones estadounidenses para benchmark comparativo.",
     },
+    {
+      categoria: "Divisas (Dólar, Euro, Real)",
+      fuente: "DolarAPI",
+      url: "https://dolarapi.com/docs/argentina/",
+      endpoint: "GET /v1/dolares & /v1/cotizaciones",
+      auth: "Sin clave (Pública)",
+      frecuencia: "Intradiaria",
+      descripcion: "Cotizaciones de compra/venta del dólar (oficial, blue, MEP, CCL, mayorista, cripto, tarjeta), el euro y el real brasileño.",
+    },
   ];
 
   return (

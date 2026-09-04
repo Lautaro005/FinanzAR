@@ -16,6 +16,7 @@ const TABS: TabConfig[] = [
   { id: "acciones", label: "Acciones" },
   { id: "bonos", label: "Bonos" },
   { id: "eeuu", label: "EE.UU." },
+  { id: "divisas", label: "Divisas" },
 ];
 
 export default function CategoryTabs({

@@ -19,24 +19,75 @@ export interface CoinGeckoMarketChartResponse {
 
 const BASE_URL = "https://api.coingecko.com/api/v3";
 
+// Top ~30 criptomonedas más relevantes por capitalización/adopción (antes
+// solo 7). Se pide todo en una sola llamada a /simple/price -- CoinGecko
+// keyless soporta decenas de ids por request sin costo adicional de rate
+// limit, así que ampliar esta lista no multiplica los pedidos a la API,
+// solo el tamaño de la respuesta.
 export const TOP_COIN_IDS = [
   "bitcoin",
   "ethereum",
-  "solana",
-  "binancecoin",
-  "ripple",
   "tether",
+  "ripple",
+  "binancecoin",
+  "solana",
   "usd-coin",
+  "dogecoin",
+  "cardano",
+  "tron",
+  "avalanche-2",
+  "chainlink",
+  "shiba-inu",
+  "sui",
+  "stellar",
+  "polkadot",
+  "hedera-hashgraph",
+  "litecoin",
+  "bitcoin-cash",
+  "toncoin",
+  "near",
+  "uniswap",
+  "dai",
+  "aptos",
+  "internet-computer",
+  "pepe",
+  "monero",
+  "ethereum-classic",
+  "cosmos",
+  "arbitrum",
 ] as const;
 
 export const COIN_METADATA: Record<string, { nombre: string; ticker: string; symbol: string }> = {
   bitcoin: { nombre: "Bitcoin", ticker: "BTC", symbol: "₿" },
   ethereum: { nombre: "Ethereum", ticker: "ETH", symbol: "Ξ" },
-  solana: { nombre: "Solana", ticker: "SOL", symbol: "◎" },
-  binancecoin: { nombre: "BNB (Binance Coin)", ticker: "BNB", symbol: "BNB" },
-  ripple: { nombre: "XRP (Ripple)", ticker: "XRP", symbol: "✕" },
   tether: { nombre: "Tether USD (USDT)", ticker: "USDT", symbol: "₮" },
+  ripple: { nombre: "XRP (Ripple)", ticker: "XRP", symbol: "✕" },
+  binancecoin: { nombre: "BNB (Binance Coin)", ticker: "BNB", symbol: "BNB" },
+  solana: { nombre: "Solana", ticker: "SOL", symbol: "◎" },
   "usd-coin": { nombre: "USD Coin (USDC)", ticker: "USDC", symbol: "$" },
+  dogecoin: { nombre: "Dogecoin", ticker: "DOGE", symbol: "Ð" },
+  cardano: { nombre: "Cardano", ticker: "ADA", symbol: "₳" },
+  tron: { nombre: "TRON", ticker: "TRX", symbol: "TRX" },
+  "avalanche-2": { nombre: "Avalanche", ticker: "AVAX", symbol: "AVAX" },
+  chainlink: { nombre: "Chainlink", ticker: "LINK", symbol: "LINK" },
+  "shiba-inu": { nombre: "Shiba Inu", ticker: "SHIB", symbol: "SHIB" },
+  sui: { nombre: "Sui", ticker: "SUI", symbol: "SUI" },
+  stellar: { nombre: "Stellar Lumens", ticker: "XLM", symbol: "XLM" },
+  polkadot: { nombre: "Polkadot", ticker: "DOT", symbol: "DOT" },
+  "hedera-hashgraph": { nombre: "Hedera", ticker: "HBAR", symbol: "HBAR" },
+  litecoin: { nombre: "Litecoin", ticker: "LTC", symbol: "Ł" },
+  "bitcoin-cash": { nombre: "Bitcoin Cash", ticker: "BCH", symbol: "BCH" },
+  toncoin: { nombre: "Toncoin", ticker: "TON", symbol: "TON" },
+  near: { nombre: "NEAR Protocol", ticker: "NEAR", symbol: "NEAR" },
+  uniswap: { nombre: "Uniswap", ticker: "UNI", symbol: "UNI" },
+  dai: { nombre: "Dai (DAI)", ticker: "DAI", symbol: "DAI" },
+  aptos: { nombre: "Aptos", ticker: "APT", symbol: "APT" },
+  "internet-computer": { nombre: "Internet Computer", ticker: "ICP", symbol: "ICP" },
+  pepe: { nombre: "Pepe", ticker: "PEPE", symbol: "PEPE" },
+  monero: { nombre: "Monero", ticker: "XMR", symbol: "ɱ" },
+  "ethereum-classic": { nombre: "Ethereum Classic", ticker: "ETC", symbol: "ETC" },
+  cosmos: { nombre: "Cosmos Hub", ticker: "ATOM", symbol: "ATOM" },
+  arbitrum: { nombre: "Arbitrum", ticker: "ARB", symbol: "ARB" },
 };
 
 export const fetchCoingecko = async <T = any>(endpoint: string): Promise<T> => {
@@ -73,4 +124,3 @@ export const getCryptoMarketChart = async (
     `/coins/${coinId}/market_chart?vs_currency=${vsCurrency}&days=${days}&interval=daily`
   );
 };
-

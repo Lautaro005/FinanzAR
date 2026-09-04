@@ -206,7 +206,7 @@ export default function InstrumentDetailScreen({
           <div>
             <span className="text-finanzar-textSecondary block">Mercado / Liquidez</span>
             <span className="font-semibold text-finanzar-textMain mt-0.5 block">
-              {instrument.categoria === "pesos" || instrument.categoria === "fci" ? "Inmediata / 30 Días" : "Mercado Abierto (T+1)"}
+              {instrument.categoria === "pesos" || instrument.categoria === "fci" ? "Inmediata / 30 Días" : instrument.categoria === "divisas" ? "Inmediata (spot)" : "Mercado Abierto (T+1)"}
             </span>
           </div>
         </div>
@@ -238,16 +238,25 @@ export default function InstrumentDetailScreen({
           <h3 className="font-serif text-lg font-bold text-finanzar-primary mb-3">
             Análisis & Descripción del Instrumento
           </h3>
+          {instrument.rubro && (
+            <span className="inline-block text-[11px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded bg-finanzar-accentSubtle text-finanzar-primary border border-finanzar-accent/30 mb-3">
+              {instrument.rubro}
+            </span>
+          )}
           <p className="text-sm text-finanzar-textSecondary leading-relaxed mb-4">
             {instrument.descripcion ||
               `Este instrumento forma parte de las alternativas disponibles para ahorristas e inversores en el mercado argentino. Su rendimiento se encuentra sujeto a la política monetaria, la cotización de los tipos de cambio de referencia y las condiciones de liquidez general.`}
           </p>
           <div className="p-4 rounded bg-finanzar-bg border border-finanzar-borderSubtle text-xs text-finanzar-textSecondary space-y-2">
             <p>
-              <strong className="text-finanzar-textMain">Supervisión:</strong> Operado bajo normas del Banco Central de la República Argentina (BCRA) o Comisión Nacional de Valores (CNV).
+              <strong className="text-finanzar-textMain">Supervisión:</strong>{" "}
+              {instrument.supervisionRegulatoria ||
+                "Operado bajo normas del Banco Central de la República Argentina (BCRA) o Comisión Nacional de Valores (CNV)."}
             </p>
             <p>
-              <strong className="text-finanzar-textMain">Moneda de liquidación:</strong> Pesos Argentinos (ARS) o Dólares Estadounidenses (USD) según corresponda.
+              <strong className="text-finanzar-textMain">Moneda de liquidación:</strong>{" "}
+              {instrument.monedaLiquidacion ||
+                "Pesos Argentinos (ARS) o Dólares Estadounidenses (USD) según corresponda."}
             </p>
             {instrument.enlace && (
               <p>

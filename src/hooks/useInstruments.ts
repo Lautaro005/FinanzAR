@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useArgentinaDatos } from "./useArgentinaDatos";
 import { useCoinGecko } from "./useCoinGecko";
 import { useData912 } from "./useData912";
+import { useDolarApi } from "./useDolarApi";
 import { MOCK_INSTRUMENTOS } from "../lib/mockData";
 import { Instrumento, Categoria } from "../types";
 
@@ -17,9 +18,15 @@ export function useInstruments(): UseInstrumentsResult {
   const argDatos = useArgentinaDatos();
   const coinGecko = useCoinGecko();
   const data912 = useData912();
+  const dolarApi = useDolarApi();
 
-  const loading = argDatos.loading && coinGecko.loading && data912.loading;
-  const isLive = !loading && (argDatos.instruments.length > 0 || coinGecko.instruments.length > 0 || data912.instruments.length > 0);
+  const loading = argDatos.loading && coinGecko.loading && data912.loading && dolarApi.loading;
+  const isLive =
+    !loading &&
+    (argDatos.instruments.length > 0 ||
+      coinGecko.instruments.length > 0 ||
+      data912.instruments.length > 0 ||
+      dolarApi.instruments.length > 0);
 
   const instruments = useMemo(() => {
     const map = new Map<string, Instrumento>();
@@ -32,6 +39,7 @@ export function useInstruments(): UseInstrumentsResult {
     argDatos.instruments.forEach((item) => liveCategoriesLoaded.add(item.categoria));
     if (coinGecko.instruments.length > 0) liveCategoriesLoaded.add("cripto");
     data912.instruments.forEach((item) => liveCategoriesLoaded.add(item.categoria));
+    if (dolarApi.instruments.length > 0) liveCategoriesLoaded.add("divisas");
 
     // 1. Mocks: solo como placeholder para categorías sin datos en vivo todavía
     //    (primer render / fuente caída), nunca conviven con datos reales.
@@ -56,8 +64,13 @@ export function useInstruments(): UseInstrumentsResult {
       map.set(item.id, item);
     });
 
+    // 5. Datos en vivo: DolarAPI (Divisas)
+    dolarApi.instruments.forEach((item) => {
+      map.set(item.id, item);
+    });
+
     return Array.from(map.values());
-  }, [argDatos.instruments, coinGecko.instruments, data912.instruments]);
+  }, [argDatos.instruments, coinGecko.instruments, data912.instruments, dolarApi.instruments]);
 
   const categoryCounts = useMemo(() => {
     const counts: Record<Categoria, number> = {
@@ -68,6 +81,7 @@ export function useInstruments(): UseInstrumentsResult {
       acciones: 0,
       bonos: 0,
       eeuu: 0,
+      divisas: 0,
     };
     instruments.forEach((item) => {
       if (counts[item.categoria] !== undefined) {
@@ -82,6 +96,7 @@ export function useInstruments(): UseInstrumentsResult {
       argDatos.refresh(),
       coinGecko.refresh(),
       data912.refresh(),
+      dolarApi.refresh(),
     ]);
   };
 
