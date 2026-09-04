@@ -70,28 +70,36 @@ export function normalizePlazosFijos(items: PlazoFijoRaw[]): Instrumento[] {
     });
 }
 
-// Normaliza FCI de Mercado de Dinero
-export function normalizeFCIs(items: FCIRaw[]): Instrumento[] {
+// Normaliza FCI (cualquiera de las 6 categorías que expone la CNV vía
+// ArgentinaDatos: mercadoDinero, rentaFija, rentaVariable, rentaMixta,
+// retornoTotal, otros). El rendimiento mostrado es un cálculo propio —
+// variación real de la cuotaparte (VCP) anualizada sobre ~30 días reales—
+// en vez de una estimación sintética; los fondos sin al menos 30 días de
+// historial (o sin dato reciente comparable) directamente no se muestran,
+// para no inventar un número.
+export function normalizeFCIs(
+  items: FCIRaw[],
+  categoriaLabel: string,
+  rendimientos: Map<string, { tasaAnualizada: number; diasReales: number }>
+): Instrumento[] {
   if (!Array.isArray(items)) return [];
 
-  // Fondos reconocidos o con mayor patrimonio
   return items
-    .filter((f) => f.fondo && f.vcp > 0)
-    .slice(0, 15)
+    .filter((f) => f.fondo && f.vcp > 0 && rendimientos.has(f.fondo))
     .map((f) => {
-      // Estimación de rendimiento o valor
-      const tasaEst = 34.5 + ((f.vcp % 50) / 10);
+      const rend = rendimientos.get(f.fondo)!;
+      const tasa = Number(rend.tasaAnualizada.toFixed(2));
       return {
         id: `fci-${slugify(f.fondo)}`,
         nombre: `FCI ${f.fondo}`,
         categoria: "pesos" as Categoria,
-        entidadOFuente: "CAFCI / Mercado de Dinero",
-        tasaORendimientoActual: Number(tasaEst.toFixed(2)),
-        variacion24h: 0.15,
+        entidadOFuente: `CAFCI / ${categoriaLabel}`,
+        tasaORendimientoActual: tasa,
+        variacion24h: 0,
         unidad: "TNA",
-        historico: generateSyntheticHistory(tasaEst, 0.8),
+        historico: generateSyntheticHistory(tasa, 0.8),
         actualizadoEn: f.fecha || "Reciente",
-        descripcion: `Fondo Común de Inversión money market de rescate inmediato (T+0).`,
+        descripcion: `Rendimiento anualizado calculado a partir de la variación real de la cuotaparte en los últimos ${rend.diasReales} días (fuente: CNV, vía ArgentinaDatos). No es una TNA oficial publicada por la gestora.`,
       };
     });
 }

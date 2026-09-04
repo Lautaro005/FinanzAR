@@ -2,12 +2,15 @@ import { useState, useMemo, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate, Link } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import CategoryTabs from "./components/CategoryTabs";
+import CategoryTabs, { CategoriaFiltro } from "./components/CategoryTabs";
 import InstrumentTable from "./components/InstrumentTable";
 import InstrumentChart from "./components/InstrumentChart";
 import CompareDrawer, { COMPARISON_COLORS } from "./components/CompareDrawer";
 import InstrumentDetailScreen from "./screens/InstrumentDetailScreen";
 import AboutScreen from "./screens/AboutScreen";
+import NotFoundScreen from "./screens/NotFoundScreen";
+import PrivacyPolicyScreen from "./screens/PrivacyPolicyScreen";
+import { useDocumentMeta } from "./hooks/useDocumentMeta";
 import { Categoria, Instrumento, PuntoHistorico } from "./types";
 import { useInstruments } from "./hooks/useInstruments";
 import { fetchInstrumentHistory } from "./lib/history";
@@ -44,7 +47,12 @@ function Home({
   onClearCompare: () => void;
 }) {
   const navigate = useNavigate();
-  const [tab, setTab] = useState<Categoria>("pesos");
+  useDocumentMeta(
+    "Mercados y Rendimientos",
+    "Tabla comparativa en vivo de plazos fijos, FCI, dólar, criptomonedas, CEDEARs, acciones, bonos y ETFs de EE.UU. disponibles en Argentina.",
+    "/"
+  );
+  const [tab, setTab] = useState<CategoriaFiltro>("todos");
   const [detailInstrument, setDetailInstrument] = useState<Instrumento | null>(null);
   const [quickHistory, setQuickHistory] = useState<{
     data: PuntoHistorico[];
@@ -67,6 +75,7 @@ function Home({
 
   // Filtrar instrumentos por categoría activa
   const categoryInstruments = useMemo(() => {
+    if (tab === "todos") return instruments;
     return instruments.filter((item) => item.categoria === tab);
   }, [instruments, tab]);
 
@@ -197,6 +206,7 @@ function Home({
           setDetailInstrument(null);
         }}
         counts={categoryCounts}
+        total={instruments.length}
       />
 
       {/* Ficha Rápida Detallada si se selecciona en la tabla */}
@@ -273,6 +283,11 @@ function CompareScreen({
   onClearCompare: () => void;
 }) {
   const navigate = useNavigate();
+  useDocumentMeta(
+    "Comparar Instrumentos",
+    "Comparación lado a lado de instrumentos de inversión seleccionados, con gráfico normalizado a 30 días.",
+    "/comparar"
+  );
 
   // Instrumentos activos para comparar (o benchmark inicial si aún no seleccionó)
   const activeCompareInstruments = useMemo(() => {
@@ -633,6 +648,8 @@ export default function App() {
               }
             />
             <Route path="/acerca" element={<AboutScreen />} />
+            <Route path="/privacidad" element={<PrivacyPolicyScreen />} />
+            <Route path="*" element={<NotFoundScreen />} />
           </Routes>
         </div>
         <Footer />

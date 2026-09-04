@@ -1,0 +1,17 @@
+# FinanzAR
+
+> Comparador informativo de instrumentos de ahorro e inversión disponibles en Argentina: plazos fijos, Fondos Comunes de Inversión (FCI), criptopesos, criptomonedas, CEDEARs, acciones locales, bonos soberanos y ETFs/acciones de EE.UU. Los datos provienen de APIs públicas (ArgentinaDatos/CNV/BCRA, CoinGecko, data912.com/BYMA) y se muestran con tasas actuales y gráficos históricos cuando la fuente lo permite.
+
+FinanzAR no es un bróker, ALyC ni entidad regulada: es una herramienta de consulta, no ejecuta operaciones ni brinda asesoramiento financiero.
+
+## Páginas principales
+
+- [Inicio](https://finanzar-delta.vercel.app/): tabla comparativa de todos los instrumentos, filtrable por categoría (Pesos, Cripto, CEDEARs, Acciones, Bonos, EE.UU. o Todos), con buscador por nombre de empresa/fondo o ticker.
+- [Comparar](https://finanzar-delta.vercel.app/comparar): comparación lado a lado de instrumentos seleccionados, con gráfico normalizado a 30 días.
+- [Acerca de](https://finanzar-delta.vercel.app/acerca): metodología, fuentes de datos y frecuencia de actualización.
+- [Política de Privacidad](https://finanzar-delta.vercel.app/privacidad): tratamiento de datos de navegación.
+
+## Notas para agentes / crawlers
+
+- Esta aplicación es una SPA (React) renderizada del lado del cliente. El HTML inicial contiene metadatos generales; el contenido detallado de cada instrumento se carga vía JavaScript al navegar a `/instrumento/{id}`.
+- Los datos de tasas y cotizaciones cambian con frecuencia (algunos en vivo, otros diarios); no asumir que un valor citado sigue vigente sin volver a consultar la página.

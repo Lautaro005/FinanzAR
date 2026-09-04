@@ -1,11 +1,14 @@
 import { Categoria } from "../types";
 
+export type CategoriaFiltro = Categoria | "todos";
+
 interface TabConfig {
-  id: Categoria;
+  id: CategoriaFiltro;
   label: string;
 }
 
 const TABS: TabConfig[] = [
+  { id: "todos", label: "Todos" },
   { id: "pesos", label: "Pesos" },
   { id: "cripto", label: "Cripto" },
   { id: "cedears", label: "CEDEARs" },
@@ -18,17 +21,19 @@ export default function CategoryTabs({
   active,
   onChange,
   counts,
+  total,
 }: {
-  active: Categoria;
-  onChange: (c: Categoria) => void;
+  active: CategoriaFiltro;
+  onChange: (c: CategoriaFiltro) => void;
   counts?: Partial<Record<Categoria, number>>;
+  total?: number;
 }) {
   return (
     <nav className="w-full bg-finanzar-surface border-b border-finanzar-border mb-6 rounded-t-md">
       <div className="flex space-x-2 sm:space-x-8 overflow-x-auto px-4 sm:px-6">
         {TABS.map((tab) => {
           const isSelected = active === tab.id;
-          const count = counts?.[tab.id];
+          const count = tab.id === "todos" ? total : counts?.[tab.id as Categoria];
 
           return (
             <button
@@ -59,4 +64,3 @@ export default function CategoryTabs({
     </nav>
   );
 }
-

@@ -106,7 +106,7 @@ export default function InstrumentTable({
         <div className="relative flex-1 max-w-md">
           <input
             type="text"
-            placeholder="Buscar por nombre, ticker o entidad..."
+            placeholder="Buscar por empresa, fondo, ticker o entidad..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-9 pr-4 py-2 bg-finanzar-bg border border-finanzar-border rounded text-sm text-finanzar-textMain placeholder-finanzar-textSecondary focus:outline-none focus:ring-1 focus:ring-finanzar-accent"
@@ -245,7 +245,10 @@ export default function InstrumentTable({
                             {item.categoria}
                           </span>
                           {item.ticker && (
-                            <span className="text-[11px] font-mono text-finanzar-textSecondary">
+                            <span
+                              className="text-[10px] font-mono font-semibold px-1.5 py-0.2 rounded bg-finanzar-bg border border-finanzar-borderSubtle text-finanzar-textSecondary"
+                              title={`Ticker: ${item.ticker}`}
+                            >
                               {item.ticker}
                             </span>
                           )}

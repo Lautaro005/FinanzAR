@@ -52,8 +52,28 @@ export const getPlazosFijos = async (): Promise<PlazoFijoRaw[]> => {
   return fetchArgDatos<PlazoFijoRaw[]>("/finanzas/tasas/plazoFijo");
 };
 
+export type FCICategoria =
+  | "mercadoDinero"
+  | "rentaFija"
+  | "rentaVariable"
+  | "rentaMixta"
+  | "retornoTotal"
+  | "otros";
+
+export const getFCIUltimo = async (categoria: FCICategoria): Promise<FCIRaw[]> => {
+  return fetchArgDatos<FCIRaw[]>(`/finanzas/fci/${categoria}/ultimo`);
+};
+
+// Fecha en formato YYYY/MM/DD. Se usa para reconstruir un punto de comparación
+// pasado (ej. ~30 días atrás) y así calcular un rendimiento anualizado real
+// a partir de la variación de la cuotaparte, en vez de una estimación.
+export const getFCIPorFecha = async (categoria: FCICategoria, fecha: string): Promise<FCIRaw[]> => {
+  return fetchArgDatos<FCIRaw[]>(`/finanzas/fci/${categoria}/${fecha}`);
+};
+
+// Alias retrocompatible.
 export const getFCIMercadoDinero = async (): Promise<FCIRaw[]> => {
-  return fetchArgDatos<FCIRaw[]>("/finanzas/fci/mercadoDinero/ultimo");
+  return getFCIUltimo("mercadoDinero");
 };
 
 export const getCriptoPesos = async (): Promise<CriptoPesoRaw[]> => {

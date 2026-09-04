@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function Footer() {
   const sources = [
     { name: "argentinadatos.com", url: "https://argentinadatos.com", desc: "Plazos fijos, FCI y dólar" },
@@ -39,9 +41,17 @@ export default function Footer() {
             ))}
           </div>
 
-          <p className="text-finanzar-textMuted text-right">
-            © {new Date().getFullYear()} FinanzAR. Diseñado bajo estándares de prensa financiera seria.
-          </p>
+          <div className="flex items-center gap-4">
+            <Link to="/acerca" className="text-finanzar-textSecondary hover:text-finanzar-primary underline">
+              Acerca de
+            </Link>
+            <Link to="/privacidad" className="text-finanzar-textSecondary hover:text-finanzar-primary underline">
+              Privacidad
+            </Link>
+            <p className="text-finanzar-textMuted text-right">
+              © {new Date().getFullYear()} FinanzAR. Diseñado bajo estándares de prensa financiera seria.
+            </p>
+          </div>
         </div>
       </div>
     </footer>

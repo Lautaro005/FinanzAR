@@ -1,4 +1,11 @@
+import { useDocumentMeta } from "../hooks/useDocumentMeta";
+
 export default function AboutScreen() {
+  useDocumentMeta(
+    "Acerca de",
+    "Metodología, fuentes de datos públicas y frecuencia de actualización utilizadas por FinanzAR.",
+    "/acerca"
+  );
   const sources = [
     {
       categoria: "Plazo Fijo & Tasas",

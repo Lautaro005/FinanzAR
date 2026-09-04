@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { getPlazosFijos, getFCIMercadoDinero, getCriptoPesos, PlazoFijoRaw, FCIRaw, CriptoPesoRaw } from "../lib/api/argentinaDatos";
+import { getPlazosFijos, getCriptoPesos, PlazoFijoRaw, FCIRaw, CriptoPesoRaw } from "../lib/api/argentinaDatos";
+import { fetchAllFCIsConRendimiento } from "../lib/fciRendimiento";
 import { normalizePlazosFijos, normalizeFCIs, normalizeCriptoPesos } from "../lib/normalize";
 import { getCachedData, cacheData } from "../lib/cache";
 import { Instrumento } from "../types";
@@ -26,13 +27,13 @@ export const useArgentinaDatos = (): ArgentinaDatosState => {
     setLoading(true);
     setError(null);
 
-    const cacheKey = "arg_datos_combined";
+    const cacheKey = "arg_datos_combined_v2";
     const cached = getCachedData<{
       plazosFijos: PlazoFijoRaw[];
       fcis: FCIRaw[];
       criptoPesos: CriptoPesoRaw[];
       instruments: Instrumento[];
-    }>(cacheKey, 15);
+    }>(cacheKey, 20);
 
     if (cached) {
       setPlazosFijos(cached.plazosFijos);
@@ -44,29 +45,34 @@ export const useArgentinaDatos = (): ArgentinaDatosState => {
     }
 
     try {
-      const [pfRes, fciRes, cpRes] = await Promise.allSettled([
+      const [pfRes, fciCategoriasRes, cpRes] = await Promise.allSettled([
         getPlazosFijos(),
-        getFCIMercadoDinero(),
+        fetchAllFCIsConRendimiento(),
         getCriptoPesos(),
       ]);
 
       const pfData = pfRes.status === "fulfilled" ? pfRes.value : [];
-      const fciData = fciRes.status === "fulfilled" ? fciRes.value : [];
+      const fciCategorias = fciCategoriasRes.status === "fulfilled" ? fciCategoriasRes.value : [];
       const cpData = cpRes.status === "fulfilled" ? cpRes.value : [];
 
       const normPf = normalizePlazosFijos(pfData);
-      const normFci = normalizeFCIs(fciData);
+      const normFciPorCategoria = fciCategorias.map((c) =>
+        normalizeFCIs(c.items, c.categoriaLabel, c.rendimientos)
+      );
+      const normFci = normFciPorCategoria.flat();
       const normCp = normalizeCriptoPesos(cpData);
       const combined = [...normPf, ...normCp, ...normFci];
 
+      const fciDataFlat = fciCategorias.flatMap((c) => c.items);
+
       setPlazosFijos(pfData);
-      setFcis(fciData);
+      setFcis(fciDataFlat);
       setCriptoPesos(cpData);
       setInstruments(combined);
 
       cacheData(cacheKey, {
         plazosFijos: pfData,
-        fcis: fciData,
+        fcis: fciDataFlat,
         criptoPesos: cpData,
         instruments: combined,
       });
@@ -83,4 +89,3 @@ export const useArgentinaDatos = (): ArgentinaDatosState => {
 
   return { plazosFijos, fcis, criptoPesos, instruments, loading, error, refresh: load };
 };
-

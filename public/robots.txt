@@ -1,0 +1,8 @@
+# FinanzAR — robots.txt
+# Se permite el acceso a todos los rastreadores, incluidos los de motores de
+# búsqueda y los de asistentes de IA (GPTBot, ClaudeBot, PerplexityBot, etc.),
+# ya que el contenido es información pública comparativa.
+User-agent: *
+Allow: /
+
+Sitemap: https://finanzar-delta.vercel.app/sitemap.xml

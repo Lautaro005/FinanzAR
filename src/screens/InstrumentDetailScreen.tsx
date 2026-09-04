@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { Instrumento, RangoTemporal, PuntoHistorico } from "../types";
 import InstrumentChart from "../components/InstrumentChart";
 import { fetchInstrumentHistory } from "../lib/history";
+import { useDocumentMeta } from "../hooks/useDocumentMeta";
 
 interface InstrumentDetailScreenProps {
   instruments: Instrumento[];
@@ -28,6 +29,14 @@ export default function InstrumentDetailScreen({
   const instrument = useMemo(() => {
     return instruments.find((item) => item.id === decodedId);
   }, [instruments, decodedId]);
+
+  useDocumentMeta(
+    instrument ? instrument.nombre : "Instrumento no encontrado",
+    instrument
+      ? `Ficha completa de ${instrument.nombre}: tasa/rendimiento actual, variación y gráfico histórico. Fuente: ${instrument.entidadOFuente}.`
+      : "El instrumento solicitado no está disponible.",
+    `/instrumento/${encodeURIComponent(decodedId)}`
+  );
 
   useEffect(() => {
     if (!instrument) return;
