@@ -6,6 +6,7 @@
 import {
   CasaDolar,
   Categoria,
+  FondoComun,
   Instrumento,
   PlazoFijo,
   PortfolioConfig,
@@ -18,6 +19,7 @@ import {
    ------------------------------------------------------------------ */
 export const KEY_TRANSACCIONES = "finanzar_portfolio_transacciones_v1";
 export const KEY_PLAZOS_FIJOS = "finanzar_portfolio_plazos_fijos_v1";
+export const KEY_FONDOS_COMUNES = "finanzar_portfolio_fci_v1";
 export const KEY_HISTORIAL = "finanzar_portfolio_historial_v1";
 export const KEY_CONFIG = "finanzar_portfolio_config_v1";
 
@@ -60,6 +62,8 @@ export const loadTransacciones = () => readJson<Transaccion[]>(KEY_TRANSACCIONES
 export const saveTransacciones = (t: Transaccion[]) => writeJson(KEY_TRANSACCIONES, t);
 export const loadPlazosFijos = () => readJson<PlazoFijo[]>(KEY_PLAZOS_FIJOS, []);
 export const savePlazosFijos = (p: PlazoFijo[]) => writeJson(KEY_PLAZOS_FIJOS, p);
+export const loadFondosComunes = () => readJson<FondoComun[]>(KEY_FONDOS_COMUNES, []);
+export const saveFondosComunes = (f: FondoComun[]) => writeJson(KEY_FONDOS_COMUNES, f);
 export const loadHistorial = () => readJson<PuntoPortfolio[]>(KEY_HISTORIAL, []);
 export const saveHistorial = (h: PuntoPortfolio[]) => writeJson(KEY_HISTORIAL, h);
 export const loadConfig = (): PortfolioConfig => ({
@@ -268,6 +272,58 @@ export function estadoEfectivo(pf: PlazoFijo, hoy = hoyISO()): PlazoFijo["estado
 export const esPlazoFijoVigente = (pf: PlazoFijo) => pf.estado === "activo";
 
 /* ------------------------------------------------------------------
+   Fondos comunes "por rendimiento" — devengo lineal de la TNA del fondo
+   ------------------------------------------------------------------ */
+export interface FondoComunValuado extends FondoComun {
+  instrumento?: Instrumento;
+  /** TNA usada para valuar (fija > en vivo > última guardada); null si no hay ninguna. */
+  tnaUsada: number | null;
+  origenTna: "fija" | "vivo" | "guardada" | "ninguna";
+  valorActual: number;
+  devengado: number;
+}
+
+export function valuarFondoComun(fc: FondoComun, instrumentos: Instrumento[], hoy = hoyISO()): FondoComunValuado {
+  const instrumento = fc.instrumentId ? instrumentos.find((i) => i.id === fc.instrumentId) : undefined;
+  let tnaUsada: number | null = null;
+  let origenTna: FondoComunValuado["origenTna"] = "ninguna";
+  if (typeof fc.tnaFija === "number") {
+    tnaUsada = fc.tnaFija;
+    origenTna = "fija";
+  } else if (instrumento) {
+    tnaUsada = instrumento.tasaORendimientoActual;
+    origenTna = "vivo";
+  } else if (typeof fc.ultimaTna === "number") {
+    tnaUsada = fc.ultimaTna;
+    origenTna = "guardada";
+  }
+  const dias = Math.max(0, diasEntre(fc.fechaInicio, hoy));
+  const devengado = tnaUsada !== null ? fc.capital * (tnaUsada / 100 / 365) * dias : 0;
+  return { ...fc, instrumento, tnaUsada, origenTna, valorActual: fc.capital + devengado, devengado };
+}
+
+/**
+ * Rescate (total o parcial) de un fondo: se retira `monto` del valor actual;
+ * la parte proporcional del capital deja de devengar y la diferencia se
+ * realiza como ganancia/pérdida.
+ */
+export function aplicarRescate(fc: FondoComunValuado, monto: number, fecha = hoyISO()): FondoComun {
+  const valor = fc.valorActual;
+  if (valor <= 0) return { ...fc, estado: "rescatado", capital: 0 };
+  const proporcion = Math.min(1, monto / valor);
+  const capitalRetirado = fc.capital * proporcion;
+  const total = proporcion >= 0.999;
+  const { instrumento: _i, tnaUsada: _t, origenTna: _o, valorActual: _v, devengado: _d, ...base } = fc;
+  return {
+    ...base,
+    capital: total ? 0 : Number((fc.capital - capitalRetirado).toFixed(2)),
+    realizada: Number((fc.realizada + (monto - capitalRetirado)).toFixed(2)),
+    rescates: [...fc.rescates, { fecha, monto: Number(monto.toFixed(2)) }],
+    estado: total ? "rescatado" : "activo",
+  };
+}
+
+/* ------------------------------------------------------------------
    Conversión USD → ARS y totales consolidados
    ------------------------------------------------------------------ */
 export function cotizacionDolar(
@@ -293,6 +349,7 @@ export interface TotalesPortfolio {
 export function calcularTotales(
   posiciones: Posicion[],
   plazosFijos: PlazoFijo[],
+  fondosComunes: FondoComunValuado[],
   dolar: number | null,
   hoy = hoyISO()
 ): TotalesPortfolio {
@@ -321,6 +378,14 @@ export function calcularTotales(
   plazosFijos.filter(esPlazoFijoVigente).forEach((pf) => {
     capitalInvertido += pf.capital;
     valorTotal += pf.capital + devengadoPlazoFijo(pf, hoy);
+  });
+
+  fondosComunes.forEach((fc) => {
+    realizada += fc.realizada;
+    if (fc.estado !== "activo") return;
+    capitalInvertido += fc.capital;
+    if (fc.tnaUsada === null) sinValuar++;
+    valorTotal += fc.valorActual;
   });
 
   const resultado = valorTotal - capitalInvertido;
@@ -402,6 +467,7 @@ export interface PortfolioBackup {
   exportadoEn: string;
   transacciones: Transaccion[];
   plazosFijos: PlazoFijo[];
+  fondosComunes: FondoComun[];
   historial: PuntoPortfolio[];
   config: PortfolioConfig;
 }
@@ -413,6 +479,7 @@ export function armarBackup(): PortfolioBackup {
     exportadoEn: new Date().toISOString(),
     transacciones: loadTransacciones(),
     plazosFijos: loadPlazosFijos(),
+    fondosComunes: loadFondosComunes(),
     historial: loadHistorial(),
     config: loadConfig(),
   };
@@ -435,13 +502,18 @@ export function parsearBackup(texto: string): PortfolioBackup {
   const pfOk = data.plazosFijos.every(
     (p: any) => p && typeof p.id === "string" && typeof p.capital === "number" && typeof p.tna === "number" && typeof p.fechaInicio === "string" && typeof p.fechaVencimiento === "string"
   );
-  if (!txOk || !pfOk) throw new Error("El backup tiene registros con un formato que no se reconoce.");
+  const fondos = Array.isArray(data.fondosComunes) ? data.fondosComunes : [];
+  const fcOk = fondos.every(
+    (f: any) => f && typeof f.id === "string" && typeof f.fondo === "string" && typeof f.capital === "number" && typeof f.fechaInicio === "string"
+  );
+  if (!txOk || !pfOk || !fcOk) throw new Error("El backup tiene registros con un formato que no se reconoce.");
   return {
     app: "FinanzAR",
     version: 1,
     exportadoEn: typeof data.exportadoEn === "string" ? data.exportadoEn : new Date().toISOString(),
     transacciones: data.transacciones,
     plazosFijos: data.plazosFijos,
+    fondosComunes: fondos.map((f: any) => ({ realizada: 0, rescates: [], estado: "activo", ...f })),
     historial: Array.isArray(data.historial) ? data.historial : [],
     config: { ...DEFAULT_CONFIG, ...(data.config || {}) },
   };

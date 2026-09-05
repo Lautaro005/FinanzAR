@@ -86,3 +86,27 @@ export interface PortfolioConfig {
   /** Última cotización usada, como respaldo si Divisas no cargó en vivo. */
   ultimoDolar?: { casa: CasaDolar; valor: number; fecha: string };
 }
+
+/**
+ * Posición en un Fondo Común de Inversión cargada "por rendimiento": sin
+ * cuotapartes ni vencimiento — capital que devenga la TNA del fondo (en vivo
+ * o fija) desde la fecha de suscripción hasta que se rescata.
+ */
+export interface FondoComun {
+  id: string;
+  /** `Instrumento.id` del FCI (categoría "fci") para tomar su rendimiento en vivo. */
+  instrumentId?: string;
+  fondo: string;
+  /** Capital vigente, neto de rescates parciales. */
+  capital: number;
+  fechaInicio: string;
+  /** Si está definida se usa en lugar del rendimiento en vivo del fondo. */
+  tnaFija?: number;
+  /** Última TNA en vivo vista para este fondo (respaldo si la fuente no carga). */
+  ultimaTna?: number;
+  estado: "activo" | "rescatado";
+  /** Ganancia realizada acumulada por rescates. */
+  realizada: number;
+  rescates: { fecha: string; monto: number }[];
+  notas?: string;
+}

@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDocumentMeta } from "../hooks/useDocumentMeta";
 import { usePortfolio } from "../hooks/usePortfolio";
-import { Instrumento, PlazoFijo, Transaccion } from "../types";
+import { FondoComun, Instrumento, PlazoFijo, Transaccion } from "../types";
 import {
   armarBackup,
   CASAS_DOLAR,
@@ -13,6 +13,7 @@ import {
   formatMoneda,
   formatPct,
   formatPrecio,
+  FondoComunValuado,
   parsearBackup,
   plazoEnDias,
   Posicion,
@@ -21,6 +22,7 @@ import {
 import PortfolioChart from "../components/portfolio/PortfolioChart";
 import TransactionModal from "../components/portfolio/TransactionModal";
 import PlazoFijoModal from "../components/portfolio/PlazoFijoModal";
+import FondoComunModal from "../components/portfolio/FondoComunModal";
 import { BotonPrimario, BotonSecundario } from "../components/portfolio/Modal";
 
 const CATEGORIA_LABEL: Record<string, string> = {
@@ -68,6 +70,9 @@ type ModalState =
   | { tipo: "alta-pf" }
   | { tipo: "renovar-pf"; plazoFijo: PlazoFijo }
   | { tipo: "editar-pf"; plazoFijo: PlazoFijo }
+  | { tipo: "alta-fci"; capitalInicial?: number }
+  | { tipo: "editar-fci"; fondo: FondoComunValuado }
+  | { tipo: "rescate-fci"; fondo: FondoComunValuado }
   | null;
 
 export default function PortfolioScreen({ instruments, isLive }: { instruments: Instrumento[]; isLive: boolean }) {
@@ -80,9 +85,10 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
   const p = usePortfolio(instruments, isLive);
   const [modal, setModal] = useState<ModalState>(null);
   const [verHistorialPf, setVerHistorialPf] = useState(false);
+  const [verHistorialFci, setVerHistorialFci] = useState(false);
   const [confirmBorrar, setConfirmBorrar] = useState(false);
   const [aviso, setAviso] = useState<{ tipo: "ok" | "error"; texto: string } | null>(null);
-  const [reinvertir, setReinvertir] = useState<{ entidad: string; monto: number } | null>(null);
+  const [reinvertir, setReinvertir] = useState<{ origen: string; monto: number } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const hoy = new Date();
@@ -95,6 +101,9 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
     () => p.plazosFijos.filter((pf) => pf.estado !== "activo").sort((a, b) => b.fechaVencimiento.localeCompare(a.fechaVencimiento)),
     [p.plazosFijos]
   );
+
+  const fondosActivos = useMemo(() => p.fondosValuados.filter((f) => f.estado === "activo"), [p.fondosValuados]);
+  const fondosHistorial = useMemo(() => p.fondosValuados.filter((f) => f.estado !== "activo"), [p.fondosValuados]);
 
   const movimientos = useMemo(
     () => [...p.transacciones].sort((a, b) => b.fecha.localeCompare(a.fecha) || b.id.localeCompare(a.id)),
@@ -136,7 +145,7 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
       p.importarBackup(backup);
       setAviso({
         tipo: "ok",
-        texto: `Backup importado: ${backup.transacciones.length} movimientos y ${backup.plazosFijos.length} plazos fijos.`,
+        texto: `Backup importado: ${backup.transacciones.length} movimientos, ${backup.plazosFijos.length} plazos fijos y ${backup.fondosComunes.length} FCI.`,
       });
     } catch (e: any) {
       setAviso({ tipo: "error", texto: e?.message || "No se pudo importar el archivo." });
@@ -158,20 +167,22 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
     </div>
   );
 
+  const accionClass =
+    "inline-block px-3 py-1 rounded-sm text-xs font-medium transition-colors text-finanzar-textSecondary hover:text-finanzar-primary hover:bg-finanzar-surfaceHover disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-finanzar-accent";
+
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[80vh]">
-      {/* Cabecera */}
-      <div className="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <span className="text-xs uppercase tracking-wider font-semibold text-finanzar-accent">Seguimiento personal</span>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-finanzar-primary tracking-tight mt-1">Portfolio</h1>
-          <p className="text-sm text-finanzar-textSecondary mt-1">
-            Cargá tus tenencias y seguí su valor con las mismas cotizaciones de Mercados. Todo queda guardado en este navegador.
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <BotonSecundario onClick={exportar} disabled={!p.tieneDatos}>⤓ Exportar backup</BotonSecundario>
-          <BotonSecundario onClick={() => fileRef.current?.click()}>⤒ Importar</BotonSecundario>
+    <>
+      {/* Barra de acciones del portfolio, pegada debajo del header (mismo formato que tenía la nav) */}
+      <div className="w-full border-b border-finanzar-borderSubtle bg-finanzar-bg sticky top-16 z-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex justify-center">
+          <ul className="flex flex-wrap items-center justify-center gap-x-1 sm:gap-x-2 gap-y-1 text-xs font-medium">
+            <li><button onClick={() => setModal({ tipo: "compra" })} className={`${accionClass} text-finanzar-primary font-semibold`}>+ Agregar compra</button></li>
+            <li><button onClick={() => setModal({ tipo: "alta-fci" })} className={accionClass}>+ FCI</button></li>
+            <li><button onClick={() => setModal({ tipo: "alta-pf" })} className={accionClass}>+ Plazo fijo</button></li>
+            <li><span className="text-finanzar-borderStrong select-none">·</span></li>
+            <li><button onClick={exportar} disabled={!p.tieneDatos} className={accionClass}>⤓ Exportar backup</button></li>
+            <li><button onClick={() => fileRef.current?.click()} className={accionClass}>⤒ Importar</button></li>
+          </ul>
           <input
             ref={fileRef}
             type="file"
@@ -183,9 +194,17 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
               e.target.value = "";
             }}
           />
-          <BotonSecundario onClick={() => setModal({ tipo: "alta-pf" })}>+ Plazo fijo</BotonSecundario>
-          <BotonPrimario onClick={() => setModal({ tipo: "compra" })}>+ Agregar compra</BotonPrimario>
         </div>
+      </div>
+
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[80vh]">
+      {/* Cabecera */}
+      <div className="mb-6">
+        <span className="text-xs uppercase tracking-wider font-semibold text-finanzar-accent">Seguimiento personal</span>
+        <h1 className="font-serif text-3xl sm:text-4xl font-bold text-finanzar-primary tracking-tight mt-1">Portfolio</h1>
+        <p className="text-sm text-finanzar-textSecondary mt-1">
+          Cargá tus tenencias y seguí su valor con las mismas cotizaciones de Mercados. Todo queda guardado en este navegador.
+        </p>
       </div>
 
       {aviso && (
@@ -204,12 +223,14 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
       {reinvertir && (
         <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 py-3 rounded-md border border-finanzar-accent bg-finanzar-accentSubtle text-xs text-finanzar-textMain">
           <span>
-            Retiraste el plazo fijo de <strong>{reinvertir.entidad}</strong>: quedaron disponibles{" "}
-            <strong>{formatMoneda(reinvertir.monto)}</strong>. ¿Los reinvertís en otro instrumento?
+            {reinvertir.origen}: quedaron disponibles <strong>{formatMoneda(reinvertir.monto)}</strong>. ¿Los reinvertís?
           </span>
           <div className="flex gap-2">
             <BotonSecundario onClick={() => { setModal({ tipo: "compra", montoInicial: reinvertir.monto }); setReinvertir(null); }}>
-              Reinvertir
+              En un instrumento
+            </BotonSecundario>
+            <BotonSecundario onClick={() => { setModal({ tipo: "alta-fci", capitalInicial: reinvertir.monto }); setReinvertir(null); }}>
+              En un FCI
             </BotonSecundario>
             <BotonSecundario onClick={() => setReinvertir(null)}>Ahora no</BotonSecundario>
           </div>
@@ -221,11 +242,12 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
         <div className="bg-finanzar-surface border border-finanzar-border rounded-md p-10 text-center shadow-sm mb-8">
           <h2 className="font-serif text-2xl font-bold text-finanzar-primary">Tu portfolio está vacío</h2>
           <p className="text-sm text-finanzar-textSecondary mt-2 max-w-xl mx-auto">
-            Agregá una compra de cualquier instrumento de Mercados (FCI, cripto, CEDEARs, acciones, bonos, EE.UU., divisas)
-            o constituí un plazo fijo. Podés cargar operaciones pasadas con la fecha y el precio que realmente pagaste.
+            Agregá una compra de cualquier instrumento de Mercados (cripto, CEDEARs, acciones, bonos, EE.UU., divisas),
+            suscribí un FCI o constituí un plazo fijo. Podés cargar operaciones pasadas con la fecha y el precio que realmente pagaste.
           </p>
           <div className="flex flex-wrap justify-center gap-2 mt-6">
             <BotonPrimario onClick={() => setModal({ tipo: "compra" })}>+ Agregar compra</BotonPrimario>
+            <BotonSecundario onClick={() => setModal({ tipo: "alta-fci" })}>+ FCI</BotonSecundario>
             <BotonSecundario onClick={() => setModal({ tipo: "alta-pf" })}>+ Plazo fijo</BotonSecundario>
             <BotonSecundario onClick={() => fileRef.current?.click()}>Importar backup</BotonSecundario>
           </div>
@@ -238,7 +260,7 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
         <>
           {/* KPIs + selector de dólar */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-            <Kpi label="Valor total (ARS)" valor={formatMoneda(p.totales.valorTotal, "ARS", true)} sub={`Mercado + plazos fijos · USD al ${casaLabel.toLowerCase()}`} />
+            <Kpi label="Valor total (ARS)" valor={formatMoneda(p.totales.valorTotal, "ARS", true)} sub={`Mercado + FCI + plazos fijos · USD al ${casaLabel.toLowerCase()}`} />
             <Kpi label="Capital invertido" valor={formatMoneda(p.totales.capitalInvertido, "ARS", true)} sub="Costo de lo que tenés hoy" />
             <Kpi
               label="Resultado no realizado"
@@ -463,7 +485,7 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
                                     <button
                                       onClick={() => {
                                         p.retirarPlazoFijo(pf.id);
-                                        setReinvertir({ entidad: pf.entidad, monto: Number(finales.toFixed(2)) });
+                                        setReinvertir({ origen: `Retiraste el plazo fijo de ${pf.entidad}`, monto: Number(finales.toFixed(2)) });
                                       }}
                                       className="text-finanzar-negative hover:underline font-semibold"
                                     >
@@ -479,6 +501,94 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
                               ) : (
                                 <button onClick={() => p.eliminarPlazoFijo(pf.id)} className="text-finanzar-textSecondary hover:text-finanzar-negative underline">Eliminar</button>
                               )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </section>
+
+          {/* Tabla de FCI por rendimiento */}
+          <section className="mb-8">
+            <div className="flex items-end justify-between mb-2 px-1">
+              <div>
+                <h2 className="font-serif text-xl font-bold text-finanzar-primary">Fondos comunes de inversión</h2>
+                <p className="text-xs text-finanzar-textSecondary">Capital que devenga el rendimiento del fondo (en vivo o fijo) hasta que lo rescatás. Sin vencimiento.</p>
+              </div>
+              <div className="flex gap-2">
+                {fondosHistorial.length > 0 && (
+                  <BotonSecundario onClick={() => setVerHistorialFci((v) => !v)}>
+                    {verHistorialFci ? "Ocultar" : "Ver"} rescatados ({fondosHistorial.length})
+                  </BotonSecundario>
+                )}
+                <BotonSecundario onClick={() => setModal({ tipo: "alta-fci" })}>+ FCI</BotonSecundario>
+              </div>
+            </div>
+            <div className="w-full bg-finanzar-surface rounded-md border border-finanzar-border shadow-sm overflow-hidden">
+              {fondosActivos.length === 0 && !(verHistorialFci && fondosHistorial.length > 0) ? (
+                <p className="px-4 py-8 text-center text-sm text-finanzar-textSecondary">Sin FCI suscriptos.</p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs">
+                    <thead className="bg-finanzar-bg text-[11px] uppercase tracking-wider text-finanzar-textSecondary">
+                      <tr>
+                        <th className="text-left px-4 py-2.5 font-medium">Fondo</th>
+                        <th className="text-right px-3 py-2.5 font-medium">Capital</th>
+                        <th className="text-right px-3 py-2.5 font-medium">TNA</th>
+                        <th className="text-right px-3 py-2.5 font-medium">Suscripción</th>
+                        <th className="text-right px-3 py-2.5 font-medium">Devengado</th>
+                        <th className="text-right px-3 py-2.5 font-medium">Valor actual</th>
+                        <th className="text-right px-3 py-2.5 font-medium">Realizado</th>
+                        <th className="text-left px-3 py-2.5 font-medium">Estado</th>
+                        <th className="text-right px-4 py-2.5 font-medium">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-finanzar-borderSubtle">
+                      {[...fondosActivos, ...(verHistorialFci ? fondosHistorial : [])].map((fc) => {
+                        const activo = fc.estado === "activo";
+                        const origen =
+                          fc.origenTna === "vivo" ? "en vivo" : fc.origenTna === "fija" ? "fija" : fc.origenTna === "guardada" ? "última guardada" : "sin dato";
+                        return (
+                          <tr key={fc.id} className={`hover:bg-finanzar-surfaceHover ${!activo ? "opacity-60" : ""}`}>
+                            <td className="px-4 py-3">
+                              <p className="font-medium text-finanzar-textMain truncate max-w-[260px]">{fc.fondo}</p>
+                              <div className="flex items-center gap-1.5 mt-0.5">
+                                <span className={`px-1.5 py-0.5 rounded-xs text-[10px] uppercase tracking-wider font-semibold ${badgeClass("fci")}`}>FCI</span>
+                                {fc.instrumento && (
+                                  <Link to={`/instrumento/${encodeURIComponent(fc.instrumento.id)}`} className="text-[10px] text-finanzar-primary hover:text-finanzar-accent underline">Detalle</Link>
+                                )}
+                                {fc.notas && <span className="text-[10px] text-finanzar-textMuted truncate max-w-[160px]">{fc.notas}</span>}
+                              </div>
+                            </td>
+                            <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-textMain">{activo ? formatMoneda(fc.capital, "ARS", true) : "—"}</td>
+                            <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-textSecondary">
+                              {fc.tnaUsada !== null ? `${fc.tnaUsada.toFixed(2)}%` : "—"}
+                              <span className="block text-[10px] text-finanzar-textMuted">{origen}</span>
+                            </td>
+                            <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-textSecondary">{formatFechaCorta(fc.fechaInicio)}</td>
+                            <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-positive">{activo ? `+${formatMoneda(fc.devengado, "ARS", true)}` : "—"}</td>
+                            <td className="px-3 py-3 text-right font-mono tabular-nums font-semibold text-finanzar-primary">{activo ? formatMoneda(fc.valorActual, "ARS", true) : "—"}</td>
+                            <td className={`px-3 py-3 text-right font-mono tabular-nums ${fc.realizada >= 0 ? "text-finanzar-positive" : "text-finanzar-negative"}`}>
+                              {fc.rescates.length > 0 ? `${fc.realizada >= 0 ? "+" : ""}${formatMoneda(fc.realizada, "ARS", true)}` : "—"}
+                            </td>
+                            <td className="px-3 py-3">
+                              <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] font-semibold ${activo ? ESTADO_PF.activo.cls : ESTADO_PF.retirado.cls}`}>
+                                <span className={`w-1.5 h-1.5 rounded-full ${activo ? ESTADO_PF.activo.dot : ESTADO_PF.retirado.dot}`} />
+                                {activo ? "Activo" : "Rescatado"}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3 text-right whitespace-nowrap">
+                              {activo ? (
+                                <>
+                                  <button onClick={() => setModal({ tipo: "rescate-fci", fondo: fc })} className="text-finanzar-negative hover:underline font-semibold mr-3">Rescatar</button>
+                                  <button onClick={() => setModal({ tipo: "editar-fci", fondo: fc })} className="text-finanzar-primary hover:text-finanzar-accent underline mr-3">Editar</button>
+                                </>
+                              ) : null}
+                              <button onClick={() => p.eliminarFondoComun(fc.id)} className="text-finanzar-textSecondary hover:text-finanzar-negative underline">Eliminar</button>
                             </td>
                           </tr>
                         );
@@ -630,6 +740,44 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
           onSubmit={(pf) => { p.editarPlazoFijo({ ...modal.plazoFijo, ...pf }); setModal(null); }}
         />
       )}
+      {modal?.tipo === "alta-fci" && (
+        <FondoComunModal
+          modo="alta"
+          instruments={instruments}
+          capitalInicial={modal.capitalInicial}
+          onClose={() => setModal(null)}
+          onSubmit={(fc) => { p.agregarFondoComun(fc); setModal(null); }}
+        />
+      )}
+      {modal?.tipo === "editar-fci" && (
+        <FondoComunModal
+          modo="editar"
+          instruments={instruments}
+          fondo={modal.fondo}
+          onClose={() => setModal(null)}
+          onSubmit={(fc) => {
+            const { instrumento: _i, tnaUsada: _t, origenTna: _o, valorActual: _v, devengado: _d, ...base } = modal.fondo;
+            const actualizado: FondoComun = { ...base, ...fc };
+            p.editarFondoComun(actualizado);
+            setModal(null);
+          }}
+        />
+      )}
+      {modal?.tipo === "rescate-fci" && (
+        <FondoComunModal
+          modo="rescate"
+          instruments={instruments}
+          fondo={modal.fondo}
+          onClose={() => setModal(null)}
+          onSubmit={() => setModal(null)}
+          onRescate={(monto) => {
+            const retirado = p.rescatarFondoComun(modal.fondo.id, monto);
+            setReinvertir({ origen: `Rescataste de ${modal.fondo.fondo}`, monto: Number(retirado.toFixed(2)) });
+            setModal(null);
+          }}
+        />
+      )}
     </main>
+    </>
   );
 }

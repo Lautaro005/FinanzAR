@@ -60,6 +60,7 @@ export default function TransactionModal({
       .filter(
         (i) =>
           i.categoria !== "pesos" && // los plazos fijos tienen su propio flujo
+          i.categoria !== "fci" && // los FCI se cargan por rendimiento desde "+ FCI"
           (i.nombre.toLowerCase().includes(q) ||
             i.entidadOFuente.toLowerCase().includes(q) ||
             i.categoria.toLowerCase().includes(q) ||
@@ -144,7 +145,7 @@ export default function TransactionModal({
       <div className="space-y-4">
         {/* Instrumento */}
         {modo === "compra" && !instrumento ? (
-          <Campo label="Instrumento" hint="Buscá por empresa, fondo, ticker o moneda. Los plazos fijos se cargan desde su propia tabla.">
+          <Campo label="Instrumento" hint="Buscá por empresa, ticker o moneda. Plazos fijos y FCI se cargan desde sus propios botones.">
             <div className="relative">
               <input
                 autoFocus

@@ -162,32 +162,90 @@ async function snapshotPlazoFijo(fecha) {
   console.log(`[snapshot] pesos (plazo fijo): ${ok} entidades`);
 }
 
+// Misma lógica que src/lib/fciRendimiento.ts (mantener sincronizado):
+// rendimiento anualizado contra una "foto completa" del mercado de ~30 días
+// atrás (la API solo tiene fotos completas algunos días, sin cadencia fija),
+// con fallback al par ultimo/penúltimo (ventana corta) por fondo, y descarte
+// de fondos que dejaron de reportar (más de 10 días respecto del dato más nuevo).
+const FCI_API = "https://api.argentinadatos.com/v1/finanzas/fci";
+const fechaApi = (d) =>
+  `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, "0")}/${String(d.getDate()).padStart(2, "0")}`;
+const diasEntreFci = (a, b) => Math.round((new Date(a).getTime() - new Date(b).getTime()) / 86400000);
+const anualizarFci = (vcpActual, vcpBase, dias) => {
+  const tasa = (vcpActual / vcpBase - 1) * (365 / Math.max(1, dias)) * 100;
+  const techo = dias >= 7 ? 400 : 150;
+  return Number.isFinite(tasa) && tasa > -80 && tasa < techo ? tasa : null;
+};
+
+async function buscarSnapshotsCompletosFci() {
+  const hoy = new Date();
+  const dias = [];
+  for (let d = 7; d <= 60; d++) dias.push(d);
+  const res = await Promise.all(
+    dias.map(async (d) => {
+      const f = fechaApi(new Date(hoy.getTime() - d * 86400000));
+      try {
+        const items = await fetchJson(`${FCI_API}/rentaFija/${f}`);
+        return Array.isArray(items) && items.length >= 500 ? { fechaApi: f, diasAtras: d } : null;
+      } catch {
+        return null;
+      }
+    })
+  );
+  return res.filter(Boolean).sort((a, b) => Math.abs(a.diasAtras - 30) - Math.abs(b.diasAtras - 30));
+}
+
 async function snapshotFCI(fecha) {
   const store = await readSnapshotFile("fci");
   let ok = 0;
+  const candidatas = await buscarSnapshotsCompletosFci().catch(() => []);
   for (const categoria of FCI_CATEGORIAS) {
     try {
-      const [actual, previo] = await Promise.all([
-        fetchJson(`https://api.argentinadatos.com/v1/finanzas/fci/${categoria}/ultimo`),
-        fetchJson(`https://api.argentinadatos.com/v1/finanzas/fci/${categoria}/penultimo`),
+      const [actualRaw, previo] = await Promise.all([
+        fetchJson(`${FCI_API}/${categoria}/ultimo`),
+        fetchJson(`${FCI_API}/${categoria}/penultimo`).catch(() => []),
       ]);
-      const previoMap = new Map(previo.map((f) => [f.fondo, f]));
+      const todos = Array.isArray(actualRaw) ? actualRaw : [];
+      const fechaMax = todos.reduce((m, f) => (f.fecha && f.fecha > m ? f.fecha : m), "");
+      const actual = todos.filter((f) => f.fecha && f.vcp > 0 && (!fechaMax || diasEntreFci(fechaMax, f.fecha) <= 10));
+      if (actual.length === 0) continue;
 
-      const conRendimiento = [];
-      for (const fondo of actual) {
-        const anterior = previoMap.get(fondo.fondo);
-        if (!anterior || !anterior.vcp || anterior.vcp <= 0 || !fondo.vcp || fondo.vcp <= 0) continue;
-        if (!fondo.fecha || !anterior.fecha || fondo.fecha === anterior.fecha) continue;
-        const diasReales = Math.max(
-          1,
-          Math.round((new Date(fondo.fecha).getTime() - new Date(anterior.fecha).getTime()) / 86400000)
-        );
-        const variacion = fondo.vcp / anterior.vcp - 1;
-        const tasaAnualizada = variacion * (365 / diasReales) * 100;
-        if (!Number.isFinite(tasaAnualizada) || tasaAnualizada <= -80 || tasaAnualizada >= 400) continue;
-        if ((fondo.patrimonio || 0) < FCI_PATRIMONIO_MINIMO) continue;
-        conRendimiento.push({ fondo: fondo.fondo, patrimonio: fondo.patrimonio || 0, tasa: tasaAnualizada });
+      let base = null;
+      const evaluadas = await Promise.all(
+        candidatas.slice(0, 4).map(async (cand) => {
+          const items = await fetchJson(`${FCI_API}/${categoria}/${cand.fechaApi}`).catch(() => []);
+          const mapa = new Map((Array.isArray(items) ? items : []).filter((f) => f.fondo && f.vcp > 0 && f.fecha).map((f) => [f.fondo, f]));
+          let cub = 0;
+          actual.forEach((f) => { if (mapa.has(f.fondo)) cub++; });
+          return { mapa, cobertura: cub / actual.length };
+        })
+      );
+      const mejor = evaluadas.filter((e) => e.cobertura >= 0.4).sort((a, b) => b.cobertura - a.cobertura)[0];
+      if (mejor) base = mejor.mapa;
+
+      const rendimientos = new Map();
+      if (base) {
+        for (const f of actual) {
+          const a = base.get(f.fondo);
+          if (!a) continue;
+          const dias = diasEntreFci(f.fecha, a.fecha);
+          if (dias < 7) continue;
+          const t = anualizarFci(f.vcp, a.vcp, dias);
+          if (t !== null) rendimientos.set(f.fondo, t);
+        }
       }
+      const previoMap = new Map((Array.isArray(previo) ? previo : []).map((f) => [f.fondo, f]));
+      for (const f of actual) {
+        if (rendimientos.has(f.fondo)) continue;
+        const a = previoMap.get(f.fondo);
+        if (!a || !a.vcp || a.vcp <= 0 || !a.fecha || f.fecha === a.fecha) continue;
+        const t = anualizarFci(f.vcp, a.vcp, Math.max(1, diasEntreFci(f.fecha, a.fecha)));
+        if (t !== null) rendimientos.set(f.fondo, t);
+      }
+
+      const conRendimiento = actual
+        .filter((f) => rendimientos.has(f.fondo) && (f.patrimonio || 0) >= FCI_PATRIMONIO_MINIMO)
+        .map((f) => ({ fondo: f.fondo, patrimonio: f.patrimonio || 0, tasa: rendimientos.get(f.fondo) }));
 
       conRendimiento.sort((a, b) => b.patrimonio - a.patrimonio);
       const top = conRendimiento.slice(0, FCI_MAX_POR_CATEGORIA);

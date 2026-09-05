@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { CasaDolar, Instrumento, PlazoFijo, PortfolioConfig, PuntoPortfolio, Transaccion } from "../types";
+import { CasaDolar, FondoComun, Instrumento, PlazoFijo, PortfolioConfig, PuntoPortfolio, Transaccion } from "../types";
 import {
   agregarPuntoHistorial,
+  aplicarRescate,
+  loadFondosComunes,
+  saveFondosComunes,
+  valuarFondoComun,
   calcularTotales,
   cotizacionDolar,
   derivarPosiciones,
@@ -28,6 +32,7 @@ import {
 export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
   const [transacciones, setTransacciones] = useState<Transaccion[]>(() => loadTransacciones());
   const [plazosFijos, setPlazosFijos] = useState<PlazoFijo[]>(() => loadPlazosFijos());
+  const [fondosComunes, setFondosComunes] = useState<FondoComun[]>(() => loadFondosComunes());
   const [historial, setHistorial] = useState<PuntoPortfolio[]>(() => loadHistorial());
   const [config, setConfig] = useState<PortfolioConfig>(() => loadConfig());
 
@@ -38,6 +43,27 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
     [transacciones, instruments, hoy]
   );
   const posicionesActivas = useMemo(() => posiciones.filter((p) => p.cantidad > 0), [posiciones]);
+
+  const fondosValuados = useMemo(
+    () => fondosComunes.map((fc) => valuarFondoComun(fc, instruments, hoy)),
+    [fondosComunes, instruments, hoy]
+  );
+
+  // Guardar la última TNA en vivo de cada fondo como respaldo (sin re-render extra si no cambió).
+  useEffect(() => {
+    let cambio = false;
+    const next = fondosComunes.map((fc) => {
+      if (!fc.instrumentId) return fc;
+      const inst = instruments.find((i) => i.id === fc.instrumentId);
+      if (!inst || inst.tasaORendimientoActual === fc.ultimaTna) return fc;
+      cambio = true;
+      return { ...fc, ultimaTna: inst.tasaORendimientoActual };
+    });
+    if (cambio) {
+      saveFondosComunes(next);
+      setFondosComunes(next);
+    }
+  }, [instruments, fondosComunes]);
 
   // Cotización USD→ARS: la elegida por el usuario si Divisas cargó en vivo;
   // si no, la última que se usó (guardada en config) como respaldo explícito.
@@ -56,11 +82,11 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
   }, [dolarEnVivo, hoy]);
 
   const totales = useMemo(
-    () => calcularTotales(posiciones, plazosFijos, dolar, hoy),
-    [posiciones, plazosFijos, dolar, hoy]
+    () => calcularTotales(posiciones, plazosFijos, fondosValuados, dolar, hoy),
+    [posiciones, plazosFijos, fondosValuados, dolar, hoy]
   );
 
-  const tieneDatos = transacciones.length > 0 || plazosFijos.length > 0;
+  const tieneDatos = transacciones.length > 0 || plazosFijos.length > 0 || fondosComunes.length > 0;
 
   /** ¿Se puede valuar todo con datos reales? (nada sin cotización en vivo). */
   const valuacionCompleta = isLive && totales.sinValuar === 0 && !dolarEsRespaldo;
@@ -97,7 +123,7 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
     if (!pendienteSnapshot.current) return;
     pendienteSnapshot.current = false;
     registrarPunto(true);
-  }, [transacciones, plazosFijos, registrarPunto]);
+  }, [transacciones, plazosFijos, fondosComunes, registrarPunto]);
 
   const persistirTransacciones = (next: Transaccion[]) => {
     saveTransacciones(next);
@@ -108,6 +134,31 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
     savePlazosFijos(next);
     pendienteSnapshot.current = true;
     setPlazosFijos(next);
+  };
+
+  const persistirFondos = (next: FondoComun[]) => {
+    saveFondosComunes(next);
+    pendienteSnapshot.current = true;
+    setFondosComunes(next);
+  };
+
+  /* ---------------- Acciones: fondos comunes ---------------- */
+  const agregarFondoComun = (fc: Omit<FondoComun, "id" | "estado" | "realizada" | "rescates">) => {
+    persistirFondos([...fondosComunes, { ...fc, id: nuevoId(), estado: "activo", realizada: 0, rescates: [] }]);
+  };
+  const editarFondoComun = (fc: FondoComun) => {
+    persistirFondos(fondosComunes.map((f) => (f.id === fc.id ? fc : f)));
+  };
+  const eliminarFondoComun = (id: string) => {
+    persistirFondos(fondosComunes.filter((f) => f.id !== id));
+  };
+  /** Rescate total o parcial; devuelve el monto retirado (para ofrecer reinvertirlo). */
+  const rescatarFondoComun = (id: string, monto: number) => {
+    const fc = fondosValuados.find((f) => f.id === id);
+    if (!fc) return 0;
+    const retirado = Math.min(monto, fc.valorActual);
+    persistirFondos(fondosComunes.map((f) => (f.id === id ? aplicarRescate(fc, retirado, hoy) : f)));
+    return retirado;
   };
 
   /* ---------------- Acciones: transacciones ---------------- */
@@ -154,10 +205,12 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
   const importarBackup = (backup: PortfolioBackup) => {
     saveTransacciones(backup.transacciones);
     savePlazosFijos(backup.plazosFijos);
+    saveFondosComunes(backup.fondosComunes);
     saveHistorial(backup.historial);
     saveConfig(backup.config);
     setTransacciones(backup.transacciones);
     setPlazosFijos(backup.plazosFijos);
+    setFondosComunes(backup.fondosComunes);
     setHistorial(backup.historial);
     setConfig(backup.config);
   };
@@ -165,15 +218,19 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
   const borrarTodo = () => {
     saveTransacciones([]);
     savePlazosFijos([]);
+    saveFondosComunes([]);
     saveHistorial([]);
     setTransacciones([]);
     setPlazosFijos([]);
+    setFondosComunes([]);
     setHistorial([]);
   };
 
   return {
     transacciones,
     plazosFijos,
+    fondosComunes,
+    fondosValuados,
     historial,
     config,
     posiciones,
@@ -191,6 +248,10 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
     eliminarPlazoFijo,
     renovarPlazoFijo,
     retirarPlazoFijo,
+    agregarFondoComun,
+    editarFondoComun,
+    eliminarFondoComun,
+    rescatarFondoComun,
     cambiarDolarCasa,
     importarBackup,
     borrarTodo,
