@@ -10,3 +10,8 @@ vite.config.*.timestamp-*.mjs
 
 # Log local de cada corrida de scripts/run-snapshot-and-push.sh (no se commitea)
 scripts/snapshot-historico.log
+
+# Marca local de la última fecha en que se avisó por mail que faltaba
+# pushear el snapshot (usado por scripts/check-snapshot-pushed.sh); no
+# se commitea.
+scripts/.cache/
