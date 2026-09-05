@@ -7,3 +7,6 @@ dist/
 
 # Artefactos temporales que a veces deja Vite al cargar la config (ESM interop)
 vite.config.*.timestamp-*.mjs
+
+# Log local de cada corrida de scripts/run-snapshot-and-push.sh (no se commitea)
+scripts/snapshot-historico.log
