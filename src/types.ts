@@ -27,3 +27,62 @@ export interface Instrumento {
 }
 
 export type RangoTemporal = "7d" | "30d" | "90d" | "1a" | "max";
+
+/* ============================================================
+   PORTFOLIO PERSONAL (ver src/lib/portfolio.ts)
+   ============================================================ */
+
+/** Operación de compra/venta sobre un instrumento de mercado (todo menos plazos fijos). */
+export interface Transaccion {
+  id: string;
+  /** Referencia al `Instrumento.id` que ya usa el resto de la app. */
+  instrumentId: string;
+  tipo: "compra" | "venta";
+  /** Fecha ISO (YYYY-MM-DD), editable: permite cargar operaciones pasadas. */
+  fecha: string;
+  /** Unidades: cuotapartes, nominales, USD, BTC, etc. */
+  cantidad: number;
+  /** Lo pagado/cobrado por unidad ese día, en la moneda del instrumento. */
+  precioUnitario: number;
+  notas?: string;
+  /**
+   * Foto del instrumento al momento de operar, para que la posición siga
+   * pudiendo mostrarse aunque el instrumento no esté cargado en vivo
+   * (fuente caída, ticker dado de baja, id renombrado).
+   */
+  instrumentoNombre: string;
+  categoria: Categoria;
+  unidad: Instrumento["unidad"];
+  ticker?: string;
+}
+
+export type EstadoPlazoFijo = "activo" | "vencido" | "renovado" | "retirado";
+
+/** Plazo fijo: capital + TNA fija + vencimiento; devenga interés simple y lineal. */
+export interface PlazoFijo {
+  id: string;
+  entidad: string;
+  capital: number;
+  /** Tasa fija (TNA, en %) pactada al constituirlo — no la tasa "hoy" del banco. */
+  tna: number;
+  fechaInicio: string;
+  fechaVencimiento: string;
+  estado: EstadoPlazoFijo;
+  notas?: string;
+}
+
+/** Punto del gráfico de evolución del portfolio (forward-only, un punto por día). */
+export interface PuntoPortfolio {
+  fecha: string;
+  valorTotal: number;
+  capitalInvertido: number;
+}
+
+/** Casas de dólar de DolarAPI utilizables para consolidar USD → ARS. */
+export type CasaDolar = "oficial" | "blue" | "bolsa" | "contadoconliqui" | "mayorista" | "cripto" | "tarjeta";
+
+export interface PortfolioConfig {
+  dolarCasa: CasaDolar;
+  /** Última cotización usada, como respaldo si Divisas no cargó en vivo. */
+  ultimoDolar?: { casa: CasaDolar; valor: number; fecha: string };
+}

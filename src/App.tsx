@@ -711,7 +711,7 @@ export default function App() {
                 />
               }
             />
-            <Route path="/portfolio" element={<PortfolioScreen />} />
+            <Route path="/portfolio" element={<PortfolioScreen instruments={instruments} isLive={isLive} />} />
             <Route path="/acerca" element={<AboutScreen />} />
             <Route path="/privacidad" element={<PrivacyPolicyScreen />} />
             <Route path="*" element={<NotFoundScreen />} />

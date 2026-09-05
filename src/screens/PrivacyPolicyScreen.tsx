@@ -45,7 +45,7 @@ export default function PrivacyPolicyScreen() {
             3. Almacenamiento local en tu navegador
           </h2>
           <p>
-            Para acelerar la carga y reducir pedidos innecesarios a las APIs públicas de terceros, FinanzAR guarda temporalmente en el almacenamiento local de tu navegador (localStorage): cotizaciones y tasas ya consultadas (con una vigencia corta, de minutos), y los instrumentos que hayas marcado para comparar durante tu visita. Esta información queda únicamente en tu dispositivo, no se envía a ningún servidor propio de FinanzAR y podés borrarla en cualquier momento limpiando los datos del sitio desde la configuración de tu navegador.
+            Para acelerar la carga y reducir pedidos innecesarios a las APIs públicas de terceros, FinanzAR guarda temporalmente en el almacenamiento local de tu navegador (localStorage): cotizaciones y tasas ya consultadas (con una vigencia corta, de minutos), los instrumentos que hayas marcado para comparar durante tu visita, y — si usás la sección Portfolio — las operaciones, plazos fijos, historial de valor y preferencia de cotización del dólar que cargues ahí (sin vencimiento: es tu dato, no una caché, y podés exportarlo o borrarlo desde la misma sección). Esta información queda únicamente en tu dispositivo, no se envía a ningún servidor propio de FinanzAR y podés borrarla en cualquier momento limpiando los datos del sitio desde la configuración de tu navegador.
           </p>
         </section>
 
