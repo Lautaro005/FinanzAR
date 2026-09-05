@@ -152,6 +152,7 @@ export const GRUPO_MERCADO_POR_CATEGORIA: Partial<Record<string, GrupoMercado>> 
   cedears: "argentina",
   acciones: "argentina",
   bonos: "argentina",
+  divisas: "argentina",
   eeuu: "eeuu",
   cripto: "cripto",
 };

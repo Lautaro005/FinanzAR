@@ -42,7 +42,7 @@ export default function CategoryTabs({
 
   return (
     <nav className="w-full bg-finanzar-surface border-b border-finanzar-border mb-6 rounded-t-md">
-      <div className="flex space-x-2 sm:space-x-8 overflow-x-auto px-4 sm:px-6">
+      <div className="flex flex-wrap items-center gap-x-1 gap-y-1 sm:gap-x-4 px-3 sm:px-6 py-0.5">
         {TABS.map((tab) => {
           const isSelected = active === tab.id;
           const count = tab.id === "todos" ? total : counts?.[tab.id as Categoria];
@@ -52,7 +52,7 @@ export default function CategoryTabs({
             <button
               key={tab.id}
               onClick={() => onChange(tab.id)}
-              className={`group inline-flex items-center py-3.5 px-1 border-b-2 text-sm transition-all duration-150 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-finanzar-accent ${
+              className={`group inline-flex items-center py-3 px-1 border-b-2 text-sm transition-all duration-150 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-finanzar-accent ${
                 isSelected
                   ? "border-finanzar-accent text-finanzar-primary font-semibold"
                   : "border-transparent text-finanzar-textSecondary hover:text-finanzar-primary hover:border-finanzar-border font-medium"

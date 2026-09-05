@@ -194,7 +194,7 @@ export default function AboutScreen() {
       </section>
 
       {/* Atribución Obligatoria CoinGecko */}
-      <div className="text-center p-4 rounded bg-finanzar-bg border border-finanzar-borderSubtle text-xs text-finanzar-textSecondary">
+      <div className="text-center p-4 rounded bg-finanzar-bg border border-finanzar-borderSubtle text-xs text-finanzar-textSecondary mb-10">
         <span>Datos cripto provistos de forma pública y gratuita por </span>
         <a
           href="https://www.coingecko.com"
@@ -204,6 +204,17 @@ export default function AboutScreen() {
         >
           CoinGecko (Data provided by CoinGecko)
         </a>.
+      </div>
+
+      {/* Aviso Legal & Transparencia Informativa (antes en el Footer, ahora al final de esta página) */}
+      <div className="bg-finanzar-bg border border-finanzar-border rounded-md p-5 text-finanzar-textMain">
+        <div className="flex items-center space-x-2 text-finanzar-primary font-serif font-bold text-sm mb-2">
+          <span className="text-finanzar-accent text-base">ℹ</span>
+          <span>Aviso Legal & Transparencia Informativa</span>
+        </div>
+        <p className="text-xs text-finanzar-textSecondary leading-relaxed">
+          FinanzAR es una herramienta de consulta exclusivamente informativa y comparativa. Los datos, tasas, cotizaciones y rendimientos aquí exhibidos provienen de APIs y fuentes públicas autorizadas y pueden presentar un pequeño delay respecto a la operativa en tiempo real. La información brindada no constituye oferta de compra ni venta, ni asesoramiento financiero, impositivo o legal. Para operar, consulte siempre con su entidad financiera, agente de liquidación y compensación (ALyC) o banco debidamente matriculado ante la CNV / BCRA.
+        </p>
       </div>
     </main>
   );
