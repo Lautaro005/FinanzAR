@@ -7,10 +7,16 @@ import {
   Data912HistoricalRaw,
 } from "./api/data912";
 import { getDolarHistorico, DolarRaw } from "./api/argentinaDatos";
+import { getSnapshotHistory } from "./historicoSnapshot";
 
 // Histórico real por instrumento, con fallback honesto a una estimación
-// cuando la fuente gratuita no ofrece serie histórica para esa categoría
-// (hoy: Pesos —plazo fijo/FCI/criptopesos— y acciones/ETFs de EE.UU.).
+// cuando ninguna fuente ofrece serie histórica confiable para esa
+// categoría. El orden de intentos por instrumento es:
+//   1. Fuente "oficial" en vivo (data912 / CoinGecko / argentinadatos),
+//      solo si además pasa el chequeo de vigencia (ver isStale más abajo).
+//   2. Snapshot propio armado día a día (ver historicoSnapshot.ts) para
+//      las categorías sin fuente gratuita confiable.
+//   3. Estimación sintética ya calculada en normalize.ts (isEstimate: true).
 
 export interface HistoryResult {
   data: PuntoHistorico[];
@@ -29,25 +35,63 @@ function formatFecha(dateLike: string | number): string {
   return d.toLocaleDateString("es-AR", { day: "2-digit", month: "2-digit", year: "2-digit" });
 }
 
-function fromData912Historical(rows: Data912HistoricalRaw[]): PuntoHistorico[] {
-  if (!Array.isArray(rows)) return [];
-  return rows
-    .filter((r) => r && r.date && typeof r.c === "number" && r.c! > 0)
-    .map((r) => ({ fecha: formatFecha(r.date), valor: Number(r.c!.toFixed(2)) }));
+// Chequeo de vigencia: data912 documenta sus endpoints de histórico
+// (/historical/cedears, /historical/stocks, /historical/bonds) como si
+// tuvieran datos actualizados, pero en la práctica varios quedaron
+// congelados hace años sin que la API lo señale de ningún modo (ej. AL30
+// se corta en oct-2023, GGAL en 2003, AAPL CEDEAR en 2015 — verificado
+// manualmente). Sin este chequeo, la app mostraba ese histórico viejo
+// como si fuera real ("Histórico oficial"), que es peor que no mostrar
+// nada. Cualquier serie cuyo punto más reciente sea más viejo que
+// MAX_DIAS_VIGENCIA se descarta y cae a las siguientes fuentes (snapshot
+// propio o estimación), igual que si la fuente no existiera.
+const MAX_DIAS_VIGENCIA = 10;
+
+function fechaMasReciente(fechas: string[]): string {
+  return fechas.reduce((max, f) => (f > max ? f : max), "");
 }
 
-function fromDolarHistorico(rows: DolarRaw[]): PuntoHistorico[] {
-  if (!Array.isArray(rows)) return [];
-  return rows
-    .filter((r) => r && r.fecha && typeof r.venta === "number" && r.venta > 0)
-    .map((r) => ({ fecha: formatFecha(r.fecha), valor: Number(r.venta.toFixed(2)) }));
+function esVigente(fechaMasRecienteISO: string): boolean {
+  const d = new Date(fechaMasRecienteISO);
+  if (isNaN(d.getTime())) return false;
+  const diasDesde = (Date.now() - d.getTime()) / (1000 * 60 * 60 * 24);
+  return diasDesde <= MAX_DIAS_VIGENCIA;
 }
 
-// Casas de dólar que argentinadatos.com expone con histórico real. El resto
-// de "divisas" (mayorista, tarjeta, euro, real) no tiene fuente histórica
-// gratuita hoy, así que cae honestamente a la estimación sintética
-// (isEstimate: true), igual que ya ocurre con pesos/FCI/EE.UU.
-const DOLAR_HISTORICO_CASAS = new Set(["oficial", "blue", "bolsa", "contadoconliqui", "cripto"]);
+function fromData912Historical(rows: Data912HistoricalRaw[]): PuntoHistorico[] | null {
+  if (!Array.isArray(rows) || rows.length === 0) return null;
+  const fechaValida = rows.filter((r) => r && r.date && typeof r.c === "number" && r.c! > 0);
+  if (fechaValida.length === 0) return null;
+
+  const masReciente = fechaMasReciente(fechaValida.map((r) => r.date));
+  if (!esVigente(masReciente)) return null;
+
+  return fechaValida.map((r) => ({ fecha: formatFecha(r.date), valor: Number(r.c!.toFixed(2)) }));
+}
+
+function fromDolarHistorico(rows: DolarRaw[]): PuntoHistorico[] | null {
+  if (!Array.isArray(rows) || rows.length === 0) return null;
+  const fechaValida = rows.filter((r) => r && r.fecha && typeof r.venta === "number" && r.venta > 0);
+  if (fechaValida.length === 0) return null;
+
+  const masReciente = fechaMasReciente(fechaValida.map((r) => r.fecha));
+  if (!esVigente(masReciente)) return null;
+
+  return fechaValida.map((r) => ({ fecha: formatFecha(r.fecha), valor: Number(r.venta.toFixed(2)) }));
+}
+
+// Casas de dólar que argentinadatos.com expone con histórico real y
+// vigente (se comprobó manualmente, sept. 2026): oficial, blue, bolsa
+// (MEP), contadoconliqui (CCL), cripto y mayorista. "Tarjeta" NO tiene
+// serie propia en argentinadatos: el nombre "tarjeta" no existe como
+// "casa" en esa API; los nombres históricos más parecidos ("solidario",
+// "turista") están discontinuados (solidario corta en 2021-09-02, turista
+// devuelve 404 incluso para fechas recientes), así que no hay forma
+// honesta de reconstruir su histórico con una fuente gratuita hoy — cae
+// a la estimación sintética hasta que la rutina de snapshot propio
+// (ver historicoSnapshot.ts) acumule suficientes puntos, si se decide
+// sumarla ahí en el futuro.
+const DOLAR_HISTORICO_CASAS = new Set(["oficial", "blue", "bolsa", "contadoconliqui", "cripto", "mayorista"]);
 
 async function fetchLiveHistory(instrument: Instrumento): Promise<PuntoHistorico[] | null> {
   if (instrument.categoria === "divisas" && instrument.ticker && DOLAR_HISTORICO_CASAS.has(instrument.ticker)) {
@@ -81,16 +125,16 @@ async function fetchLiveHistory(instrument: Instrumento): Promise<PuntoHistorico
 
   // "pesos" (plazo fijo / criptopesos), "fci", "eeuu" (acciones de EE.UU.) y
   // las variantes de "divisas" sin cobertura de argentinadatos.com (arriba):
-  // las APIs gratuitas usadas hoy no exponen histórico por instrumento.
+  // ninguna API gratuita usada hoy expone histórico por instrumento. Para
+  // estas cinco, fetchInstrumentHistory intenta después el snapshot propio
+  // (historicoSnapshot.ts) antes de resignarse a la estimación sintética.
   return null;
 }
 
 /**
- * Devuelve el histórico real de un instrumento cuando la fuente gratuita
- * lo ofrece (CEDEARs, acciones y bonos vía data912; cripto vía CoinGecko).
- * Si no hay fuente disponible o la request falla, cae de forma explícita
- * a la estimación ya calculada en normalize.ts (isEstimate: true) en vez
- * de mostrarla como si fuera un dato oficial.
+ * Devuelve el histórico real de un instrumento, probando en orden:
+ * fuente oficial en vivo y vigente → snapshot propio armado día a día →
+ * estimación sintética ya calculada en normalize.ts (isEstimate: true).
  */
 export async function fetchInstrumentHistory(instrument: Instrumento): Promise<HistoryResult> {
   const cacheKey = instrument.id;
@@ -105,7 +149,18 @@ export async function fetchInstrumentHistory(instrument: Instrumento): Promise<H
       return result;
     }
   } catch (e) {
-    console.warn(`[history] Sin histórico oficial para ${instrument.id}, se usa estimación:`, e);
+    console.warn(`[history] Sin histórico oficial vigente para ${instrument.id}, se prueba snapshot propio:`, e);
+  }
+
+  try {
+    const snapshot = await getSnapshotHistory(instrument.categoria, instrument.id);
+    if (snapshot && snapshot.length >= 2) {
+      const result: HistoryResult = { data: snapshot, isEstimate: false };
+      memoryCache.set(cacheKey, result);
+      return result;
+    }
+  } catch (e) {
+    console.warn(`[history] Sin snapshot propio para ${instrument.id}, se usa estimación:`, e);
   }
 
   const fallback: HistoryResult = { data: instrument.historico, isEstimate: true };
