@@ -1,1 +1,5834 @@
-{}
+{
+  "cedears-aal": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10360
+    }
+  ],
+  "cedears-aalc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.53
+    }
+  ],
+  "cedears-aald": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.92
+    }
+  ],
+  "cedears-aap": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5000
+    }
+  ],
+  "cedears-aapl": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 25400
+    }
+  ],
+  "cedears-aaplc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16.05
+    }
+  ],
+  "cedears-aapld": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16.88
+    }
+  ],
+  "cedears-abbv": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 40560
+    }
+  ],
+  "cedears-abbvc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 26.15
+    }
+  ],
+  "cedears-abbvd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 27
+    }
+  ],
+  "cedears-abev": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 14430
+    }
+  ],
+  "cedears-abev3": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4845
+    }
+  ],
+  "cedears-abevc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.7
+    }
+  ],
+  "cedears-abevd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.49
+    }
+  ],
+  "cedears-abnb": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19210
+    }
+  ],
+  "cedears-abnbc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12.32
+    }
+  ],
+  "cedears-abnbd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12.63
+    }
+  ],
+  "cedears-abt": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 42920
+    }
+  ],
+  "cedears-abtc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 21.2
+    }
+  ],
+  "cedears-abtd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 28.5
+    }
+  ],
+  "cedears-acn": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3947.5
+    }
+  ],
+  "cedears-acnc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.56
+    }
+  ],
+  "cedears-acnd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.57
+    }
+  ],
+  "cedears-acwi": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9855
+    }
+  ],
+  "cedears-acwic": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.27
+    }
+  ],
+  "cedears-acwid": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.54
+    }
+  ],
+  "cedears-adbe": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9615
+    }
+  ],
+  "cedears-adbec": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.09
+    }
+  ],
+  "cedears-adbed": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.31
+    }
+  ],
+  "cedears-adgo": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18720
+    }
+  ],
+  "cedears-adgoc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10.25
+    }
+  ],
+  "cedears-adgod": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12.29
+    }
+  ],
+  "cedears-adi": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 38340
+    }
+  ],
+  "cedears-adid": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 25.82
+    }
+  ],
+  "cedears-adp": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 73350
+    }
+  ],
+  "cedears-adpd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 47.92
+    }
+  ],
+  "cedears-ads": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3980
+    }
+  ],
+  "cedears-aeg": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 14540
+    }
+  ],
+  "cedears-aem": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 54325
+    }
+  ],
+  "cedears-aemd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 35.77
+    }
+  ],
+  "cedears-ai": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3320
+    }
+  ],
+  "cedears-aid": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.19
+    }
+  ],
+  "cedears-aig": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 24110
+    }
+  ],
+  "cedears-aigc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15.18
+    }
+  ],
+  "cedears-aigd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15.28
+    }
+  ],
+  "cedears-ako.b": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 47440
+    }
+  ],
+  "cedears-alab": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11230
+    }
+  ],
+  "cedears-alac": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.49
+    }
+  ],
+  "cedears-alad": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.96
+    }
+  ],
+  "cedears-amat": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 144600
+    }
+  ],
+  "cedears-amatc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 92
+    }
+  ],
+  "cedears-amatd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 95
+    }
+  ],
+  "cedears-amd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 75700
+    }
+  ],
+  "cedears-amdc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 47.43
+    }
+  ],
+  "cedears-amdd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 49.68
+    }
+  ],
+  "cedears-amgn": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 23070
+    }
+  ],
+  "cedears-amgnc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 14.3
+    }
+  ],
+  "cedears-amgnd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15.44
+    }
+  ],
+  "cedears-amx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 36520
+    }
+  ],
+  "cedears-amxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 23.99
+    }
+  ],
+  "cedears-amzn": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2857.5
+    }
+  ],
+  "cedears-amznc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1.85
+    }
+  ],
+  "cedears-amznd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1.89
+    }
+  ],
+  "cedears-anet": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10570
+    }
+  ],
+  "cedears-anetd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.98
+    }
+  ],
+  "cedears-anf": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 238325
+    }
+  ],
+  "cedears-anfd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 149
+    }
+  ],
+  "cedears-arco": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 25920
+    }
+  ],
+  "cedears-arcoc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16.6
+    }
+  ],
+  "cedears-arcod": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 17.16
+    }
+  ],
+  "cedears-arkk": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13680
+    }
+  ],
+  "cedears-arkkc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.31
+    }
+  ],
+  "cedears-arkkd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.01
+    }
+  ],
+  "cedears-arm": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 14840
+    }
+  ],
+  "cedears-armd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.75
+    }
+  ],
+  "cedears-asml": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18600
+    }
+  ],
+  "cedears-asmlc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11.65
+    }
+  ],
+  "cedears-asmld": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12.25
+    }
+  ],
+  "cedears-asr": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 20360
+    }
+  ],
+  "cedears-asts": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6610
+    }
+  ],
+  "cedears-astsc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.81
+    }
+  ],
+  "cedears-astsd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.32
+    }
+  ],
+  "cedears-avgo": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 14600
+    }
+  ],
+  "cedears-avgoc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.26
+    }
+  ],
+  "cedears-avgod": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.55
+    }
+  ],
+  "cedears-avy": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15390
+    }
+  ],
+  "cedears-avyd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10.38
+    }
+  ],
+  "cedears-axp": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 34400
+    }
+  ],
+  "cedears-axpc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 21.65
+    }
+  ],
+  "cedears-axpd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 22.75
+    }
+  ],
+  "cedears-azn": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 64550
+    }
+  ],
+  "cedears-aznc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 39.5
+    }
+  ],
+  "cedears-aznd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 42.1
+    }
+  ],
+  "cedears-b": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 35580
+    }
+  ],
+  "cedears-b.c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 22.61
+    }
+  ],
+  "cedears-b.d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 23.59
+    }
+  ],
+  "cedears-ba": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 14000
+    }
+  ],
+  "cedears-ba.c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 24800
+    }
+  ],
+  "cedears-ba.cc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15.6
+    }
+  ],
+  "cedears-ba.cd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16.35
+    }
+  ],
+  "cedears-baba": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19980
+    }
+  ],
+  "cedears-babac": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12.6
+    }
+  ],
+  "cedears-babad": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13.11
+    }
+  ],
+  "cedears-bac": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.76
+    }
+  ],
+  "cedears-bad": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.16
+    }
+  ],
+  "cedears-bak": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1522
+    }
+  ],
+  "cedears-bakd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1
+    }
+  ],
+  "cedears-bayn": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 31480
+    }
+  ],
+  "cedears-bb": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4080
+    }
+  ],
+  "cedears-bb.d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.72
+    }
+  ],
+  "cedears-bbas3": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3467.5
+    }
+  ],
+  "cedears-bbd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5470
+    }
+  ],
+  "cedears-bbdc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.44
+    }
+  ],
+  "cedears-bbdc3": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4805
+    }
+  ],
+  "cedears-bbdcd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.6
+    }
+  ],
+  "cedears-bbdd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.58
+    }
+  ],
+  "cedears-bbv": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 46720
+    }
+  ],
+  "cedears-bbvd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 30.49
+    }
+  ],
+  "cedears-bcs": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 42760
+    }
+  ],
+  "cedears-bhp": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 71625
+    }
+  ],
+  "cedears-bhpd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 47.66
+    }
+  ],
+  "cedears-bidu": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 14350
+    }
+  ],
+  "cedears-biduc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.6
+    }
+  ],
+  "cedears-bidud": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.42
+    }
+  ],
+  "cedears-biib": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 26860
+    }
+  ],
+  "cedears-biibd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 17.84
+    }
+  ],
+  "cedears-biox": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 685
+    }
+  ],
+  "cedears-bioxc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.43
+    }
+  ],
+  "cedears-bioxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.45
+    }
+  ],
+  "cedears-bkng": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 423.5
+    }
+  ],
+  "cedears-bkngc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.27
+    }
+  ],
+  "cedears-bkngd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.28
+    }
+  ],
+  "cedears-bkr": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 14310
+    }
+  ],
+  "cedears-bkrd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.39
+    }
+  ],
+  "cedears-bmnr": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4965
+    }
+  ],
+  "cedears-bmnrd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.29
+    }
+  ],
+  "cedears-bmy": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 35280
+    }
+  ],
+  "cedears-bmyd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 23.6
+    }
+  ],
+  "cedears-bng": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 37640
+    }
+  ],
+  "cedears-bngd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 24.95
+    }
+  ],
+  "cedears-bny": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 130725
+    }
+  ],
+  "cedears-bnyd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 84.5
+    }
+  ],
+  "cedears-bp": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13930
+    }
+  ],
+  "cedears-bpa11": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18130
+    }
+  ],
+  "cedears-bpc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.45
+    }
+  ],
+  "cedears-bpd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.15
+    }
+  ],
+  "cedears-brkb": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 36540
+    }
+  ],
+  "cedears-brkbc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 23
+    }
+  ],
+  "cedears-brkbd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 24.2
+    }
+  ],
+  "cedears-bsbr": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9415
+    }
+  ],
+  "cedears-bx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7175
+    }
+  ],
+  "cedears-bxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.8
+    }
+  ],
+  "cedears-c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 72925
+    }
+  ],
+  "cedears-c.d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 47.97
+    }
+  ],
+  "cedears-caap": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 153825
+    }
+  ],
+  "cedears-caapd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 99
+    }
+  ],
+  "cedears-cah": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 130600
+    }
+  ],
+  "cedears-cahd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 82
+    }
+  ],
+  "cedears-car": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8410
+    }
+  ],
+  "cedears-car.d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.52
+    }
+  ],
+  "cedears-cat": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 64700
+    }
+  ],
+  "cedears-catc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 40.82
+    }
+  ],
+  "cedears-catd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 42.45
+    }
+  ],
+  "cedears-cc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 44.36
+    }
+  ],
+  "cedears-ccj": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6910
+    }
+  ],
+  "cedears-ccjc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.22
+    }
+  ],
+  "cedears-ccjd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.61
+    }
+  ],
+  "cedears-ccl": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12420
+    }
+  ],
+  "cedears-cclc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.55
+    }
+  ],
+  "cedears-ccld": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.27
+    }
+  ],
+  "cedears-cde": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 33880
+    }
+  ],
+  "cedears-cded": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 21.96
+    }
+  ],
+  "cedears-ceg": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10540
+    }
+  ],
+  "cedears-cegc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.18
+    }
+  ],
+  "cedears-cegd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7
+    }
+  ],
+  "cedears-cibr": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 14950
+    }
+  ],
+  "cedears-cibrc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.4
+    }
+  ],
+  "cedears-cibrd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.76
+    }
+  ],
+  "cedears-cl": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 46900
+    }
+  ],
+  "cedears-cld": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 30.57
+    }
+  ],
+  "cedears-cls": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 24730
+    }
+  ],
+  "cedears-clsc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15.2
+    }
+  ],
+  "cedears-clsd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16.19
+    }
+  ],
+  "cedears-coin": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10840
+    }
+  ],
+  "cedears-coinc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.68
+    }
+  ],
+  "cedears-coind": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.09
+    }
+  ],
+  "cedears-cop": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8495
+    }
+  ],
+  "cedears-copd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.55
+    }
+  ],
+  "cedears-copx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10250
+    }
+  ],
+  "cedears-copxc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.57
+    }
+  ],
+  "cedears-copxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.77
+    }
+  ],
+  "cedears-cost": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 30300
+    }
+  ],
+  "cedears-costc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19.67
+    }
+  ],
+  "cedears-costd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19.86
+    }
+  ],
+  "cedears-crm": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 22050
+    }
+  ],
+  "cedears-crmc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 14.41
+    }
+  ],
+  "cedears-crmd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15.1
+    }
+  ],
+  "cedears-crwd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4260
+    }
+  ],
+  "cedears-crwdd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.77
+    }
+  ],
+  "cedears-crwv": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5270
+    }
+  ],
+  "cedears-crwvd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.41
+    }
+  ],
+  "cedears-csco": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 34620
+    }
+  ],
+  "cedears-cscoc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 22.15
+    }
+  ],
+  "cedears-cscod": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 22.94
+    }
+  ],
+  "cedears-csna3": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1885
+    }
+  ],
+  "cedears-cvs": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10180
+    }
+  ],
+  "cedears-cvsd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.72
+    }
+  ],
+  "cedears-cvx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 20600
+    }
+  ],
+  "cedears-cvxc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13.02
+    }
+  ],
+  "cedears-cvxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13.53
+    }
+  ],
+  "cedears-cx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 17530
+    }
+  ],
+  "cedears-cxc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10.92
+    }
+  ],
+  "cedears-cxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11.11
+    }
+  ],
+  "cedears-dal": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15910
+    }
+  ],
+  "cedears-dald": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10.52
+    }
+  ],
+  "cedears-dd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 41600
+    }
+  ],
+  "cedears-ddd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 28.35
+    }
+  ],
+  "cedears-de": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 27400
+    }
+  ],
+  "cedears-dec": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16.77
+    }
+  ],
+  "cedears-deck": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5410
+    }
+  ],
+  "cedears-deckc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.63
+    }
+  ],
+  "cedears-deckd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.6
+    }
+  ],
+  "cedears-ded": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18.04
+    }
+  ],
+  "cedears-dell": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11270
+    }
+  ],
+  "cedears-delld": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.47
+    }
+  ],
+  "cedears-deo": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 23550
+    }
+  ],
+  "cedears-deod": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15.92
+    }
+  ],
+  "cedears-dhr": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6065
+    }
+  ],
+  "cedears-dhrc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.56
+    }
+  ],
+  "cedears-dhrd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.96
+    }
+  ],
+  "cedears-dia": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 42340
+    }
+  ],
+  "cedears-diac": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 26.89
+    }
+  ],
+  "cedears-diad": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 27.86
+    }
+  ],
+  "cedears-disn": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13800
+    }
+  ],
+  "cedears-disnc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.98
+    }
+  ],
+  "cedears-disnd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.16
+    }
+  ],
+  "cedears-docu": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4920
+    }
+  ],
+  "cedears-docuc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.6
+    }
+  ],
+  "cedears-docud": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.2
+    }
+  ],
+  "cedears-dow": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7760
+    }
+  ],
+  "cedears-dowc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.53
+    }
+  ],
+  "cedears-dowd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.33
+    }
+  ],
+  "cedears-e": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 21210
+    }
+  ],
+  "cedears-ebay": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 82000
+    }
+  ],
+  "cedears-ebayc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 56.4
+    }
+  ],
+  "cedears-ebayd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 55.3
+    }
+  ],
+  "cedears-ecl": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7895
+    }
+  ],
+  "cedears-ecld": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.37
+    }
+  ],
+  "cedears-eem": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 21750
+    }
+  ],
+  "cedears-eemc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13.69
+    }
+  ],
+  "cedears-eemd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 14.21
+    }
+  ],
+  "cedears-efa": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9565
+    }
+  ],
+  "cedears-efac": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.1
+    }
+  ],
+  "cedears-efad": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.31
+    }
+  ],
+  "cedears-efx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 17600
+    }
+  ],
+  "cedears-efxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11.34
+    }
+  ],
+  "cedears-elpc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 58300
+    }
+  ],
+  "cedears-elpcd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 27.14
+    }
+  ],
+  "cedears-embj": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 117250
+    }
+  ],
+  "cedears-eqnr": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11000
+    }
+  ],
+  "cedears-eric": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7985
+    }
+  ],
+  "cedears-ericd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.37
+    }
+  ],
+  "cedears-esgu": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8885
+    }
+  ],
+  "cedears-esgud": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.9
+    }
+  ],
+  "cedears-etha": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5875
+    }
+  ],
+  "cedears-ethac": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.71
+    }
+  ],
+  "cedears-ethad": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.87
+    }
+  ],
+  "cedears-etsy": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7560
+    }
+  ],
+  "cedears-etsyd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.08
+    }
+  ],
+  "cedears-ewj": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11050
+    }
+  ],
+  "cedears-ewjc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.99
+    }
+  ],
+  "cedears-ewjd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.36
+    }
+  ],
+  "cedears-ewy": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5985
+    }
+  ],
+  "cedears-ewyc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.62
+    }
+  ],
+  "cedears-ewyd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.91
+    }
+  ],
+  "cedears-ewz": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 29980
+    }
+  ],
+  "cedears-ewzc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19
+    }
+  ],
+  "cedears-ewzd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19.76
+    }
+  ],
+  "cedears-f": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 23200
+    }
+  ],
+  "cedears-fc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13.89
+    }
+  ],
+  "cedears-fcx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 38520
+    }
+  ],
+  "cedears-fcxc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 24.53
+    }
+  ],
+  "cedears-fcxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 25.56
+    }
+  ],
+  "cedears-fd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15.21
+    }
+  ],
+  "cedears-fdx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 50975
+    }
+  ],
+  "cedears-fdxc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 38.17
+    }
+  ],
+  "cedears-fdxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 33.27
+    }
+  ],
+  "cedears-fisv": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7610
+    }
+  ],
+  "cedears-fisvd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.87
+    }
+  ],
+  "cedears-fmx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 31860
+    }
+  ],
+  "cedears-fmxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 21.26
+    }
+  ],
+  "cedears-fnma": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9100
+    }
+  ],
+  "cedears-fslr": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18080
+    }
+  ],
+  "cedears-fslrc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11.31
+    }
+  ],
+  "cedears-fslrd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11.82
+    }
+  ],
+  "cedears-fxi": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11400
+    }
+  ],
+  "cedears-fxic": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.04
+    }
+  ],
+  "cedears-fxid": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.53
+    }
+  ],
+  "cedears-gdx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15790
+    }
+  ],
+  "cedears-gdxc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.72
+    }
+  ],
+  "cedears-gdxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10.35
+    }
+  ],
+  "cedears-ge": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 66975
+    }
+  ],
+  "cedears-gec": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 42
+    }
+  ],
+  "cedears-ged": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 43.95
+    }
+  ],
+  "cedears-gev": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8335
+    }
+  ],
+  "cedears-gevd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.49
+    }
+  ],
+  "cedears-gfi": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 75125
+    }
+  ],
+  "cedears-ggb": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 31460
+    }
+  ],
+  "cedears-ggbc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19
+    }
+  ],
+  "cedears-ggbd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 20.52
+    }
+  ],
+  "cedears-gild": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 59700
+    }
+  ],
+  "cedears-gildc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 35.81
+    }
+  ],
+  "cedears-gildd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 38.93
+    }
+  ],
+  "cedears-gld": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12930
+    }
+  ],
+  "cedears-gldc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.22
+    }
+  ],
+  "cedears-gldd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.55
+    }
+  ],
+  "cedears-glng": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8230
+    }
+  ],
+  "cedears-glngd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.3
+    }
+  ],
+  "cedears-glob": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3465
+    }
+  ],
+  "cedears-globc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.21
+    }
+  ],
+  "cedears-globd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.27
+    }
+  ],
+  "cedears-glw": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 61375
+    }
+  ],
+  "cedears-glwd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 40.01
+    }
+  ],
+  "cedears-gm": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 23240
+    }
+  ],
+  "cedears-gmd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 14.97
+    }
+  ],
+  "cedears-goglc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.91
+    }
+  ],
+  "cedears-gogld": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.1
+    }
+  ],
+  "cedears-googl": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9290
+    }
+  ],
+  "cedears-gprk": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18340
+    }
+  ],
+  "cedears-gprkc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11.81
+    }
+  ],
+  "cedears-gprkd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12.03
+    }
+  ],
+  "cedears-grmn": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 146300
+    }
+  ],
+  "cedears-grmnd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 94.9
+    }
+  ],
+  "cedears-gs": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 127025
+    }
+  ],
+  "cedears-gsc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 78.7
+    }
+  ],
+  "cedears-gsd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 83.3
+    }
+  ],
+  "cedears-gsk": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19760
+    }
+  ],
+  "cedears-gskc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13.15
+    }
+  ],
+  "cedears-gskd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13.15
+    }
+  ],
+  "cedears-gt": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4922.5
+    }
+  ],
+  "cedears-gtc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.13
+    }
+  ],
+  "cedears-gtd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.19
+    }
+  ],
+  "cedears-hal": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 29340
+    }
+  ],
+  "cedears-halc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18.48
+    }
+  ],
+  "cedears-hald": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19.25
+    }
+  ],
+  "cedears-hapv3": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2336
+    }
+  ],
+  "cedears-hd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15910
+    }
+  ],
+  "cedears-hdb": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18380
+    }
+  ],
+  "cedears-hdc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10.69
+    }
+  ],
+  "cedears-hdd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10.55
+    }
+  ],
+  "cedears-hims": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10910
+    }
+  ],
+  "cedears-himsc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.29
+    }
+  ],
+  "cedears-himsd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.19
+    }
+  ],
+  "cedears-hl": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 32780
+    }
+  ],
+  "cedears-hld": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 21.5
+    }
+  ],
+  "cedears-hmc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 51675
+    }
+  ],
+  "cedears-hmy": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 32260
+    }
+  ],
+  "cedears-hmyc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 20.7
+    }
+  ],
+  "cedears-hmyd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 21.22
+    }
+  ],
+  "cedears-hog": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 14950
+    }
+  ],
+  "cedears-hon": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 41540
+    }
+  ],
+  "cedears-hond": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 27.09
+    }
+  ],
+  "cedears-hood": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6675
+    }
+  ],
+  "cedears-hoodc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.65
+    }
+  ],
+  "cedears-hoodd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.25
+    }
+  ],
+  "cedears-hpq": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 51950
+    }
+  ],
+  "cedears-hpqc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 32.22
+    }
+  ],
+  "cedears-hpqd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 33.9
+    }
+  ],
+  "cedears-hsbc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 84825
+    }
+  ],
+  "cedears-hsy": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13050
+    }
+  ],
+  "cedears-hsyc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.21
+    }
+  ],
+  "cedears-hsyd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.6
+    }
+  ],
+  "cedears-hut": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 29640
+    }
+  ],
+  "cedears-hutc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16.01
+    }
+  ],
+  "cedears-hutd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19.5
+    }
+  ],
+  "cedears-hwm": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 411750
+    }
+  ],
+  "cedears-hwmd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 266.75
+    }
+  ],
+  "cedears-ibb": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12420
+    }
+  ],
+  "cedears-ibbc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.92
+    }
+  ],
+  "cedears-ibbd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.23
+    }
+  ],
+  "cedears-ibit": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7195
+    }
+  ],
+  "cedears-ibitc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.66
+    }
+  ],
+  "cedears-ibitd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.73
+    }
+  ],
+  "cedears-ibkr": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8620
+    }
+  ],
+  "cedears-ibkrd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.73
+    }
+  ],
+  "cedears-ibm": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 24890
+    }
+  ],
+  "cedears-ibmc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15.68
+    }
+  ],
+  "cedears-ibmd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16.33
+    }
+  ],
+  "cedears-ibn": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 48060
+    }
+  ],
+  "cedears-icln": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5610
+    }
+  ],
+  "cedears-iclnc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.5
+    }
+  ],
+  "cedears-iclnd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.71
+    }
+  ],
+  "cedears-iemg": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11000
+    }
+  ],
+  "cedears-iemgc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.88
+    }
+  ],
+  "cedears-iemgd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.28
+    }
+  ],
+  "cedears-ieur": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11150
+    }
+  ],
+  "cedears-ieurc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.05
+    }
+  ],
+  "cedears-ieurd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.37
+    }
+  ],
+  "cedears-iff": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11390
+    }
+  ],
+  "cedears-iffd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.6
+    }
+  ],
+  "cedears-ijh": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10030
+    }
+  ],
+  "cedears-ijhc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.48
+    }
+  ],
+  "cedears-ijhd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.56
+    }
+  ],
+  "cedears-ilf": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9520
+    }
+  ],
+  "cedears-ilfc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.01
+    }
+  ],
+  "cedears-ilfd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.23
+    }
+  ],
+  "cedears-infy": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18560
+    }
+  ],
+  "cedears-ing": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19600
+    }
+  ],
+  "cedears-ingd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10.16
+    }
+  ],
+  "cedears-intc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 30460
+    }
+  ],
+  "cedears-intcc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19.01
+    }
+  ],
+  "cedears-intcd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 20.5
+    }
+  ],
+  "cedears-ip": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 14820
+    }
+  ],
+  "cedears-ipd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10.63
+    }
+  ],
+  "cedears-iren": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5890
+    }
+  ],
+  "cedears-irenc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.29
+    }
+  ],
+  "cedears-irend": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.73
+    }
+  ],
+  "cedears-isrg": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6450
+    }
+  ],
+  "cedears-ita": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7180
+    }
+  ],
+  "cedears-itac": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.5
+    }
+  ],
+  "cedears-itad": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.73
+    }
+  ],
+  "cedears-itub": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12930
+    }
+  ],
+  "cedears-itub3": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 14120
+    }
+  ],
+  "cedears-itubc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.21
+    }
+  ],
+  "cedears-itubd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.47
+    }
+  ],
+  "cedears-ive": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9380
+    }
+  ],
+  "cedears-ivec": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6
+    }
+  ],
+  "cedears-ived": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.21
+    }
+  ],
+  "cedears-ivv": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1775
+    }
+  ],
+  "cedears-ivvc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1.15
+    }
+  ],
+  "cedears-ivvd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1.18
+    }
+  ],
+  "cedears-ivw": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11180
+    }
+  ],
+  "cedears-ivwc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.11
+    }
+  ],
+  "cedears-ivwd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.36
+    }
+  ],
+  "cedears-iwm": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 46940
+    }
+  ],
+  "cedears-iwmc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 29.01
+    }
+  ],
+  "cedears-iwmd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 30.89
+    }
+  ],
+  "cedears-jci": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 118600
+    }
+  ],
+  "cedears-jd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11210
+    }
+  ],
+  "cedears-jdc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.91
+    }
+  ],
+  "cedears-jdd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.33
+    }
+  ],
+  "cedears-jmia": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11590
+    }
+  ],
+  "cedears-jmiac": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.2
+    }
+  ],
+  "cedears-jmiad": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.5
+    }
+  ],
+  "cedears-jnj": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 29180
+    }
+  ],
+  "cedears-jnjc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18.59
+    }
+  ],
+  "cedears-jnjd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19.26
+    }
+  ],
+  "cedears-joyy": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 23740
+    }
+  ],
+  "cedears-joyyd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15.98
+    }
+  ],
+  "cedears-jpm": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 38000
+    }
+  ],
+  "cedears-jpmc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 24.11
+    }
+  ],
+  "cedears-jpmd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 25
+    }
+  ],
+  "cedears-kb": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 101575
+    }
+  ],
+  "cedears-keel": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 27460
+    }
+  ],
+  "cedears-keelc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16.93
+    }
+  ],
+  "cedears-keeld": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18
+    }
+  ],
+  "cedears-kep": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18950
+    }
+  ],
+  "cedears-kgc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 49100
+    }
+  ],
+  "cedears-klac": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8590
+    }
+  ],
+  "cedears-klacc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.7
+    }
+  ],
+  "cedears-klacd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.81
+    }
+  ],
+  "cedears-kmb": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 27820
+    }
+  ],
+  "cedears-kmbc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18.4
+    }
+  ],
+  "cedears-kmbd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18.38
+    }
+  ],
+  "cedears-ko": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 28000
+    }
+  ],
+  "cedears-koc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 17.95
+    }
+  ],
+  "cedears-kod": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18.4
+    }
+  ],
+  "cedears-kofm": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 88650
+    }
+  ],
+  "cedears-lac": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4775
+    }
+  ],
+  "cedears-lacd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.15
+    }
+  ],
+  "cedears-lar": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10790
+    }
+  ],
+  "cedears-larc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.2
+    }
+  ],
+  "cedears-lard": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.12
+    }
+  ],
+  "cedears-lin": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7410
+    }
+  ],
+  "cedears-linc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.87
+    }
+  ],
+  "cedears-lind": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.93
+    }
+  ],
+  "cedears-lly": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 32580
+    }
+  ],
+  "cedears-llyc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 20.4
+    }
+  ],
+  "cedears-llyd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 21.37
+    }
+  ],
+  "cedears-lmt": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 41600
+    }
+  ],
+  "cedears-lmtc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 27.12
+    }
+  ],
+  "cedears-lmtd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 27.4
+    }
+  ],
+  "cedears-lnd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6050
+    }
+  ],
+  "cedears-lrcx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8745
+    }
+  ],
+  "cedears-lrcxc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.44
+    }
+  ],
+  "cedears-lrcxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.72
+    }
+  ],
+  "cedears-lren3": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3545
+    }
+  ],
+  "cedears-lvs": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 35380
+    }
+  ],
+  "cedears-lyg": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4787.5
+    }
+  ],
+  "cedears-ma": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 26540
+    }
+  ],
+  "cedears-mac": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 17.69
+    }
+  ],
+  "cedears-mad": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18.55
+    }
+  ],
+  "cedears-mcd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16950
+    }
+  ],
+  "cedears-mcdc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11.16
+    }
+  ],
+  "cedears-mcdd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11.13
+    }
+  ],
+  "cedears-mdlz": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6455
+    }
+  ],
+  "cedears-mdlzc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.17
+    }
+  ],
+  "cedears-mdlzd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.24
+    }
+  ],
+  "cedears-mdt": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 37260
+    }
+  ],
+  "cedears-mdtd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 24
+    }
+  ],
+  "cedears-meli": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 26180
+    }
+  ],
+  "cedears-melic": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16.57
+    }
+  ],
+  "cedears-melid": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 17.13
+    }
+  ],
+  "cedears-meta": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 40800
+    }
+  ],
+  "cedears-metac": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 25.68
+    }
+  ],
+  "cedears-metad": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 26.78
+    }
+  ],
+  "cedears-mfg": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 17710
+    }
+  ],
+  "cedears-mglu3": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1794
+    }
+  ],
+  "cedears-mmm": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 26660
+    }
+  ],
+  "cedears-mmmc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16.61
+    }
+  ],
+  "cedears-mmmd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 17.41
+    }
+  ],
+  "cedears-mo": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 27220
+    }
+  ],
+  "cedears-moc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 17.3
+    }
+  ],
+  "cedears-mod": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 17.94
+    }
+  ],
+  "cedears-mos": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8120
+    }
+  ],
+  "cedears-mosc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.82
+    }
+  ],
+  "cedears-mosd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.33
+    }
+  ],
+  "cedears-mp": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8625
+    }
+  ],
+  "cedears-mpc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.46
+    }
+  ],
+  "cedears-mpd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.7
+    }
+  ],
+  "cedears-mrk": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 47700
+    }
+  ],
+  "cedears-mrkc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 29.72
+    }
+  ],
+  "cedears-mrkd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 31.3
+    }
+  ],
+  "cedears-mrna": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12170
+    }
+  ],
+  "cedears-mrnac": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.66
+    }
+  ],
+  "cedears-mrnad": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.97
+    }
+  ],
+  "cedears-mrsh": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18360
+    }
+  ],
+  "cedears-mrvl": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 25340
+    }
+  ],
+  "cedears-mrvld": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16.65
+    }
+  ],
+  "cedears-ms": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8420
+    }
+  ],
+  "cedears-msd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.56
+    }
+  ],
+  "cedears-msft": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 26460
+    }
+  ],
+  "cedears-msftc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16.6
+    }
+  ],
+  "cedears-msftd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 17.32
+    }
+  ],
+  "cedears-msi": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 37060
+    }
+  ],
+  "cedears-mstr": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11340
+    }
+  ],
+  "cedears-mstrc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.15
+    }
+  ],
+  "cedears-mstrd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.42
+    }
+  ],
+  "cedears-mu": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 323000
+    }
+  ],
+  "cedears-muc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 202.5
+    }
+  ],
+  "cedears-mud": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 211
+    }
+  ],
+  "cedears-mufg": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 38200
+    }
+  ],
+  "cedears-mufgd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 24.93
+    }
+  ],
+  "cedears-mux": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15820
+    }
+  ],
+  "cedears-muxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10.53
+    }
+  ],
+  "cedears-nat3d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1.77
+    }
+  ],
+  "cedears-natu3": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2750
+    }
+  ],
+  "cedears-nbis": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13300
+    }
+  ],
+  "cedears-nbisc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.03
+    }
+  ],
+  "cedears-nbisd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.6
+    }
+  ],
+  "cedears-nee": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6850
+    }
+  ],
+  "cedears-neec": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.3
+    }
+  ],
+  "cedears-need": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.59
+    }
+  ],
+  "cedears-nem": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 67550
+    }
+  ],
+  "cedears-nemd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 44.01
+    }
+  ],
+  "cedears-nflx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2597.5
+    }
+  ],
+  "cedears-nflxc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1.67
+    }
+  ],
+  "cedears-nflxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1.7
+    }
+  ],
+  "cedears-ng": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 51100
+    }
+  ],
+  "cedears-ngc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 38.15
+    }
+  ],
+  "cedears-ngd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 33.93
+    }
+  ],
+  "cedears-ngg": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 62000
+    }
+  ],
+  "cedears-nio": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1496
+    }
+  ],
+  "cedears-nioc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.94
+    }
+  ],
+  "cedears-niod": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.99
+    }
+  ],
+  "cedears-nke": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5090
+    }
+  ],
+  "cedears-nkec": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.31
+    }
+  ],
+  "cedears-nked": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.35
+    }
+  ],
+  "cedears-nmr": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16880
+    }
+  ],
+  "cedears-noka": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15880
+    }
+  ],
+  "cedears-now": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1299
+    }
+  ],
+  "cedears-nowc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.82
+    }
+  ],
+  "cedears-nowd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.86
+    }
+  ],
+  "cedears-ntes": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13500
+    }
+  ],
+  "cedears-ntesc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.71
+    }
+  ],
+  "cedears-ntesd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.75
+    }
+  ],
+  "cedears-ntra": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10250
+    }
+  ],
+  "cedears-ntrad": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.71
+    }
+  ],
+  "cedears-nu": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12190
+    }
+  ],
+  "cedears-nuc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.72
+    }
+  ],
+  "cedears-nud": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.98
+    }
+  ],
+  "cedears-nue": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 25820
+    }
+  ],
+  "cedears-nvda": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15240
+    }
+  ],
+  "cedears-nvdac": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.6
+    }
+  ],
+  "cedears-nvdad": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10
+    }
+  ],
+  "cedears-nvo": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10520
+    }
+  ],
+  "cedears-nvoc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.55
+    }
+  ],
+  "cedears-nvod": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.88
+    }
+  ],
+  "cedears-nvs": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 63575
+    }
+  ],
+  "cedears-nvsc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 36.71
+    }
+  ],
+  "cedears-nvsd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 40.21
+    }
+  ],
+  "cedears-nxe": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 17140
+    }
+  ],
+  "cedears-nxed": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11.5
+    }
+  ],
+  "cedears-o": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7480
+    }
+  ],
+  "cedears-oc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.81
+    }
+  ],
+  "cedears-od": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.93
+    }
+  ],
+  "cedears-oklo": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2348
+    }
+  ],
+  "cedears-okloc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1.42
+    }
+  ],
+  "cedears-oklod": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1.54
+    }
+  ],
+  "cedears-onds": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6075
+    }
+  ],
+  "cedears-ondsc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.21
+    }
+  ],
+  "cedears-ondsd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4
+    }
+  ],
+  "cedears-orcl": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 83900
+    }
+  ],
+  "cedears-orclc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 51.8
+    }
+  ],
+  "cedears-orcld": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 54.8
+    }
+  ],
+  "cedears-orly": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 625.5
+    }
+  ],
+  "cedears-orlyc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.4
+    }
+  ],
+  "cedears-orlyd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.41
+    }
+  ],
+  "cedears-oxy": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19100
+    }
+  ],
+  "cedears-oxyc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12.55
+    }
+  ],
+  "cedears-oxyd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12.44
+    }
+  ],
+  "cedears-paas": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 27200
+    }
+  ],
+  "cedears-paasc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 17.03
+    }
+  ],
+  "cedears-paasd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 17.9
+    }
+  ],
+  "cedears-pac": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 20550
+    }
+  ],
+  "cedears-pags": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5115
+    }
+  ],
+  "cedears-pagsd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.39
+    }
+  ],
+  "cedears-panw": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10600
+    }
+  ],
+  "cedears-panwc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.79
+    }
+  ],
+  "cedears-panwd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.93
+    }
+  ],
+  "cedears-path": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12130
+    }
+  ],
+  "cedears-pathd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.97
+    }
+  ],
+  "cedears-pbi": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 27500
+    }
+  ],
+  "cedears-pbr": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 32000
+    }
+  ],
+  "cedears-pbrc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 20.17
+    }
+  ],
+  "cedears-pbrd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 21
+    }
+  ],
+  "cedears-pcar": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 65825
+    }
+  ],
+  "cedears-pcard": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 44.29
+    }
+  ],
+  "cedears-pdd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5210
+    }
+  ],
+  "cedears-pddc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.98
+    }
+  ],
+  "cedears-pddd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.47
+    }
+  ],
+  "cedears-pep": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12170
+    }
+  ],
+  "cedears-pepc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.8
+    }
+  ],
+  "cedears-pepd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.97
+    }
+  ],
+  "cedears-petr3": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15950
+    }
+  ],
+  "cedears-petrc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.16
+    }
+  ],
+  "cedears-petrd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10.64
+    }
+  ],
+  "cedears-pfe": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11300
+    }
+  ],
+  "cedears-pfec": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.16
+    }
+  ],
+  "cedears-pfed": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.39
+    }
+  ],
+  "cedears-pg": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15410
+    }
+  ],
+  "cedears-pgc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.88
+    }
+  ],
+  "cedears-pgd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10.22
+    }
+  ],
+  "cedears-phg": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8190
+    }
+  ],
+  "cedears-pins": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4647.5
+    }
+  ],
+  "cedears-pinsd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.06
+    }
+  ],
+  "cedears-pks": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 33080
+    }
+  ],
+  "cedears-pld": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7500
+    }
+  ],
+  "cedears-pldd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5
+    }
+  ],
+  "cedears-pltr": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 92350
+    }
+  ],
+  "cedears-pltrc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 58.5
+    }
+  ],
+  "cedears-pltrd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 61
+    }
+  ],
+  "cedears-pm": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16060
+    }
+  ],
+  "cedears-pmc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10.68
+    }
+  ],
+  "cedears-pmd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10.79
+    }
+  ],
+  "cedears-prio3": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9390
+    }
+  ],
+  "cedears-psq": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5110
+    }
+  ],
+  "cedears-psqc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.1
+    }
+  ],
+  "cedears-psqd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.33
+    }
+  ],
+  "cedears-psx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 67325
+    }
+  ],
+  "cedears-psxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 44.64
+    }
+  ],
+  "cedears-pypl": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10930
+    }
+  ],
+  "cedears-pyplc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.75
+    }
+  ],
+  "cedears-pypld": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.15
+    }
+  ],
+  "cedears-qcom": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 24400
+    }
+  ],
+  "cedears-qcomc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15.45
+    }
+  ],
+  "cedears-qcomd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15.95
+    }
+  ],
+  "cedears-qqq": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 57050
+    }
+  ],
+  "cedears-qqqc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 36.04
+    }
+  ],
+  "cedears-qqqd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 37.4
+    }
+  ],
+  "cedears-race": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7830
+    }
+  ],
+  "cedears-racec": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.99
+    }
+  ],
+  "cedears-raced": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.16
+    }
+  ],
+  "cedears-rblx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 34280
+    }
+  ],
+  "cedears-rblxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 22.63
+    }
+  ],
+  "cedears-rent3": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5650
+    }
+  ],
+  "cedears-rgti": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12090
+    }
+  ],
+  "cedears-rgtic": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.57
+    }
+  ],
+  "cedears-rgtid": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.96
+    }
+  ],
+  "cedears-rio": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 20410
+    }
+  ],
+  "cedears-rioc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12.83
+    }
+  ],
+  "cedears-riod": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13.46
+    }
+  ],
+  "cedears-riot": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11550
+    }
+  ],
+  "cedears-riotc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.33
+    }
+  ],
+  "cedears-riotd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.6
+    }
+  ],
+  "cedears-rklb": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8440
+    }
+  ],
+  "cedears-rklbc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.37
+    }
+  ],
+  "cedears-rklbd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.55
+    }
+  ],
+  "cedears-roku": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19030
+    }
+  ],
+  "cedears-rokud": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12.71
+    }
+  ],
+  "cedears-rost": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 91375
+    }
+  ],
+  "cedears-rostd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 57.7
+    }
+  ],
+  "cedears-rsp": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11560
+    }
+  ],
+  "cedears-rspc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.41
+    }
+  ],
+  "cedears-rspd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.69
+    }
+  ],
+  "cedears-rtx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 63625
+    }
+  ],
+  "cedears-rtxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 42.18
+    }
+  ],
+  "cedears-san": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 94475
+    }
+  ],
+  "cedears-sanc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 56.4
+    }
+  ],
+  "cedears-sand": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 62.6
+    }
+  ],
+  "cedears-sap": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 56600
+    }
+  ],
+  "cedears-sapd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 37.06
+    }
+  ],
+  "cedears-satl": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7385
+    }
+  ],
+  "cedears-satlc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.67
+    }
+  ],
+  "cedears-satld": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.83
+    }
+  ],
+  "cedears-sbs": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16310
+    }
+  ],
+  "cedears-sbsp3": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8125
+    }
+  ],
+  "cedears-sbux": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13780
+    }
+  ],
+  "cedears-sbuxc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.79
+    }
+  ],
+  "cedears-sbuxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.06
+    }
+  ],
+  "cedears-scco": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 157075
+    }
+  ],
+  "cedears-schw": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9810
+    }
+  ],
+  "cedears-sda": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 485
+    }
+  ],
+  "cedears-se": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5525
+    }
+  ],
+  "cedears-sec": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.83
+    }
+  ],
+  "cedears-sed": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.63
+    }
+  ],
+  "cedears-sh": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6420
+    }
+  ],
+  "cedears-shc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.06
+    }
+  ],
+  "cedears-shd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.23
+    }
+  ],
+  "cedears-shel": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 73900
+    }
+  ],
+  "cedears-shelc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 45.43
+    }
+  ],
+  "cedears-sheld": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 48.36
+    }
+  ],
+  "cedears-shop": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2105
+    }
+  ],
+  "cedears-shopc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1.31
+    }
+  ],
+  "cedears-shopd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1.41
+    }
+  ],
+  "cedears-shw": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7600
+    }
+  ],
+  "cedears-shwd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.11
+    }
+  ],
+  "cedears-sid": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15510
+    }
+  ],
+  "cedears-sidc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.01
+    }
+  ],
+  "cedears-sidd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10.33
+    }
+  ],
+  "cedears-siegy": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 81500
+    }
+  ],
+  "cedears-skhy": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11250
+    }
+  ],
+  "cedears-skhyd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.46
+    }
+  ],
+  "cedears-slb": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 30460
+    }
+  ],
+  "cedears-slbc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19
+    }
+  ],
+  "cedears-slbd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19.78
+    }
+  ],
+  "cedears-slv": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15790
+    }
+  ],
+  "cedears-slvc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10.01
+    }
+  ],
+  "cedears-slvd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10.36
+    }
+  ],
+  "cedears-smh": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18040
+    }
+  ],
+  "cedears-smhc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11.45
+    }
+  ],
+  "cedears-smhd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11.92
+    }
+  ],
+  "cedears-sna": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 101050
+    }
+  ],
+  "cedears-snap": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8705
+    }
+  ],
+  "cedears-snapd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.02
+    }
+  ],
+  "cedears-sndk": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16220
+    }
+  ],
+  "cedears-sndkc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10.13
+    }
+  ],
+  "cedears-sndkd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10.5
+    }
+  ],
+  "cedears-snow": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 17920
+    }
+  ],
+  "cedears-snowc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10.41
+    }
+  ],
+  "cedears-snowd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11.87
+    }
+  ],
+  "cedears-sony": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4870
+    }
+  ],
+  "cedears-sonyc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.96
+    }
+  ],
+  "cedears-sonyd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.17
+    }
+  ],
+  "cedears-spce": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9600
+    }
+  ],
+  "cedears-spced": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.26
+    }
+  ],
+  "cedears-spcx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4700
+    }
+  ],
+  "cedears-spcxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.05
+    }
+  ],
+  "cedears-spgi": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15600
+    }
+  ],
+  "cedears-spgic": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.39
+    }
+  ],
+  "cedears-spgid": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10.31
+    }
+  ],
+  "cedears-sphq": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9675
+    }
+  ],
+  "cedears-sphqc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.11
+    }
+  ],
+  "cedears-sphqd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.4
+    }
+  ],
+  "cedears-spot": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 30600
+    }
+  ],
+  "cedears-spotc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19.75
+    }
+  ],
+  "cedears-spotd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 20.19
+    }
+  ],
+  "cedears-spxl": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18370
+    }
+  ],
+  "cedears-spxlc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11.72
+    }
+  ],
+  "cedears-spxld": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12.34
+    }
+  ],
+  "cedears-spy": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 20410
+    }
+  ],
+  "cedears-spyc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12.9
+    }
+  ],
+  "cedears-spyd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13.42
+    }
+  ],
+  "cedears-stla": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1740
+    }
+  ],
+  "cedears-stlac": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1.06
+    }
+  ],
+  "cedears-stlad": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1.15
+    }
+  ],
+  "cedears-stne": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5350
+    }
+  ],
+  "cedears-stnec": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.47
+    }
+  ],
+  "cedears-stned": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.54
+    }
+  ],
+  "cedears-suz": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 14460
+    }
+  ],
+  "cedears-suzb3": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 14500
+    }
+  ],
+  "cedears-suzd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.4
+    }
+  ],
+  "cedears-swks": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5590
+    }
+  ],
+  "cedears-swksd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.5
+    }
+  ],
+  "cedears-syy": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15840
+    }
+  ],
+  "cedears-syyd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10.67
+    }
+  ],
+  "cedears-t": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13550
+    }
+  ],
+  "cedears-tc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.6
+    }
+  ],
+  "cedears-tcom": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 32520
+    }
+  ],
+  "cedears-tcomd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 22.8
+    }
+  ],
+  "cedears-td": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.98
+    }
+  ],
+  "cedears-team": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6300
+    }
+  ],
+  "cedears-teamd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.2
+    }
+  ],
+  "cedears-tem": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8530
+    }
+  ],
+  "cedears-temd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.77
+    }
+  ],
+  "cedears-ten": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 89450
+    }
+  ],
+  "cedears-tenc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 53
+    }
+  ],
+  "cedears-tend": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 58.9
+    }
+  ],
+  "cedears-tgt": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10860
+    }
+  ],
+  "cedears-tgtc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.67
+    }
+  ],
+  "cedears-tgtd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.1
+    }
+  ],
+  "cedears-timb": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 29260
+    }
+  ],
+  "cedears-timbd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18.58
+    }
+  ],
+  "cedears-tims3": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5900
+    }
+  ],
+  "cedears-tjx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9740
+    }
+  ],
+  "cedears-tjxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.32
+    }
+  ],
+  "cedears-tln": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7955
+    }
+  ],
+  "cedears-tlnd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.24
+    }
+  ],
+  "cedears-tm": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 20800
+    }
+  ],
+  "cedears-tmc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13.25
+    }
+  ],
+  "cedears-tmd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13.66
+    }
+  ],
+  "cedears-tmo": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 43980
+    }
+  ],
+  "cedears-tmod": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 28.62
+    }
+  ],
+  "cedears-tmus": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8675
+    }
+  ],
+  "cedears-tmusd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.84
+    }
+  ],
+  "cedears-tqqq": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4587.5
+    }
+  ],
+  "cedears-tqqqc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.88
+    }
+  ],
+  "cedears-tqqqd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3
+    }
+  ],
+  "cedears-trip": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7380
+    }
+  ],
+  "cedears-tripc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.4
+    }
+  ],
+  "cedears-tripd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.73
+    }
+  ],
+  "cedears-trvv": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 97325
+    }
+  ],
+  "cedears-trvvd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 63.6
+    }
+  ],
+  "cedears-tsla": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 37540
+    }
+  ],
+  "cedears-tslac": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 23.58
+    }
+  ],
+  "cedears-tslad": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 24.6
+    }
+  ],
+  "cedears-tsm": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 75525
+    }
+  ],
+  "cedears-tsmc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 47.92
+    }
+  ],
+  "cedears-tsmd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 49.6
+    }
+  ],
+  "cedears-tte": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 46880
+    }
+  ],
+  "cedears-tted": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 30.39
+    }
+  ],
+  "cedears-tv": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1372
+    }
+  ],
+  "cedears-tvd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.94
+    }
+  ],
+  "cedears-twlo": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10220
+    }
+  ],
+  "cedears-twlod": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.71
+    }
+  ],
+  "cedears-txn": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 82200
+    }
+  ],
+  "cedears-txnc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 50.3
+    }
+  ],
+  "cedears-txnd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 54
+    }
+  ],
+  "cedears-txr": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 22980
+    }
+  ],
+  "cedears-txrc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13.56
+    }
+  ],
+  "cedears-txrd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15.06
+    }
+  ],
+  "cedears-ual": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 35280
+    }
+  ],
+  "cedears-ualc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 21.62
+    }
+  ],
+  "cedears-uald": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 23.17
+    }
+  ],
+  "cedears-uber": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 60225
+    }
+  ],
+  "cedears-uberc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 38.67
+    }
+  ],
+  "cedears-uberd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 39.5
+    }
+  ],
+  "cedears-ugp": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11480
+    }
+  ],
+  "cedears-ugpd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.17
+    }
+  ],
+  "cedears-ul": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 34000
+    }
+  ],
+  "cedears-ulc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 21.17
+    }
+  ],
+  "cedears-uld": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 22.17
+    }
+  ],
+  "cedears-unh": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19100
+    }
+  ],
+  "cedears-unhc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12.1
+    }
+  ],
+  "cedears-unhd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12.5
+    }
+  ],
+  "cedears-unp": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 22960
+    }
+  ],
+  "cedears-unpd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15.32
+    }
+  ],
+  "cedears-upst": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8770
+    }
+  ],
+  "cedears-upstc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.4
+    }
+  ],
+  "cedears-upstd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.78
+    }
+  ],
+  "cedears-ura": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 14650
+    }
+  ],
+  "cedears-urac": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.2
+    }
+  ],
+  "cedears-urad": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.53
+    }
+  ],
+  "cedears-urbn": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 64150
+    }
+  ],
+  "cedears-urbnd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 36.31
+    }
+  ],
+  "cedears-usb": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 20140
+    }
+  ],
+  "cedears-uso": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 14970
+    }
+  ],
+  "cedears-usod": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9.88
+    }
+  ],
+  "cedears-v": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 33100
+    }
+  ],
+  "cedears-val3c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16.33
+    }
+  ],
+  "cedears-val3d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16.27
+    }
+  ],
+  "cedears-vale": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12070
+    }
+  ],
+  "cedears-vale3": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 24390
+    }
+  ],
+  "cedears-valec": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.78
+    }
+  ],
+  "cedears-valed": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.95
+    }
+  ],
+  "cedears-vc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 20.88
+    }
+  ],
+  "cedears-vd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 21.74
+    }
+  ],
+  "cedears-vea": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11720
+    }
+  ],
+  "cedears-veac": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.47
+    }
+  ],
+  "cedears-vead": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7.68
+    }
+  ],
+  "cedears-vig": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9825
+    }
+  ],
+  "cedears-vigc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.25
+    }
+  ],
+  "cedears-vigd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.49
+    }
+  ],
+  "cedears-vist": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 39060
+    }
+  ],
+  "cedears-vistc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 24.52
+    }
+  ],
+  "cedears-vistd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 25.64
+    }
+  ],
+  "cedears-viv": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18430
+    }
+  ],
+  "cedears-vivd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 11.94
+    }
+  ],
+  "cedears-vivt3": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9390
+    }
+  ],
+  "cedears-vod": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 26780
+    }
+  ],
+  "cedears-vodc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13.3
+    }
+  ],
+  "cedears-vodd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16.6
+    }
+  ],
+  "cedears-vrsn": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 77225
+    }
+  ],
+  "cedears-vrsnd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 51.4
+    }
+  ],
+  "cedears-vrtx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8540
+    }
+  ],
+  "cedears-vrtxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.71
+    }
+  ],
+  "cedears-vst": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9100
+    }
+  ],
+  "cedears-vstc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.78
+    }
+  ],
+  "cedears-vstd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6
+    }
+  ],
+  "cedears-vxx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5625
+    }
+  ],
+  "cedears-vxxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.63
+    }
+  ],
+  "cedears-vz": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19700
+    }
+  ],
+  "cedears-vzc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12.72
+    }
+  ],
+  "cedears-vzd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13.13
+    }
+  ],
+  "cedears-wbo": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1789
+    }
+  ],
+  "cedears-wbod": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1.18
+    }
+  ],
+  "cedears-wdc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8090
+    }
+  ],
+  "cedears-wdcd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.34
+    }
+  ],
+  "cedears-wege3": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16120
+    }
+  ],
+  "cedears-well": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7825
+    }
+  ],
+  "cedears-welld": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.14
+    }
+  ],
+  "cedears-wfc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 28620
+    }
+  ],
+  "cedears-wfcc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 17.86
+    }
+  ],
+  "cedears-wfcd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18.73
+    }
+  ],
+  "cedears-wmt": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9470
+    }
+  ],
+  "cedears-wmtc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.04
+    }
+  ],
+  "cedears-wmtd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.25
+    }
+  ],
+  "cedears-xlb": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4600
+    }
+  ],
+  "cedears-xlbc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.92
+    }
+  ],
+  "cedears-xlbd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.02
+    }
+  ],
+  "cedears-xlc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9375
+    }
+  ],
+  "cedears-xlcc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.87
+    }
+  ],
+  "cedears-xlcd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.11
+    }
+  ],
+  "cedears-xle": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 50800
+    }
+  ],
+  "cedears-xlec": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 32.48
+    }
+  ],
+  "cedears-xled": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 33.6
+    }
+  ],
+  "cedears-xlf": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 46060
+    }
+  ],
+  "cedears-xlfc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 29.34
+    }
+  ],
+  "cedears-xlfd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 30.27
+    }
+  ],
+  "cedears-xli": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9960
+    }
+  ],
+  "cedears-xlic": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.23
+    }
+  ],
+  "cedears-xlid": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.56
+    }
+  ],
+  "cedears-xlk": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6485
+    }
+  ],
+  "cedears-xlkc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.08
+    }
+  ],
+  "cedears-xlkd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.36
+    }
+  ],
+  "cedears-xlp": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8410
+    }
+  ],
+  "cedears-xlpc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.32
+    }
+  ],
+  "cedears-xlpd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.53
+    }
+  ],
+  "cedears-xlre": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7710
+    }
+  ],
+  "cedears-xlrec": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.9
+    }
+  ],
+  "cedears-xlred": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.09
+    }
+  ],
+  "cedears-xlu": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4560
+    }
+  ],
+  "cedears-xluc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.88
+    }
+  ],
+  "cedears-xlud": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.02
+    }
+  ],
+  "cedears-xlv": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9400
+    }
+  ],
+  "cedears-xlvc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.92
+    }
+  ],
+  "cedears-xlvd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.24
+    }
+  ],
+  "cedears-xly": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4200
+    }
+  ],
+  "cedears-xlyc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.71
+    }
+  ],
+  "cedears-xlyd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.77
+    }
+  ],
+  "cedears-xme": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6250
+    }
+  ],
+  "cedears-xmed": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.07
+    }
+  ],
+  "cedears-xom": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 25280
+    }
+  ],
+  "cedears-xomc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16
+    }
+  ],
+  "cedears-xomd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16.67
+    }
+  ],
+  "cedears-xp": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7860
+    }
+  ],
+  "cedears-xpc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.13
+    }
+  ],
+  "cedears-xpd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.13
+    }
+  ],
+  "cedears-xpev": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4337.5
+    }
+  ],
+  "cedears-xpevc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.99
+    }
+  ],
+  "cedears-xpevd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.85
+    }
+  ],
+  "cedears-xrox": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5340
+    }
+  ],
+  "cedears-xroxd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.33
+    }
+  ],
+  "cedears-xyz": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6545
+    }
+  ],
+  "cedears-xyzc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.07
+    }
+  ],
+  "cedears-xyzd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.26
+    }
+  ],
+  "cedears-yelp": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 17200
+    }
+  ],
+  "cedears-yelpd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13.16
+    }
+  ],
+  "cedears-yzca": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.01
+    }
+  ],
+  "cedears-zm": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3390
+    }
+  ],
+  "cedears-zmc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.02
+    }
+  ],
+  "cedears-zmd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.24
+    }
+  ]
+}

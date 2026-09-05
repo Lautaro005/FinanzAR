@@ -1,1 +1,572 @@
-{}
+{
+  "acciones-a3": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2870
+    }
+  ],
+  "acciones-agro": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 39.2
+    }
+  ],
+  "acciones-alua": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 845
+    }
+  ],
+  "acciones-aluad": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.56
+    }
+  ],
+  "acciones-auso": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3120
+    }
+  ],
+  "acciones-bbar": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7850
+    }
+  ],
+  "acciones-bbard": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.12
+    }
+  ],
+  "acciones-bhip": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 314
+    }
+  ],
+  "acciones-bma": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12480
+    }
+  ],
+  "acciones-bma.d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.15
+    }
+  ],
+  "acciones-bolt": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 62.6
+    }
+  ],
+  "acciones-bpat": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1900
+    }
+  ],
+  "acciones-byma": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 266
+    }
+  ],
+  "acciones-bymad": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.17
+    }
+  ],
+  "acciones-cado": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 545
+    }
+  ],
+  "acciones-capx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3585
+    }
+  ],
+  "acciones-carc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19.15
+    }
+  ],
+  "acciones-ceco2": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 541
+    }
+  ],
+  "acciones-celu": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 207
+    }
+  ],
+  "acciones-cepu": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2216
+    }
+  ],
+  "acciones-cepud": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1.48
+    }
+  ],
+  "acciones-cgpa2": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1770
+    }
+  ],
+  "acciones-come": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 41.39
+    }
+  ],
+  "acciones-comed": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.03
+    }
+  ],
+  "acciones-cres": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1913
+    }
+  ],
+  "acciones-cresd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1.26
+    }
+  ],
+  "acciones-ctio": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1810
+    }
+  ],
+  "acciones-cvh": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9490
+    }
+  ],
+  "acciones-cvhd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.99
+    }
+  ],
+  "acciones-dgcu2": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1615
+    }
+  ],
+  "acciones-dome": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 64
+    }
+  ],
+  "acciones-ecog": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2870
+    }
+  ],
+  "acciones-ecogd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1.89
+    }
+  ],
+  "acciones-edn": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1952
+    }
+  ],
+  "acciones-ednd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1.27
+    }
+  ],
+  "acciones-edsh": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2850
+    }
+  ],
+  "acciones-ferr": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18.9
+    }
+  ],
+  "acciones-fipl": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 150
+    }
+  ],
+  "acciones-gami": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 362
+    }
+  ],
+  "acciones-garo": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 450
+    }
+  ],
+  "acciones-gban": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1850
+    }
+  ],
+  "acciones-gcdi": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 12.6
+    }
+  ],
+  "acciones-gcla": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3750
+    }
+  ],
+  "acciones-ggal": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7025
+    }
+  ],
+  "acciones-ggald": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4.61
+    }
+  ],
+  "acciones-grim": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2390
+    }
+  ],
+  "acciones-harg": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1460
+    }
+  ],
+  "acciones-hava": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4365
+    }
+  ],
+  "acciones-hsat": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 118
+    }
+  ],
+  "acciones-ieb": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1765
+    }
+  ],
+  "acciones-inag": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6850
+    }
+  ],
+  "acciones-intr": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 276
+    }
+  ],
+  "acciones-invj": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 420
+    }
+  ],
+  "acciones-irsa": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2400
+    }
+  ],
+  "acciones-irsad": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1.6
+    }
+  ],
+  "acciones-lede": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 870
+    }
+  ],
+  "acciones-loma": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3270
+    }
+  ],
+  "acciones-lomad": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.15
+    }
+  ],
+  "acciones-long": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18
+    }
+  ],
+  "acciones-metr": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2375
+    }
+  ],
+  "acciones-metrd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1.55
+    }
+  ],
+  "acciones-mirg": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1920
+    }
+  ],
+  "acciones-mola": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 22000
+    }
+  ],
+  "acciones-moli": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2455
+    }
+  ],
+  "acciones-mori": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 22.55
+    }
+  ],
+  "acciones-oest": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 780
+    }
+  ],
+  "acciones-pamp": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5380
+    }
+  ],
+  "acciones-pampd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.54
+    }
+  ],
+  "acciones-pata": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1250
+    }
+  ],
+  "acciones-poll": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 298
+    }
+  ],
+  "acciones-ragh": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1750
+    }
+  ],
+  "acciones-rege": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 7100
+    }
+  ],
+  "acciones-reit": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1038
+    }
+  ],
+  "acciones-reitd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.67
+    }
+  ],
+  "acciones-rich": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1575
+    }
+  ],
+  "acciones-rigo": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 440
+    }
+  ],
+  "acciones-rose": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 160
+    }
+  ],
+  "acciones-sami": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 478
+    }
+  ],
+  "acciones-semi": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 15.65
+    }
+  ],
+  "acciones-supv": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2795
+    }
+  ],
+  "acciones-supvd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1.83
+    }
+  ],
+  "acciones-teco2": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 4125
+    }
+  ],
+  "acciones-tecod": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.77
+    }
+  ],
+  "acciones-tgn4d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.13
+    }
+  ],
+  "acciones-tgno4": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3215
+    }
+  ],
+  "acciones-tgsu2": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 9200
+    }
+  ],
+  "acciones-tgsud": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.03
+    }
+  ],
+  "acciones-tran": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3060
+    }
+  ],
+  "acciones-trand": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 2.01
+    }
+  ],
+  "acciones-txar": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 691
+    }
+  ],
+  "acciones-txard": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.45
+    }
+  ],
+  "acciones-valo": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 543
+    }
+  ],
+  "acciones-valod": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.36
+    }
+  ],
+  "acciones-ypfd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8355
+    }
+  ],
+  "acciones-ypfdd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5.5
+    }
+  ]
+}

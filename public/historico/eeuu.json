@@ -1,1 +1,542 @@
-{}
+{
+  "eeuu-aal": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 13.14
+    }
+  ],
+  "eeuu-aapl": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 319.61
+    }
+  ],
+  "eeuu-abbv": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 256.36
+    }
+  ],
+  "eeuu-abnb": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 181.89
+    }
+  ],
+  "eeuu-adbe": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 266.51
+    }
+  ],
+  "eeuu-adi": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 362.32
+    }
+  ],
+  "eeuu-amat": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 454.5
+    }
+  ],
+  "eeuu-amd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 476
+    }
+  ],
+  "eeuu-amgn": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 413.99
+    }
+  ],
+  "eeuu-amzn": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 258.21
+    }
+  ],
+  "eeuu-anet": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 193.61
+    }
+  ],
+  "eeuu-arm": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 252.39
+    }
+  ],
+  "eeuu-asml": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1711
+    }
+  ],
+  "eeuu-avgo": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 357.45
+    }
+  ],
+  "eeuu-ba": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 212.14
+    }
+  ],
+  "eeuu-baba": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 113.15
+    }
+  ],
+  "eeuu-bac": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 62.66
+    }
+  ],
+  "eeuu-bidu": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 99.51
+    }
+  ],
+  "eeuu-bkng": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 193.28
+    }
+  ],
+  "eeuu-bkr": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 63.48
+    }
+  ],
+  "eeuu-bmy": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 66.82
+    }
+  ],
+  "eeuu-cat": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 813.86
+    }
+  ],
+  "eeuu-ccl": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 23.52
+    }
+  ],
+  "eeuu-cl": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 88.75
+    }
+  ],
+  "eeuu-coin": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 184.81
+    }
+  ],
+  "eeuu-cop": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 134.27
+    }
+  ],
+  "eeuu-cost": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 916
+    }
+  ],
+  "eeuu-crm": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 259.4
+    }
+  ],
+  "eeuu-crwd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 212.98
+    }
+  ],
+  "eeuu-csco": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 109.15
+    }
+  ],
+  "eeuu-cvs": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 96.73
+    }
+  ],
+  "eeuu-cvx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 208.5
+    }
+  ],
+  "eeuu-dal": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 80.15
+    }
+  ],
+  "eeuu-de": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 693.48
+    }
+  ],
+  "eeuu-deck": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 85.81
+    }
+  ],
+  "eeuu-dell": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 522.35
+    }
+  ],
+  "eeuu-dis": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 105.3
+    }
+  ],
+  "eeuu-docu": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 68.44
+    }
+  ],
+  "eeuu-ebay": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 103.43
+    }
+  ],
+  "eeuu-etsy": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 76.47
+    }
+  ],
+  "eeuu-f": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 14.62
+    }
+  ],
+  "eeuu-fdx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 322.44
+    }
+  ],
+  "eeuu-fslr": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 204.45
+    }
+  ],
+  "eeuu-ge": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 337
+    }
+  ],
+  "eeuu-gild": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 150.96
+    }
+  ],
+  "eeuu-gm": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 87.72
+    }
+  ],
+  "eeuu-googl": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 338.8
+    }
+  ],
+  "eeuu-gs": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1038.57
+    }
+  ],
+  "eeuu-hal": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 36.9
+    }
+  ],
+  "eeuu-hd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 321.05
+    }
+  ],
+  "eeuu-hims": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 27.74
+    }
+  ],
+  "eeuu-hon": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 209.57
+    }
+  ],
+  "eeuu-hood": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 121.96
+    }
+  ],
+  "eeuu-hpq": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 32.63
+    }
+  ],
+  "eeuu-ibm": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 234.61
+    }
+  ],
+  "eeuu-intc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 95.49
+    }
+  ],
+  "eeuu-jd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 28.27
+    }
+  ],
+  "eeuu-jnj": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 275.84
+    }
+  ],
+  "eeuu-jpm": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 358.35
+    }
+  ],
+  "eeuu-ko": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 88.16
+    }
+  ],
+  "eeuu-ma": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 579.16
+    }
+  ],
+  "eeuu-mcd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 255.86
+    }
+  ],
+  "eeuu-meli": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1978.1
+    }
+  ],
+  "eeuu-meta": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 614.56
+    }
+  ],
+  "eeuu-mmm": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 168.53
+    }
+  ],
+  "eeuu-mo": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 68.89
+    }
+  ],
+  "eeuu-mrk": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 150.33
+    }
+  ],
+  "eeuu-msft": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 499.62
+    }
+  ],
+  "eeuu-mu": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1013.27
+    }
+  ],
+  "eeuu-nflx": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 78.33
+    }
+  ],
+  "eeuu-nke": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 38.41
+    }
+  ],
+  "eeuu-nvda": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 229.96
+    }
+  ],
+  "eeuu-orcl": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 158.95
+    }
+  ],
+  "eeuu-pep": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 137.62
+    }
+  ],
+  "eeuu-pfe": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 28.46
+    }
+  ],
+  "eeuu-pg": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 146.46
+    }
+  ],
+  "eeuu-pypl": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 54.97
+    }
+  ],
+  "eeuu-qcom": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 168.3
+    }
+  ],
+  "eeuu-sbux": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 104.49
+    }
+  ],
+  "eeuu-t": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 25.67
+    }
+  ],
+  "eeuu-tsla": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 353.33
+    }
+  ],
+  "eeuu-txn": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 258.15
+    }
+  ],
+  "eeuu-unh": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 396.49
+    }
+  ],
+  "eeuu-ups": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 102.3
+    }
+  ],
+  "eeuu-v": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 374.81
+    }
+  ],
+  "eeuu-voo": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 707.31
+    }
+  ],
+  "eeuu-vz": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 50.14
+    }
+  ],
+  "eeuu-wfc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 89.94
+    }
+  ],
+  "eeuu-wmt": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 107.17
+    }
+  ],
+  "eeuu-xom": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 159.32
+    }
+  ]
+}

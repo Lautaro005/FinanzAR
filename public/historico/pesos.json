@@ -1,1 +1,182 @@
-{}
+{
+  "pf-banco-bica": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 23
+    }
+  ],
+  "pf-banco-cmf": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 23.5
+    }
+  ],
+  "pf-banco-comafi-sociedad-anonima": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19
+    }
+  ],
+  "pf-banco-credicoop": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18.5
+    }
+  ],
+  "pf-banco-de-comercio": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 21.5
+    }
+  ],
+  "pf-banco-de-formosa": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18.5
+    }
+  ],
+  "pf-banco-de-la-ciudad-de-buenos-aires": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18
+    }
+  ],
+  "pf-banco-de-la-provincia-de-cordoba": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 20.75
+    }
+  ],
+  "pf-banco-del-chubut": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19.5
+    }
+  ],
+  "pf-banco-del-sol": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 23
+    }
+  ],
+  "pf-banco-dino": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 20
+    }
+  ],
+  "pf-banco-galicia": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18.5
+    }
+  ],
+  "pf-banco-hipotecario": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18.5
+    }
+  ],
+  "pf-banco-julio-sociedad-anonima": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19
+    }
+  ],
+  "pf-banco-macro": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19.5
+    }
+  ],
+  "pf-banco-mariva": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 23
+    }
+  ],
+  "pf-banco-masventas": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 21
+    }
+  ],
+  "pf-banco-meridian": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 22.5
+    }
+  ],
+  "pf-banco-nacion": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19.5
+    }
+  ],
+  "pf-banco-patagonia": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 16
+    }
+  ],
+  "pf-banco-provincia": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 21
+    }
+  ],
+  "pf-banco-provincia-de-tierra-del-fuego": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19
+    }
+  ],
+  "pf-banco-santander": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 17
+    }
+  ],
+  "pf-banco-voii": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 22.75
+    }
+  ],
+  "pf-bbva-frances": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 19.5
+    }
+  ],
+  "pf-bibank": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 21.5
+    }
+  ],
+  "pf-credito-regional-compania-financiera": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 23.5
+    }
+  ],
+  "pf-industrial-and-commercial-bank-of-china-argentina": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 18.1
+    }
+  ],
+  "pf-reba-compania-financiera": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 24
+    }
+  ],
+  "pf-uala": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 21
+    }
+  ]
+}

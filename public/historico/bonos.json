@@ -1,1 +1,1172 @@
-{}
+{
+  "bonos-ae38": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 120330
+    }
+  ],
+  "bonos-ae38c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 76
+    }
+  ],
+  "bonos-ae38d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 79.05
+    }
+  ],
+  "bonos-al29": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 83000
+    }
+  ],
+  "bonos-al29c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 52.25
+    }
+  ],
+  "bonos-al29d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 54.4
+    }
+  ],
+  "bonos-al30": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 85300
+    }
+  ],
+  "bonos-al30c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 53.73
+    }
+  ],
+  "bonos-al30d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 55.92
+    }
+  ],
+  "bonos-al35": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 116500
+    }
+  ],
+  "bonos-al35c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 73.46
+    }
+  ],
+  "bonos-al35d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 76.98
+    }
+  ],
+  "bonos-al41": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 108520
+    }
+  ],
+  "bonos-al41c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 68.74
+    }
+  ],
+  "bonos-al41d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 71.57
+    }
+  ],
+  "bonos-an29": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 141370
+    }
+  ],
+  "bonos-an29c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 89.15
+    }
+  ],
+  "bonos-an29d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 92.65
+    }
+  ],
+  "bonos-ao27": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 156990
+    }
+  ],
+  "bonos-ao27c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 98.96
+    }
+  ],
+  "bonos-ao27d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 103.1
+    }
+  ],
+  "bonos-ao28": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 144590
+    }
+  ],
+  "bonos-ao28c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 91.1
+    }
+  ],
+  "bonos-ao28d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 94.93
+    }
+  ],
+  "bonos-ao29": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 138200
+    }
+  ],
+  "bonos-ao29c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 87.02
+    }
+  ],
+  "bonos-ao29d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 90.59
+    }
+  ],
+  "bonos-ba37d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 109500
+    }
+  ],
+  "bonos-ba7dc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 69.2
+    }
+  ],
+  "bonos-ba7dd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 71.91
+    }
+  ],
+  "bonos-baf27": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 103.1
+    }
+  ],
+  "bonos-bam27": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 105.4
+    }
+  ],
+  "bonos-bao27": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 98
+    }
+  ],
+  "bonos-bb37d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 115010
+    }
+  ],
+  "bonos-bb7dc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 74.35
+    }
+  ],
+  "bonos-bb7dd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 76
+    }
+  ],
+  "bonos-bc33c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 105
+    }
+  ],
+  "bonos-bc33d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 109.7
+    }
+  ],
+  "bonos-bc37d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 110610
+    }
+  ],
+  "bonos-bc37e": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 97500
+    }
+  ],
+  "bonos-bc7dc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 73.77
+    }
+  ],
+  "bonos-bc7dd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 76.1
+    }
+  ],
+  "bonos-bdc28": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 100
+    }
+  ],
+  "bonos-bdc33": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 167000
+    }
+  ],
+  "bonos-bdc36": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 159250
+    }
+  ],
+  "bonos-bpa7c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 99.96
+    }
+  ],
+  "bonos-bpa7d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 104
+    }
+  ],
+  "bonos-bpa8c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 89.66
+    }
+  ],
+  "bonos-bpa8d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 93.36
+    }
+  ],
+  "bonos-bpb7c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 100.25
+    }
+  ],
+  "bonos-bpb7d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 104
+    }
+  ],
+  "bonos-bpb8c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 89.8
+    }
+  ],
+  "bonos-bpb8d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 93.4
+    }
+  ],
+  "bonos-bpc7c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 100.2
+    }
+  ],
+  "bonos-bpc7d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 104.15
+    }
+  ],
+  "bonos-bpd7c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 100.2
+    }
+  ],
+  "bonos-bpd7d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 104.2
+    }
+  ],
+  "bonos-bpoa7": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 158370
+    }
+  ],
+  "bonos-bpoa8": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 141300
+    }
+  ],
+  "bonos-bpob7": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 159200
+    }
+  ],
+  "bonos-bpob8": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 142200
+    }
+  ],
+  "bonos-bpoc7": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 158800
+    }
+  ],
+  "bonos-bpod7": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 158790
+    }
+  ],
+  "bonos-carp": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 63000
+    }
+  ],
+  "bonos-co26": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 5725
+    }
+  ],
+  "bonos-co26d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3.7
+    }
+  ],
+  "bonos-co2d7": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 104
+    }
+  ],
+  "bonos-co32": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 167600
+    }
+  ],
+  "bonos-co32c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 105.45
+    }
+  ],
+  "bonos-co32d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 110
+    }
+  ],
+  "bonos-co35": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 157200
+    }
+  ],
+  "bonos-co35c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 99.18
+    }
+  ],
+  "bonos-co35d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 103.2
+    }
+  ],
+  "bonos-cod7": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 174.35
+    }
+  ],
+  "bonos-cuap": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 43350
+    }
+  ],
+  "bonos-dicp": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 48895
+    }
+  ],
+  "bonos-dicpc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 30.34
+    }
+  ],
+  "bonos-dicpd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 32.26
+    }
+  ],
+  "bonos-dip0": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 48930
+    }
+  ],
+  "bonos-ef25d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 38.68
+    }
+  ],
+  "bonos-em33c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 97.9
+    }
+  ],
+  "bonos-em33d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 101.8
+    }
+  ],
+  "bonos-erf25": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 58400
+    }
+  ],
+  "bonos-erm33": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 162500
+    }
+  ],
+  "bonos-gd29": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 85250
+    }
+  ],
+  "bonos-gd29c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 54
+    }
+  ],
+  "bonos-gd29d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 56.13
+    }
+  ],
+  "bonos-gd30": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 88510
+    }
+  ],
+  "bonos-gd30c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 55.94
+    }
+  ],
+  "bonos-gd30d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 58.1
+    }
+  ],
+  "bonos-gd35": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 121900
+    }
+  ],
+  "bonos-gd35c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 77.02
+    }
+  ],
+  "bonos-gd35d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 80.11
+    }
+  ],
+  "bonos-gd38": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 128200
+    }
+  ],
+  "bonos-gd38c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 80.75
+    }
+  ],
+  "bonos-gd38d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 84.24
+    }
+  ],
+  "bonos-gd41": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 113600
+    }
+  ],
+  "bonos-gd41c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 71.45
+    }
+  ],
+  "bonos-gd41d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 74.68
+    }
+  ],
+  "bonos-gd46": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 104680
+    }
+  ],
+  "bonos-gd46c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 65.87
+    }
+  ],
+  "bonos-gd46d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 68.6
+    }
+  ],
+  "bonos-lk01q": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 147000
+    }
+  ],
+  "bonos-lk1qd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 94
+    }
+  ],
+  "bonos-ndg34": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 156800
+    }
+  ],
+  "bonos-ndt25": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 98310
+    }
+  ],
+  "bonos-ndt5c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 63.19
+    }
+  ],
+  "bonos-ndt5d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 64.56
+    }
+  ],
+  "bonos-pap0": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 34810
+    }
+  ],
+  "bonos-parp": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 35150
+    }
+  ],
+  "bonos-pay0": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 111500
+    }
+  ],
+  "bonos-pba27": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 103.85
+    }
+  ],
+  "bonos-pba28": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 111.1
+    }
+  ],
+  "bonos-pbm27": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 101.75
+    }
+  ],
+  "bonos-pm29c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 46.2
+    }
+  ],
+  "bonos-pm29d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 48.25
+    }
+  ],
+  "bonos-pma28": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 112.5
+    }
+  ],
+  "bonos-pmd26": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 105.8
+    }
+  ],
+  "bonos-pmm29": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 73600
+    }
+  ],
+  "bonos-pr17": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 644.9
+    }
+  ],
+  "bonos-pua36": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 170800
+    }
+  ],
+  "bonos-pua6c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 103.95
+    }
+  ],
+  "bonos-pua6d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 111.1
+    }
+  ],
+  "bonos-s24dc": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 38.4
+    }
+  ],
+  "bonos-s24dd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 38.75
+    }
+  ],
+  "bonos-sa24d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 60800
+    }
+  ],
+  "bonos-sfd34": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 161370
+    }
+  ],
+  "bonos-sfd4c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 101.7
+    }
+  ],
+  "bonos-sfd4d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 107.7
+    }
+  ],
+  "bonos-sfn27": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 89.19
+    }
+  ],
+  "bonos-t15e7": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 147.67
+    }
+  ],
+  "bonos-t30a7": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 133.6
+    }
+  ],
+  "bonos-t30j7": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 126.8
+    }
+  ],
+  "bonos-t31y7": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 125.7
+    }
+  ],
+  "bonos-ta7c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.08
+    }
+  ],
+  "bonos-ta7d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.09
+    }
+  ],
+  "bonos-tj7d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.08
+    }
+  ],
+  "bonos-tmf27": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 121.75
+    }
+  ],
+  "bonos-tmf28": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 108.7
+    }
+  ],
+  "bonos-tmg27": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 116.6
+    }
+  ],
+  "bonos-tmg28": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 106.4
+    }
+  ],
+  "bonos-tml27": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 107.15
+    }
+  ],
+  "bonos-tmve8": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 139390
+    }
+  ],
+  "bonos-to26": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 105
+    }
+  ],
+  "bonos-to26d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.07
+    }
+  ],
+  "bonos-ttd26": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 169.15
+    }
+  ],
+  "bonos-ttd6d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.11
+    }
+  ],
+  "bonos-tts26": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 169.38
+    }
+  ],
+  "bonos-tvpa": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 3890
+    }
+  ],
+  "bonos-tvpe": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 20000
+    }
+  ],
+  "bonos-tvpp": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 8.9
+    }
+  ],
+  "bonos-tvpy": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 10000
+    }
+  ],
+  "bonos-tvpyd": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 6.75
+    }
+  ],
+  "bonos-tx26": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 737.1
+    }
+  ],
+  "bonos-tx26d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.48
+    }
+  ],
+  "bonos-tx28": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1728.5
+    }
+  ],
+  "bonos-tx28d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1.14
+    }
+  ],
+  "bonos-tx31": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 1462
+    }
+  ],
+  "bonos-txa7d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.08
+    }
+  ],
+  "bonos-txd6d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.2
+    }
+  ],
+  "bonos-txd7d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.18
+    }
+  ],
+  "bonos-txd9d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.06
+    }
+  ],
+  "bonos-txj0d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.06
+    }
+  ],
+  "bonos-txm7d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.15
+    }
+  ],
+  "bonos-txm8d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.06
+    }
+  ],
+  "bonos-txm9d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.06
+    }
+  ],
+  "bonos-txmd8": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 93.3
+    }
+  ],
+  "bonos-txmd9": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 85.89
+    }
+  ],
+  "bonos-txmj0": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 82.8
+    }
+  ],
+  "bonos-txmj8": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 99.5
+    }
+  ],
+  "bonos-txmj9": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 92.3
+    }
+  ],
+  "bonos-txs7d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.07
+    }
+  ],
+  "bonos-txs8d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.06
+    }
+  ],
+  "bonos-ty30c": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.07
+    }
+  ],
+  "bonos-ty30d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.07
+    }
+  ],
+  "bonos-ty30p": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 111.1
+    }
+  ],
+  "bonos-tzv27": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 147500
+    }
+  ],
+  "bonos-tzv28": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 125000
+    }
+  ],
+  "bonos-tzv7d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 96.13
+    }
+  ],
+  "bonos-tzvd8": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 118850
+    }
+  ],
+  "bonos-tzx27": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 395.3
+    }
+  ],
+  "bonos-tzx28": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 352
+    }
+  ],
+  "bonos-tzx7d": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 0.25
+    }
+  ],
+  "bonos-tzxa7": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 123
+    }
+  ],
+  "bonos-tzxd6": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 302
+    }
+  ],
+  "bonos-tzxd7": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 277.2
+    }
+  ],
+  "bonos-tzxd8": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 85.8
+    }
+  ],
+  "bonos-tzxm7": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 223
+    }
+  ],
+  "bonos-tzxm8": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 99.9
+    }
+  ],
+  "bonos-tzxm9": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 90.53
+    }
+  ],
+  "bonos-tzxo6": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 171.8
+    }
+  ],
+  "bonos-tzxo7": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 96.9
+    }
+  ],
+  "bonos-tzxs7": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 106.85
+    }
+  ],
+  "bonos-tzxs8": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 95.49
+    }
+  ],
+  "bonos-tzxy7": [
+    {
+      "fecha": "2026-09-05",
+      "valor": 120.75
+    }
+  ]
+}
