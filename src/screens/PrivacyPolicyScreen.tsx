@@ -85,10 +85,16 @@ export default function PrivacyPolicyScreen() {
             7. Contacto
           </h2>
           <p>
-            Para consultas sobre esta política, podés escribirnos a través de los canales indicados en la sección{" "}
-            <a href="/acerca" className="text-finanzar-primary hover:text-finanzar-accent underline font-medium">
-              Acerca de
-            </a>.
+            ¿Tenés una consulta sobre esta política, encontraste un error o querés reportar un problema de privacidad? FinanzAR es un proyecto de código abierto: la vía más directa es abrir un issue en{" "}
+            <a
+              href="https://github.com/Lautaro005/FinanzAR"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-finanzar-primary hover:text-finanzar-accent underline font-medium"
+            >
+              el repositorio de GitHub
+            </a>
+            , donde le hacemos seguimiento a cada reporte.
           </p>
         </section>
       </div>

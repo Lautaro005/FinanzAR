@@ -10,6 +10,7 @@ import InstrumentDetailScreen from "./screens/InstrumentDetailScreen";
 import AboutScreen from "./screens/AboutScreen";
 import NotFoundScreen from "./screens/NotFoundScreen";
 import PrivacyPolicyScreen from "./screens/PrivacyPolicyScreen";
+import PortfolioScreen from "./screens/PortfolioScreen";
 import { useDocumentMeta } from "./hooks/useDocumentMeta";
 import { Categoria, Instrumento, PuntoHistorico } from "./types";
 import { useInstruments } from "./hooks/useInstruments";
@@ -710,6 +711,7 @@ export default function App() {
                 />
               }
             />
+            <Route path="/portfolio" element={<PortfolioScreen />} />
             <Route path="/acerca" element={<AboutScreen />} />
             <Route path="/privacidad" element={<PrivacyPolicyScreen />} />
             <Route path="*" element={<NotFoundScreen />} />

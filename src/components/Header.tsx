@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { getEstadoMercados } from "../lib/marketHours";
 
 export default function Header({
   isLive = true,
@@ -9,9 +11,18 @@ export default function Header({
 }) {
   const location = useLocation();
 
+  // Estado de apertura de mercados (argentino / EE.UU. / cripto), recalculado
+  // cada minuto para que el texto del indicador siga vigente sin recargar la página.
+  const [estadoMercados, setEstadoMercados] = useState(() => getEstadoMercados());
+  useEffect(() => {
+    const id = setInterval(() => setEstadoMercados(getEstadoMercados()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+
   const navLinks = [
     { to: "/", label: "Mercados" },
     { to: "/comparar", label: "Comparador" },
+    { to: "/portfolio", label: "Portfolio" },
     { to: "/acerca", label: "Acerca de" },
   ];
 
@@ -35,13 +46,22 @@ export default function Header({
 
         {/* Estado y Navegación */}
         <div className="flex items-center space-x-4 sm:space-x-6">
-          <div className="hidden sm:inline-flex items-center space-x-2 px-2.5 py-1 rounded-full bg-finanzar-bg border border-finanzar-borderSubtle text-xs text-finanzar-textSecondary">
+          <div
+            className="hidden sm:inline-flex items-center space-x-2 px-2.5 py-1 rounded-full bg-finanzar-bg border border-finanzar-borderSubtle text-xs text-finanzar-textSecondary"
+            title={
+              isLive
+                ? `Argentina: ${estadoMercados.argentina ? "abierto" : "cerrado"} · EE.UU.: ${
+                    estadoMercados.eeuu ? "abierto" : "cerrado"
+                  } · Cripto: abierto`
+                : undefined
+            }
+          >
             <span
               className={`w-2 h-2 rounded-full ${
                 isLive ? "bg-finanzar-positive animate-pulse" : "bg-finanzar-accent"
               }`}
             />
-            <span>{isLive ? "Mercados en vivo" : "Datos en caché"}</span>
+            <span>{isLive ? estadoMercados.textoHeader : "Datos en caché"}</span>
           </div>
 
           {onRefresh && (
