@@ -653,7 +653,7 @@ function CompareScreen({
    APLICACIÓN PRINCIPAL (ROUTER + LAYOUT)
    ============================================================ */
 export default function App() {
-  const { instruments, categoryCounts, loading, isLive, refreshAll } = useInstruments();
+  const { instruments, categoryCounts, loading, isLive } = useInstruments();
   const [selectedCompareIds, setSelectedCompareIds] = useState<string[]>([]);
 
   const handleToggleCompare = (id: string) => {
@@ -673,7 +673,7 @@ export default function App() {
   return (
     <Router>
       <div className="min-h-screen flex flex-col bg-finanzar-bg text-finanzar-textMain font-sans">
-        <Header isLive={isLive} onRefresh={refreshAll} />
+        <Header isLive={isLive} />
         <div className="flex-1">
           <Routes>
             <Route
