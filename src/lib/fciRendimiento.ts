@@ -1,17 +1,20 @@
-import { FCICategoria, FCIRaw, getFCIPenultimo, getFCIPorFecha, getFCIUltimo } from "./api/argentinaDatos";
+import { FCICategoria, FCIRaw, getFCIPorFecha, getFCIUltimo } from "./api/argentinaDatos";
 
 // Fondos Comunes de Inversión (FCI): agrupa las 6 categorías que expone la
 // API pública de ArgentinaDatos (fuente: CNV - Cuotapartes). Cada una incluye
 // fondos de las principales gestoras/plataformas argentinas (bancos, ALyCs
 // como Cocos Capital, IOL, Balanz, etc. publican sus FCIs ante la CNV aunque
 // no tengan API propia).
+// "rentaVariable" (fondos de acciones) se excluye a propósito desde 2026-09-05:
+// son fondos que siguen al Merval y presentarlos como una "TNA" anualizada
+// daba -50%/+150% según el mes — no describe nada útil y confunde al lado
+// de money market/renta fija. La exposición a acciones ya está en la pestaña
+// Acciones/CEDEARs. "otros" trae cuentas remuneradas con otro formato (sin vcp).
 export const FCI_CATEGORIAS: { id: FCICategoria; label: string }[] = [
   { id: "mercadoDinero", label: "Money Market / Mercado de Dinero" },
   { id: "rentaFija", label: "Renta Fija" },
-  { id: "rentaVariable", label: "Renta Variable" },
   { id: "rentaMixta", label: "Renta Mixta" },
   { id: "retornoTotal", label: "Retorno Total" },
-  { id: "otros", label: "Otros" },
 ];
 
 export interface FCIConRendimiento {
@@ -45,13 +48,17 @@ const MS_PER_DAY = 1000 * 60 * 60 * 24;
 // ultimo/penúltimo de siempre (ventana corta, marcada por `diasReales`).
 // ---------------------------------------------------------------------------
 const VENTANA_MIN_DIAS = 7;
+/** Ventanas de al menos esto se prefieren siempre: con 10 días todavía hay demasiado ruido (verificado: renta fija p50 35% vs 21% con 46 días). */
+const VENTANA_PREFERIDA_DIAS = 20;
 const VENTANA_MAX_DIAS = 60;
 const VENTANA_OBJETIVO_DIAS = 30;
 const COBERTURA_MINIMA = 0.4; // fracción de fondos de "ultimo" que debe traer una foto para considerarla completa
 const INDICE_MINIMO_FONDOS = 500; // rentaFija completa trae ~1.800 fondos; un día parcial trae menos de 100
-const MAX_CANDIDATAS_POR_CATEGORIA = 4;
-/** Fondos cuyo último dato es más viejo que esto respecto del dato más nuevo del dataset se descartan (dejaron de reportar). */
-export const FCI_MAX_DIAS_VIGENCIA = 10;
+const MAX_CANDIDATAS_POR_CATEGORIA = 5;
+/** Fondos cuyo último dato es más viejo que esto respecto del dato más nuevo del dataset se descartan (no están actualizados). */
+export const FCI_MAX_DIAS_VIGENCIA = 3;
+export const FCI_TASA_MINIMA = -20;
+export const FCI_TASA_MAXIMA = 60;
 
 const fechaApi = (d: Date): string =>
   `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, "0")}/${String(d.getDate()).padStart(2, "0")}`;
@@ -84,9 +91,16 @@ function buscarSnapshotsCompletos(): Promise<SnapshotCandidata[]> {
       })
     );
 
+    // Orden de preferencia: primero las ventanas "largas" (≥ 20 días) por
+    // cercanía a 30 días; después las cortas, solo como último recurso.
+    const distancia = (c: SnapshotCandidata) => Math.abs(c.diasAtras - VENTANA_OBJETIVO_DIAS);
     return resultados
       .filter((r): r is SnapshotCandidata => r !== null)
-      .sort((a, b) => Math.abs(a.diasAtras - VENTANA_OBJETIVO_DIAS) - Math.abs(b.diasAtras - VENTANA_OBJETIVO_DIAS));
+      .sort((a, b) => {
+        const la = a.diasAtras >= VENTANA_PREFERIDA_DIAS ? 0 : 1;
+        const lb = b.diasAtras >= VENTANA_PREFERIDA_DIAS ? 0 : 1;
+        return la - lb || distancia(a) - distancia(b);
+      });
   })();
   return candidatasCache;
 }
@@ -100,8 +114,11 @@ function anualizar(vcpActual: number, vcpBase: number, diasReales: number): numb
   // Rango verosímil; fuera de él es un dato roto (ej. cuotaparte reiniciada a
   // 1000) o ruido de ventana corta (un día bueno anualizado). Con ventana de
   // pocos días se es más estricto todavía.
-  const techo = diasReales >= VENTANA_MIN_DIAS ? 400 : 150;
-  return Number.isFinite(tasa) && tasa > -80 && tasa < techo ? tasa : null;
+  // Banda verosímil para un FCI presentado como tasa anualizada: fuera de
+  // (-20%, 60%) el número no describe un "rendimiento" (es un dato roto, una
+  // cuotaparte reiniciada o un fondo muy volátil) y no se lista.
+  void diasReales;
+  return Number.isFinite(tasa) && tasa > FCI_TASA_MINIMA && tasa < FCI_TASA_MAXIMA ? tasa : null;
 }
 
 /**
@@ -115,10 +132,7 @@ export async function fetchFCICategoriaConRendimiento(
 ): Promise<FCIConRendimiento> {
   const label = FCI_CATEGORIAS.find((c) => c.id === categoria)?.label || categoria;
 
-  const [actualRaw, previo] = await Promise.all([
-    getFCIUltimo(categoria).catch(() => [] as FCIRaw[]),
-    getFCIPenultimo(categoria).catch(() => [] as FCIRaw[]),
-  ]);
+  const actualRaw = await getFCIUltimo(categoria).catch(() => [] as FCIRaw[]);
   const actualTodos = Array.isArray(actualRaw) ? actualRaw : [];
 
   // Vigencia: "ultimo" incluye fondos que dejaron de reportar hace años
@@ -134,29 +148,27 @@ export async function fetchFCICategoriaConRendimiento(
     return { categoria, categoriaLabel: label, items: actual, rendimientos };
   }
 
-  // 1) Base preferida: la foto completa candidata que mejor cubra a esta
-  //    categoría (las fechas "completas" de rentaFija no siempre lo son para
-  //    money market, por ejemplo); a igual cobertura gana la más cercana a 30 días.
+  // 1) Base: la primera foto candidata (en orden de preferencia: ventana
+  //    larga y cercana a 30 días) que cubra al menos COBERTURA_MINIMA de los
+  //    fondos vigentes de esta categoría. Las fechas "completas" de rentaFija
+  //    no siempre lo son para las otras categorías, por eso se chequea.
   let base: Map<string, FCIRaw> | null = null;
   try {
     const candidatas = await buscarSnapshotsCompletos();
-    const evaluadas = await Promise.all(
-      candidatas.slice(0, MAX_CANDIDATAS_POR_CATEGORIA).map(async (cand) => {
-        const items = await getFCIPorFecha(categoria, cand.fechaApi).catch(() => [] as FCIRaw[]);
-        const mapa = new Map(
-          (Array.isArray(items) ? items : []).filter((f) => f.fondo && f.vcp > 0 && f.fecha).map((f) => [f.fondo, f])
-        );
-        let cubiertos = 0;
-        actual.forEach((f) => {
-          if (mapa.has(f.fondo)) cubiertos++;
-        });
-        return { mapa, cobertura: cubiertos / actual.length };
-      })
-    );
-    const mejor = evaluadas
-      .filter((e) => e.cobertura >= COBERTURA_MINIMA)
-      .sort((a, b) => b.cobertura - a.cobertura)[0];
-    if (mejor) base = mejor.mapa;
+    for (const cand of candidatas.slice(0, MAX_CANDIDATAS_POR_CATEGORIA)) {
+      const items = await getFCIPorFecha(categoria, cand.fechaApi).catch(() => [] as FCIRaw[]);
+      const mapa = new Map(
+        (Array.isArray(items) ? items : []).filter((f) => f.fondo && f.vcp > 0 && f.fecha).map((f) => [f.fondo, f])
+      );
+      let cubiertos = 0;
+      actual.forEach((f) => {
+        if (mapa.has(f.fondo)) cubiertos++;
+      });
+      if (cubiertos >= actual.length * COBERTURA_MINIMA) {
+        base = mapa;
+        break;
+      }
+    }
   } catch {
     base = null;
   }
@@ -172,18 +184,10 @@ export async function fetchFCICategoriaConRendimiento(
     }
   }
 
-  // 2) Fallback por fondo: par ultimo/penúltimo (ventana corta, normalmente 1-4 días).
-  if (Array.isArray(previo) && previo.length > 0) {
-    const previoMap = new Map(previo.map((f) => [f.fondo, f]));
-    for (const fondo of actual) {
-      if (rendimientos.has(fondo.fondo)) continue;
-      const anterior = previoMap.get(fondo.fondo);
-      if (!anterior || !anterior.vcp || anterior.vcp <= 0 || !anterior.fecha || fondo.fecha === anterior.fecha) continue;
-      const diasReales = Math.max(1, diasEntre(fondo.fecha, anterior.fecha));
-      const tasa = anualizar(fondo.vcp, anterior.vcp, diasReales);
-      if (tasa !== null) rendimientos.set(fondo.fondo, { tasaAnualizada: tasa, diasReales });
-    }
-  }
+  // Sin fallback a ventana corta (ultimo/penúltimo): anualizar 1-4 días era
+  // justamente lo que generaba tasas de 100-300%. Un fondo que ninguna foto
+  // completa cubre directamente no se lista — mejor no mostrar un número que
+  // mostrar uno inventado.
 
   return { categoria, categoriaLabel: label, items: actual, rendimientos };
 }

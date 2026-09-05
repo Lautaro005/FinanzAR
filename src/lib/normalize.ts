@@ -91,7 +91,7 @@ export function normalizePlazosFijos(items: PlazoFijoRaw[]): Instrumento[] {
 // InstrumentTable pagina de a 100 filas — así que un cupo mayor no
 // impacta el rendimiento de la pantalla, solo la cantidad de alternativas
 // reales disponibles para buscar/comparar.
-const FCI_MAX_POR_CATEGORIA = 250;
+const FCI_MAX_POR_CATEGORIA = 60; // los "populares": mayor patrimonio (bajado de 250 el 2026-09-05, ver REFERENCE 5.2)
 const FCI_PATRIMONIO_MINIMO = 50_000_000; // ARS 50M: filtra clases dormidas/institucionales residuales
 
 export function normalizeFCIs(
@@ -199,6 +199,19 @@ export function normalizeData912Quotes(
 ): Instrumento[] {
   if (!Array.isArray(quotes)) return [];
 
+  // Símbolos presentes, para detectar variantes de liquidación en dólares sin
+  // nombre curado: "XXXXD"/"XXXXC" cuya especie base "XXXX" también cotiza.
+  const simbolos = new Set(quotes.map((q) => q.symbol));
+  const varianteUsdSinNombre = (symbol: string): "Dólar MEP" | "Cable" | null => {
+    if (categoria === "eeuu" || symbol.length < 3) return null;
+    const sufijo = symbol.slice(-1);
+    const base = symbol.slice(0, -1).replace(/\.$/, "");
+    if ((sufijo === "D" || sufijo === "C") && base.length >= 2 && simbolos.has(base) && !ASSET_NAMES[symbol]) {
+      return sufijo === "D" ? "Dólar MEP" : "Cable";
+    }
+    return null;
+  };
+
   return quotes
     .filter((q) => q.symbol && q.c > 0)
     // data912 expone miles de tickers de EE.UU. (incluyendo microcaps casi
@@ -209,10 +222,19 @@ export function normalizeData912Quotes(
     .filter((q) => categoria !== "eeuu" || USA_DIRECT_ALLOWED.has(q.symbol))
     .map((q) => {
       const meta = categoria === "eeuu" ? USA_DIRECT_NAMES[q.symbol] : ASSET_NAMES[q.symbol];
-      const nombre = meta?.nombre || `${q.symbol} (${categoria.toUpperCase()})`;
+      const varianteUsd = varianteUsdSinNombre(q.symbol);
+      const nombre = meta?.nombre
+        ? meta.nombre
+        : varianteUsd
+        ? `${q.symbol} (${categoria.toUpperCase()}, liq. ${varianteUsd})`
+        : `${q.symbol} (${categoria.toUpperCase()})`;
       const entidad = meta?.entidad || "BYMA";
-      // CEDEARs/acciones/bonos cotizan en pesos en BYMA; solo "eeuu" (acciones de EE.UU.) está en USD.
-      const isUsd = categoria === "eeuu";
+      // CEDEARs/acciones/bonos cotizan en pesos en BYMA, salvo las variantes
+      // de liquidación en dólares (sufijo "D" = Dólar MEP, "C" = Cable/CCL,
+      // identificadas en ASSET_NAMES por "(liq. Dólar MEP)" / "(liq. Cable)"),
+      // que cotizan en USD y deben mostrarse como "US$". "eeuu" siempre es USD.
+      const liquidaEnUsd = /liq\. (Dólar MEP|Cable)/.test(nombre);
+      const isUsd = categoria === "eeuu" || liquidaEnUsd;
       const unidad = isUsd ? "precio_usd" : "precio_ars";
 
       // Personalización por instrumento: para bonos se busca por ticker
@@ -247,7 +269,9 @@ export function normalizeData912Quotes(
         supervisionRegulatoria = categoria === "cedears"
           ? "Comisión Nacional de Valores (CNV) y Bolsas y Mercados Argentinos (BYMA) — como certificado, no como acción directa"
           : "Comisión Nacional de Valores (CNV) y Bolsas y Mercados Argentinos (BYMA) / Merval";
-        monedaLiquidacion = categoria === "cedears"
+        monedaLiquidacion = liquidaEnUsd
+          ? `Dólares Estadounidenses (USD) — variante de liquidación ${nombre.includes("Cable") ? "Cable (CCL)" : "Dólar MEP"} de la misma especie`
+          : categoria === "cedears"
           ? "Pesos Argentinos (ARS); existen variantes de liquidación en Dólares (Cable/MEP) bajo tickers específicos de la misma especie"
           : "Pesos Argentinos (ARS)";
         descripcion = sector
@@ -266,7 +290,7 @@ export function normalizeData912Quotes(
         variacion24h: Number((q.pct_change || 0).toFixed(2)),
         unidad,
         historico: generateSyntheticHistory(q.c, (q.pct_change || 1) * 2),
-        actualizadoEn: isUsd ? "En vivo NYSE/Nasdaq" : "En vivo BYMA",
+        actualizadoEn: categoria === "eeuu" ? "En vivo NYSE/Nasdaq" : "En vivo BYMA",
         ticker: q.symbol,
         rubro: sector?.rubro,
         descripcion,

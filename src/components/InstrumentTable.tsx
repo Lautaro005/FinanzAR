@@ -75,6 +75,17 @@ export default function InstrumentTable({
     [filteredAndSortedData, visibleCount]
   );
 
+  // Título de la columna según lo que hay en la tabla: "Tasa / Rendimiento"
+  // solo cuando todo es TNA (Plazos Fijos, FCI); "Valor" cuando son
+  // cotizaciones (al lado ya está la variación 24h); ambos en "Todos".
+  const tituloColumnaValor = useMemo(() => {
+    const conTna = data.some((i) => i.unidad === "TNA");
+    const conPrecio = data.some((i) => i.unidad !== "TNA");
+    if (conTna && !conPrecio) return "Tasa / Rendimiento";
+    if (conPrecio && !conTna) return "Valor";
+    return "Valor / Tasa";
+  }, [data]);
+
   const formatValue = (item: Instrumento) => {
     if (item.unidad === "TNA") {
       return `${item.tasaORendimientoActual.toFixed(2)}% TNA`;
@@ -198,7 +209,7 @@ export default function InstrumentTable({
                   className="px-4 py-3.5 text-right cursor-pointer hover:text-finanzar-primary transition-colors"
                 >
                   <div className="flex items-center justify-end space-x-1">
-                    <span>Tasa / Rendimiento</span>
+                    <span>{tituloColumnaValor}</span>
                     <span>{sortField === "tasaORendimientoActual" ? (sortAsc ? "↑" : "↓") : "⇅"}</span>
                   </div>
                 </th>

@@ -75,9 +75,9 @@ function slugify(text) {
     .replace(/^-+|-+$/g, "");
 }
 
-const FCI_CATEGORIAS = ["mercadoDinero", "rentaFija", "rentaVariable", "rentaMixta", "retornoTotal", "otros"];
+const FCI_CATEGORIAS = ["mercadoDinero", "rentaFija", "rentaMixta", "retornoTotal"]; // sin rentaVariable ni otros (ver src/lib/fciRendimiento.ts)
 const FCI_PATRIMONIO_MINIMO = 50_000_000;
-const FCI_MAX_POR_CATEGORIA = 250;
+const FCI_MAX_POR_CATEGORIA = 60;
 
 // Misma lista que USA_DIRECT_ALLOWED en src/lib/api/data912.ts (mantener
 // en sync si se agregan/sacan tickers ahí).
@@ -173,8 +173,7 @@ const fechaApi = (d) =>
 const diasEntreFci = (a, b) => Math.round((new Date(a).getTime() - new Date(b).getTime()) / 86400000);
 const anualizarFci = (vcpActual, vcpBase, dias) => {
   const tasa = (vcpActual / vcpBase - 1) * (365 / Math.max(1, dias)) * 100;
-  const techo = dias >= 7 ? 400 : 150;
-  return Number.isFinite(tasa) && tasa > -80 && tasa < techo ? tasa : null;
+  return Number.isFinite(tasa) && tasa > -20 && tasa < 60 ? tasa : null; // banda verosímil, igual que la app
 };
 
 async function buscarSnapshotsCompletosFci() {
@@ -192,7 +191,10 @@ async function buscarSnapshotsCompletosFci() {
       }
     })
   );
-  return res.filter(Boolean).sort((a, b) => Math.abs(a.diasAtras - 30) - Math.abs(b.diasAtras - 30));
+  // Preferir ventanas largas (>= 20 días) cercanas a 30; las cortas solo como último recurso.
+  return res
+    .filter(Boolean)
+    .sort((a, b) => ((a.diasAtras >= 20 ? 0 : 1) - (b.diasAtras >= 20 ? 0 : 1)) || Math.abs(a.diasAtras - 30) - Math.abs(b.diasAtras - 30));
 }
 
 async function snapshotFCI(fecha) {
@@ -201,28 +203,24 @@ async function snapshotFCI(fecha) {
   const candidatas = await buscarSnapshotsCompletosFci().catch(() => []);
   for (const categoria of FCI_CATEGORIAS) {
     try {
-      const [actualRaw, previo] = await Promise.all([
-        fetchJson(`${FCI_API}/${categoria}/ultimo`),
-        fetchJson(`${FCI_API}/${categoria}/penultimo`).catch(() => []),
-      ]);
+      const actualRaw = await fetchJson(`${FCI_API}/${categoria}/ultimo`);
       const todos = Array.isArray(actualRaw) ? actualRaw : [];
       const fechaMax = todos.reduce((m, f) => (f.fecha && f.fecha > m ? f.fecha : m), "");
-      const actual = todos.filter((f) => f.fecha && f.vcp > 0 && (!fechaMax || diasEntreFci(fechaMax, f.fecha) <= 10));
+      // Solo fondos actualizados (a lo sumo 3 días del dato más nuevo).
+      const actual = todos.filter((f) => f.fecha && f.vcp > 0 && (!fechaMax || diasEntreFci(fechaMax, f.fecha) <= 3));
       if (actual.length === 0) continue;
 
+      // Primera foto candidata (en orden de preferencia) que cubra >= 40% de los fondos vigentes.
       let base = null;
-      const evaluadas = await Promise.all(
-        candidatas.slice(0, 4).map(async (cand) => {
-          const items = await fetchJson(`${FCI_API}/${categoria}/${cand.fechaApi}`).catch(() => []);
-          const mapa = new Map((Array.isArray(items) ? items : []).filter((f) => f.fondo && f.vcp > 0 && f.fecha).map((f) => [f.fondo, f]));
-          let cub = 0;
-          actual.forEach((f) => { if (mapa.has(f.fondo)) cub++; });
-          return { mapa, cobertura: cub / actual.length };
-        })
-      );
-      const mejor = evaluadas.filter((e) => e.cobertura >= 0.4).sort((a, b) => b.cobertura - a.cobertura)[0];
-      if (mejor) base = mejor.mapa;
+      for (const cand of candidatas.slice(0, 5)) {
+        const items = await fetchJson(`${FCI_API}/${categoria}/${cand.fechaApi}`).catch(() => []);
+        const mapa = new Map((Array.isArray(items) ? items : []).filter((f) => f.fondo && f.vcp > 0 && f.fecha).map((f) => [f.fondo, f]));
+        let cub = 0;
+        actual.forEach((f) => { if (mapa.has(f.fondo)) cub++; });
+        if (cub >= actual.length * 0.4) { base = mapa; break; }
+      }
 
+      // Sin fallback a ventana corta: los fondos que ninguna foto cubre no se guardan.
       const rendimientos = new Map();
       if (base) {
         for (const f of actual) {
@@ -233,14 +231,6 @@ async function snapshotFCI(fecha) {
           const t = anualizarFci(f.vcp, a.vcp, dias);
           if (t !== null) rendimientos.set(f.fondo, t);
         }
-      }
-      const previoMap = new Map((Array.isArray(previo) ? previo : []).map((f) => [f.fondo, f]));
-      for (const f of actual) {
-        if (rendimientos.has(f.fondo)) continue;
-        const a = previoMap.get(f.fondo);
-        if (!a || !a.vcp || a.vcp <= 0 || !a.fecha || f.fecha === a.fecha) continue;
-        const t = anualizarFci(f.vcp, a.vcp, Math.max(1, diasEntreFci(f.fecha, a.fecha)));
-        if (t !== null) rendimientos.set(f.fondo, t);
       }
 
       const conRendimiento = actual
