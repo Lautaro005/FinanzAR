@@ -44,6 +44,12 @@ export default {
         lg: '8px',
         full: '9999px',
       },
+      keyframes: {
+        fadeIn: { from: { opacity: '0', transform: 'translateY(-2px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+      },
+      animation: {
+        fadeIn: 'fadeIn 160ms ease-out',
+      },
       boxShadow: {
         sm: '0 1px 2px rgba(27, 42, 74, 0.04)',
         DEFAULT: '0 4px 12px -2px rgba(27, 42, 74, 0.06), 0 2px 4px -1px rgba(27, 42, 74, 0.03)',

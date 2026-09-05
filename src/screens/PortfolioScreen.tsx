@@ -24,6 +24,7 @@ import PortfolioChart from "../components/portfolio/PortfolioChart";
 import TransactionModal from "../components/portfolio/TransactionModal";
 import PlazoFijoModal from "../components/portfolio/PlazoFijoModal";
 import FondoComunModal from "../components/portfolio/FondoComunModal";
+import CurrencyToggle from "../components/portfolio/CurrencyToggle";
 import { BotonPrimario, BotonSecundario } from "../components/portfolio/Modal";
 
 const CATEGORIA_LABEL: Record<string, string> = {
@@ -113,6 +114,16 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
     [p.transacciones]
   );
 
+  /** Fecha más antigua en que el usuario tenía algo cargado (para arrancar el gráfico con una línea plana). */
+  const fechaInicioTenencias = useMemo(() => {
+    const fechas = [
+      ...p.transacciones.map((t) => t.fecha),
+      ...p.plazosFijos.map((pf) => pf.fechaInicio),
+      ...p.fondosComunes.map((fc) => fc.fechaInicio),
+    ].filter(Boolean);
+    return fechas.length ? fechas.reduce((a, b) => (a < b ? a : b)) : null;
+  }, [p.transacciones, p.plazosFijos, p.fondosComunes]);
+
   const aArs = (monto: number, moneda: "ARS" | "USD") => (moneda === "USD" ? (p.dolar ?? 0) * monto : monto);
 
   const posicionesOrdenadas = useMemo(
@@ -125,6 +136,24 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
   );
 
   const casaLabel = CASAS_DOLAR.find((c) => c.id === p.config.dolarCasa)?.label || p.config.dolarCasa;
+
+  /* ---------------- Moneda de visualización (toggle AR$ / US$) ---------------- */
+  const vista = p.config.monedaVista ?? "ARS";
+  /** Convierte un monto de su moneda de origen a la moneda de la vista; null si hace falta el dólar y no hay. */
+  const convertir = (monto: number, origen: "ARS" | "USD"): number | null => {
+    if (origen === vista) return monto;
+    if (p.dolar === null || p.dolar === 0) return null;
+    return vista === "USD" ? monto / p.dolar : monto * p.dolar;
+  };
+  /** Formatea en la moneda de la vista (o en la de origen si no se puede convertir). */
+  const fm = (monto: number, origen: "ARS" | "USD" = "ARS", compact = true) => {
+    const c = convertir(monto, origen);
+    return c === null ? formatMoneda(monto, origen, compact) : formatMoneda(c, vista, compact);
+  };
+  const fp = (precio: number, origen: "ARS" | "USD") => {
+    const c = convertir(precio, origen);
+    return c === null ? formatPrecio(precio, origen) : formatPrecio(c, vista);
+  };
 
   /* ---------------- Backup ---------------- */
   const exportar = () => {
@@ -232,7 +261,15 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
       {/* Cabecera */}
       <div className="mb-6">
         <span className="text-xs uppercase tracking-wider font-semibold text-finanzar-accent">Seguimiento personal</span>
-        <h1 className="font-serif text-3xl sm:text-4xl font-bold text-finanzar-primary tracking-tight mt-1">Portfolio</h1>
+        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 mt-1">
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-finanzar-primary tracking-tight">Portfolio</h1>
+          <CurrencyToggle
+            value={vista}
+            onChange={p.cambiarMonedaVista}
+            casaLabel={casaLabel}
+            dolarTexto={p.dolar !== null ? formatMoneda(p.dolar) : null}
+          />
+        </div>
         <p className="text-sm text-finanzar-textSecondary mt-1">
           Cargá tus tenencias y seguí su valor con las mismas cotizaciones de Mercados.{" "}
           {syncActiva ? "Todo queda guardado en este navegador y sincronizado con tu cuenta." : "Todo queda guardado en este navegador."}
@@ -255,7 +292,7 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
       {reinvertir && (
         <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 py-3 rounded-md border border-finanzar-accent bg-finanzar-accentSubtle text-xs text-finanzar-textMain">
           <span>
-            {reinvertir.origen}: quedaron disponibles <strong>{formatMoneda(reinvertir.monto)}</strong>. ¿Los reinvertís?
+            {reinvertir.origen}: quedaron disponibles <strong>{fm(reinvertir.monto, "ARS", false)}</strong>. ¿Los reinvertís?
           </span>
           <div className="flex gap-2">
             <BotonSecundario onClick={() => { setModal({ tipo: "compra", montoInicial: reinvertir.monto }); setReinvertir(null); }}>
@@ -299,44 +336,37 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
         <>
           {/* KPIs + selector de dólar */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-            <Kpi label="Valor total (ARS)" valor={formatMoneda(p.totales.valorTotal, "ARS", true)} sub={`Mercado + FCI + plazos fijos · USD al ${casaLabel.toLowerCase()}`} />
-            <Kpi label="Capital invertido" valor={formatMoneda(p.totales.capitalInvertido, "ARS", true)} sub="Costo de lo que tenés hoy" />
+            <Kpi label={`Valor total (${vista === "USD" ? "US$" : "ARS"})`} valor={fm(p.totales.valorTotal)} sub={`Mercado + FCI + plazos fijos · ${vista === "USD" ? "ARS → US$" : "USD → ARS"} al ${casaLabel.toLowerCase()}`} />
+            <Kpi label="Capital invertido" valor={fm(p.totales.capitalInvertido)} sub="Costo de lo que tenés hoy" />
             <Kpi
               label="Resultado no realizado"
-              valor={`${p.totales.resultado >= 0 ? "+" : ""}${formatMoneda(p.totales.resultado, "ARS", true)}`}
+              valor={`${p.totales.resultado >= 0 ? "+" : ""}${fm(p.totales.resultado)}`}
               sub={formatPct(p.totales.resultadoPct)}
               tono={p.totales.resultado >= 0 ? "pos" : "neg"}
             />
             <Kpi
               label="Ganancia realizada"
-              valor={`${p.totales.realizada >= 0 ? "+" : ""}${formatMoneda(p.totales.realizada, "ARS", true)}`}
+              valor={`${p.totales.realizada >= 0 ? "+" : ""}${fm(p.totales.realizada)}`}
               sub="Acumulada por ventas"
               tono={p.totales.realizada >= 0 ? "pos" : "neg"}
             />
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8 px-1">
-            <div className="flex items-center gap-2 text-xs text-finanzar-textSecondary">
-              <span>Convertir USD a pesos con</span>
-              <select
-                value={p.config.dolarCasa}
-                onChange={(e) => p.cambiarDolarCasa(e.target.value as any)}
-                className="px-2 py-1 bg-finanzar-surface border border-finanzar-border rounded text-xs text-finanzar-textMain focus:outline-none focus:ring-1 focus:ring-finanzar-accent"
-              >
-                {CASAS_DOLAR.map((c) => (
-                  <option key={c.id} value={c.id}>{c.label}</option>
-                ))}
-              </select>
-              <span className="font-mono tabular-nums text-finanzar-textMain">
-                {p.dolar !== null ? `= ${formatMoneda(p.dolar)}` : "sin cotización"}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8 px-1 text-[11px] text-finanzar-textMuted">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+              <span>
+                {casaLabel}:{" "}
+                <span className="font-mono tabular-nums text-finanzar-textMain">{p.dolar !== null ? formatMoneda(p.dolar) : "sin cotización"}</span>
               </span>
               {p.dolarEsRespaldo && p.config.ultimoDolar && (
                 <span className="text-finanzar-accent" title="Divisas no cargó en vivo; se usa la última cotización guardada.">
                   (última guardada, {formatFechaCorta(p.config.ultimoDolar.fecha)})
                 </span>
               )}
+              <span className="text-finanzar-borderStrong select-none">·</span>
+              <Link to="/account" className="underline hover:text-finanzar-primary">Cambiar cotización</Link>
             </div>
-            <div className="text-[11px] text-finanzar-textMuted">
+            <div>
               {!isLive
                 ? "Cargando cotizaciones en vivo…"
                 : p.totales.sinValuar > 0
@@ -346,7 +376,12 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
           </div>
 
           <div className="mb-8">
-            <PortfolioChart historial={p.historial} />
+            <PortfolioChart
+              historial={p.historial}
+              moneda={vista}
+              dolar={p.dolar}
+              fechaInicioTenencias={fechaInicioTenencias}
+            />
           </div>
 
           {/* Tabla de posiciones de mercado */}
@@ -409,18 +444,18 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
                               </div>
                             </td>
                             <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-textMain">{formatCantidad(pos.cantidad, pos.categoria)}</td>
-                            <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-textSecondary">{formatPrecio(pos.precioPromedio, pos.moneda)}</td>
+                            <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-textSecondary">{fp(pos.precioPromedio, pos.moneda)}</td>
                             <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-textMain">
-                              {pos.precioActual !== null ? formatPrecio(pos.precioActual, pos.moneda) : "—"}
+                              {pos.precioActual !== null ? fp(pos.precioActual, pos.moneda) : "—"}
                             </td>
-                            <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-textSecondary">{formatMoneda(pos.costoTotal, pos.moneda, true)}</td>
-                            <td className="px-3 py-3 text-right font-mono tabular-nums font-semibold text-finanzar-primary">{formatMoneda(valor, pos.moneda, true)}</td>
+                            <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-textSecondary">{fm(pos.costoTotal, pos.moneda)}</td>
+                            <td className="px-3 py-3 text-right font-mono tabular-nums font-semibold text-finanzar-primary">{fm(valor, pos.moneda)}</td>
                             <td className="px-3 py-3 text-right">
                               {resultado === null ? (
                                 <span className="text-finanzar-textMuted">—</span>
                               ) : (
                                 <span className={`inline-flex flex-col items-end font-mono tabular-nums ${resultado >= 0 ? "text-finanzar-positive" : "text-finanzar-negative"}`}>
-                                  <span className="font-semibold">{resultado >= 0 ? "+" : ""}{formatMoneda(resultado, pos.moneda, true)}</span>
+                                  <span className="font-semibold">{resultado >= 0 ? "+" : ""}{fm(resultado, pos.moneda)}</span>
                                   <span className="text-[10px]">{resultadoPct !== null ? formatPct(resultadoPct) : ""}</span>
                                 </span>
                               )}
@@ -501,15 +536,15 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
                               <p className="font-medium text-finanzar-textMain">{pf.entidad}</p>
                               {pf.notas && <p className="text-[10px] text-finanzar-textMuted truncate max-w-[200px]">{pf.notas}</p>}
                             </td>
-                            <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-textMain">{formatMoneda(pf.capital, "ARS", true)}</td>
+                            <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-textMain">{fm(pf.capital)}</td>
                             <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-textSecondary">{pf.tna.toFixed(2)}%</td>
                             <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-textSecondary">{formatFechaCorta(pf.fechaInicio)}</td>
                             <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-textSecondary">
                               {formatFechaCorta(pf.fechaVencimiento)}
                               {activoOVencido && !vencio && <span className="block text-[10px] text-finanzar-textMuted">en {diasRestantes} d</span>}
                             </td>
-                            <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-positive">+{formatMoneda(devengado, "ARS", true)}</td>
-                            <td className="px-3 py-3 text-right font-mono tabular-nums font-semibold text-finanzar-primary">{formatMoneda(finales, "ARS", true)}</td>
+                            <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-positive">+{fm(devengado)}</td>
+                            <td className="px-3 py-3 text-right font-mono tabular-nums font-semibold text-finanzar-primary">{fm(finales)}</td>
                             <td className="px-3 py-3">
                               <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] font-semibold ${e.cls}`}>
                                 <span className={`w-1.5 h-1.5 rounded-full ${e.dot}`} />
@@ -603,16 +638,16 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
                                 {fc.notas && <span className="text-[10px] text-finanzar-textMuted truncate max-w-[160px]">{fc.notas}</span>}
                               </div>
                             </td>
-                            <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-textMain">{activo ? formatMoneda(fc.capital, "ARS", true) : "—"}</td>
+                            <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-textMain">{activo ? fm(fc.capital) : "—"}</td>
                             <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-textSecondary">
                               {fc.tnaUsada !== null ? `${fc.tnaUsada.toFixed(2)}%` : "—"}
                               <span className="block text-[10px] text-finanzar-textMuted">{origen}</span>
                             </td>
                             <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-textSecondary">{formatFechaCorta(fc.fechaInicio)}</td>
-                            <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-positive">{activo ? `+${formatMoneda(fc.devengado, "ARS", true)}` : "—"}</td>
-                            <td className="px-3 py-3 text-right font-mono tabular-nums font-semibold text-finanzar-primary">{activo ? formatMoneda(fc.valorActual, "ARS", true) : "—"}</td>
+                            <td className="px-3 py-3 text-right font-mono tabular-nums text-finanzar-positive">{activo ? `+${fm(fc.devengado)}` : "—"}</td>
+                            <td className="px-3 py-3 text-right font-mono tabular-nums font-semibold text-finanzar-primary">{activo ? fm(fc.valorActual) : "—"}</td>
                             <td className={`px-3 py-3 text-right font-mono tabular-nums ${fc.realizada >= 0 ? "text-finanzar-positive" : "text-finanzar-negative"}`}>
-                              {fc.rescates.length > 0 ? `${fc.realizada >= 0 ? "+" : ""}${formatMoneda(fc.realizada, "ARS", true)}` : "—"}
+                              {fc.rescates.length > 0 ? `${fc.realizada >= 0 ? "+" : ""}${fm(fc.realizada)}` : "—"}
                             </td>
                             <td className="px-3 py-3">
                               <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] font-semibold ${activo ? ESTADO_PF.activo.cls : ESTADO_PF.retirado.cls}`}>
@@ -685,8 +720,8 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
                               {tx.ticker && <span className="ml-1.5 font-mono text-[10px] text-finanzar-textSecondary">{tx.ticker}</span>}
                             </td>
                             <td className="px-3 py-2.5 text-right font-mono tabular-nums">{formatCantidad(tx.cantidad, tx.categoria)}</td>
-                            <td className="px-3 py-2.5 text-right font-mono tabular-nums text-finanzar-textSecondary">{formatPrecio(tx.precioUnitario, moneda)}</td>
-                            <td className="px-3 py-2.5 text-right font-mono tabular-nums font-semibold">{formatMoneda(tx.cantidad * tx.precioUnitario, moneda, true)}</td>
+                            <td className="px-3 py-2.5 text-right font-mono tabular-nums text-finanzar-textSecondary">{fp(tx.precioUnitario, moneda)}</td>
+                            <td className="px-3 py-2.5 text-right font-mono tabular-nums font-semibold">{fm(tx.cantidad * tx.precioUnitario, moneda)}</td>
                             <td className="px-3 py-2.5 text-finanzar-textMuted truncate max-w-[160px]">{tx.notas || ""}</td>
                             <td className="px-4 py-2.5 text-right whitespace-nowrap">
                               <button onClick={() => setModal({ tipo: "editar-tx", transaccion: tx })} className="text-finanzar-primary hover:text-finanzar-accent underline mr-3">Editar</button>

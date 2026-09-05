@@ -51,7 +51,9 @@ export function validarPortfolio(data: any): { ok: true; payload: PortfolioPaylo
       Array.isArray(f.rescates ?? []) && (f.notas === undefined || isStr(f.notas, 500))
   );
   const histOk = historial.every((h: any) => h && isDate(h.fecha) && isNum(h.valorTotal) && isNum(h.capitalInvertido));
-  const cfgOk = config && typeof config === "object" && (config.dolarCasa === undefined || isStr(config.dolarCasa, 30));
+  const cfgOk =
+    config && typeof config === "object" && (config.dolarCasa === undefined || isStr(config.dolarCasa, 30)) &&
+    (config.monedaVista === undefined || config.monedaVista === "ARS" || config.monedaVista === "USD");
   if (!txOk || !pfOk || !fcOk || !histOk || !cfgOk) return { ok: false, error: "El portfolio tiene registros con un formato que no se reconoce." };
 
   return {
@@ -64,7 +66,11 @@ export function validarPortfolio(data: any): { ok: true; payload: PortfolioPaylo
       plazosFijos,
       fondosComunes,
       historial,
-      config: { dolarCasa: config.dolarCasa ?? "bolsa", ...(config.ultimoDolar ? { ultimoDolar: config.ultimoDolar } : {}) },
+      config: {
+        dolarCasa: config.dolarCasa ?? "bolsa",
+        ...(config.monedaVista ? { monedaVista: config.monedaVista } : {}),
+        ...(config.ultimoDolar ? { ultimoDolar: config.ultimoDolar } : {}),
+      },
     },
   };
 }

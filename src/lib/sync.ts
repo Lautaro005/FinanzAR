@@ -2,6 +2,7 @@
 // El estado/orquestación vive en hooks/useAuth.tsx.
 import {
   armarBackup,
+  loadConfig,
   PortfolioBackup,
   saveConfig,
   saveFondosComunes,
@@ -64,4 +65,16 @@ export function limpiarMarcaDispositivo() {
   } catch {
     /* ignorar */
   }
+}
+
+/** Disparado cuando cambia la configuración del portfolio desde otra pantalla (Account). */
+export const EVENTO_CONFIG_CAMBIO = "finanzar:portfolio-config-cambio";
+
+/** Actualiza parte de la config del portfolio desde fuera de usePortfolio (p. ej. Account) y avisa a todos. */
+export function actualizarConfigPortfolio(parcial: Partial<PortfolioBackup["config"]>) {
+  const next = { ...loadConfig(), ...parcial };
+  saveConfig(next);
+  window.dispatchEvent(new Event(EVENTO_CONFIG_CAMBIO));
+  notificarCambioPortfolio();
+  return next;
 }

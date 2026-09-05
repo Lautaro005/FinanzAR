@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { CasaDolar, FondoComun, Instrumento, PlazoFijo, PortfolioConfig, PuntoPortfolio, Transaccion } from "../types";
+import { CasaDolar, FondoComun, MonedaVista, Instrumento, PlazoFijo, PortfolioConfig, PuntoPortfolio, Transaccion } from "../types";
 import {
   agregarPuntoHistorial,
   aplicarRescate,
@@ -22,7 +22,7 @@ import {
   saveTransacciones,
   valorFinalPlazoFijo,
 } from "../lib/portfolio";
-import { EVENTO_PORTFOLIO_REEMPLAZADO, notificarCambioPortfolio } from "../lib/sync";
+import { EVENTO_CONFIG_CAMBIO, EVENTO_PORTFOLIO_REEMPLAZADO, notificarCambioPortfolio } from "../lib/sync";
 
 /**
  * Estado + acciones del portfolio personal. Todo vive en localStorage del
@@ -49,8 +49,13 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
       setHistorial(loadHistorial());
       setConfig(loadConfig());
     };
+    const recargarConfig = () => setConfig(loadConfig());
     window.addEventListener(EVENTO_PORTFOLIO_REEMPLAZADO, recargar);
-    return () => window.removeEventListener(EVENTO_PORTFOLIO_REEMPLAZADO, recargar);
+    window.addEventListener(EVENTO_CONFIG_CAMBIO, recargarConfig);
+    return () => {
+      window.removeEventListener(EVENTO_PORTFOLIO_REEMPLAZADO, recargar);
+      window.removeEventListener(EVENTO_CONFIG_CAMBIO, recargarConfig);
+    };
   }, []);
 
   const posiciones = useMemo(
@@ -221,6 +226,13 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
     pendienteSnapshot.current = true;
   };
 
+  const cambiarMonedaVista = (moneda: MonedaVista) => {
+    const next = { ...config, monedaVista: moneda };
+    saveConfig(next);
+    notificarCambioPortfolio();
+    setConfig(next);
+  };
+
   /* ---------------- Backup ---------------- */
   const importarBackup = (backup: PortfolioBackup) => {
     saveTransacciones(backup.transacciones);
@@ -275,6 +287,7 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
     eliminarFondoComun,
     rescatarFondoComun,
     cambiarDolarCasa,
+    cambiarMonedaVista,
     importarBackup,
     borrarTodo,
     valorFinalPlazoFijo,

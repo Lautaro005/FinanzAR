@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { APP_VERSION } from "../lib/changelog";
 
 export default function Footer() {
   return (
@@ -13,10 +14,16 @@ export default function Footer() {
             <Link to="/privacidad" className="text-finanzar-textSecondary hover:text-finanzar-primary underline">
               Privacidad
             </Link>
+            <Link to="/changelog" className="text-finanzar-textSecondary hover:text-finanzar-primary underline">
+              Changelog
+            </Link>
           </div>
 
           <p className="text-finanzar-textMuted text-right">
-            © {new Date().getFullYear()} FinanzAR.
+            © {new Date().getFullYear()} FinanzAR ·{" "}
+            <Link to="/changelog" className="font-mono hover:text-finanzar-primary" title="Ver novedades de esta versión">
+              v{APP_VERSION}
+            </Link>
           </p>
         </div>
       </div>

@@ -81,8 +81,13 @@ export interface PuntoPortfolio {
 /** Casas de dólar de DolarAPI utilizables para consolidar USD → ARS. */
 export type CasaDolar = "oficial" | "blue" | "bolsa" | "contadoconliqui" | "mayorista" | "cripto" | "tarjeta";
 
+/** Moneda en la que se muestran todos los valores del portfolio (toggle junto al título). */
+export type MonedaVista = "ARS" | "USD";
+
 export interface PortfolioConfig {
   dolarCasa: CasaDolar;
+  /** Moneda de visualización del portfolio (default ARS). */
+  monedaVista?: MonedaVista;
   /** Última cotización usada, como respaldo si Divisas no cargó en vivo. */
   ultimoDolar?: { casa: CasaDolar; valor: number; fecha: string };
 }
