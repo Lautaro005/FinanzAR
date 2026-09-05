@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { getDb } from "../_lib/db";
-import { assertSameOrigin, getSessionUser, handleError, methodNotAllowed, setSessionCookie, verifyPassword } from "../_lib/security";
+import { getDb } from "../_lib/db.js";
+import { assertSameOrigin, getSessionUser, handleError, methodNotAllowed, setSessionCookie, verifyPassword } from "../_lib/security.js";
 
 /** Elimina la cuenta, todas sus sesiones y el portfolio sincronizado. Exige la contraseña actual. */
 export default async function handler(req: VercelRequest, res: VercelResponse) {

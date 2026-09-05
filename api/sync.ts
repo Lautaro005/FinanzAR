@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { getDb } from "./_lib/db";
-import { assertSameOrigin, getSessionUser, handleError, methodNotAllowed, nowISO } from "./_lib/security";
+import { getDb } from "./_lib/db.js";
+import { assertSameOrigin, getSessionUser, handleError, methodNotAllowed, nowISO } from "./_lib/security.js";
 
 /**
  * Activa/desactiva la sincronización del portfolio con la cuenta.

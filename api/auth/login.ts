@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { getDb } from "../_lib/db";
+import { getDb } from "../_lib/db.js";
 import {
   assertSameOrigin, clearAttempts, clientIp, createSession, handleError, isRateLimited, methodNotAllowed,
   normalizeEmail, recordFailedAttempt, setSessionCookie, verifyPassword,
-} from "../_lib/security";
+} from "../_lib/security.js";
 
 const MSG_INVALIDO = "Email o contraseña incorrectos.";
 

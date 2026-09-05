@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { getDb } from "./_lib/db";
-import { MAX_PORTFOLIO_BYTES, validarPortfolio } from "./_lib/portfolioShape";
-import { assertSameOrigin, getSessionUser, handleError, methodNotAllowed, nowISO } from "./_lib/security";
+import { getDb } from "./_lib/db.js";
+import { MAX_PORTFOLIO_BYTES, validarPortfolio } from "./_lib/portfolioShape.js";
+import { assertSameOrigin, getSessionUser, handleError, methodNotAllowed, nowISO } from "./_lib/security.js";
 
 /**
  * Portfolio sincronizado del usuario logueado (solo si tiene la sincronización activa).

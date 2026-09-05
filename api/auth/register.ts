@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { getDb } from "../_lib/db";
+import { getDb } from "../_lib/db.js";
 import {
   assertSameOrigin, createSession, handleError, hashPassword, methodNotAllowed, newId, normalizeEmail,
   normalizeNombre, nowISO, setSessionCookie, validPassword,
-} from "../_lib/security";
+} from "../_lib/security.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") return methodNotAllowed(res, ["POST"]);

@@ -3,7 +3,7 @@
 // límite de intentos. Sin dependencias externas (crypto nativo de Node).
 import { randomBytes, scrypt as scryptCb, timingSafeEqual, createHash } from "node:crypto";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { getDb } from "./db";
+import { getDb } from "./db.js";
 
 const scrypt = (password: string, salt: Buffer, keylen: number, N: number) =>
   new Promise<Buffer>((resolve, reject) =>
