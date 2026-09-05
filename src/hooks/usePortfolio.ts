@@ -22,6 +22,7 @@ import {
   saveTransacciones,
   valorFinalPlazoFijo,
 } from "../lib/portfolio";
+import { EVENTO_PORTFOLIO_REEMPLAZADO, notificarCambioPortfolio } from "../lib/sync";
 
 /**
  * Estado + acciones del portfolio personal. Todo vive en localStorage del
@@ -37,6 +38,20 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
   const [config, setConfig] = useState<PortfolioConfig>(() => loadConfig());
 
   const hoy = hoyISO();
+
+  // Si el portfolio local fue reemplazado desde afuera (sincronización con la
+  // cuenta, import desde Account), se recarga todo el estado desde localStorage.
+  useEffect(() => {
+    const recargar = () => {
+      setTransacciones(loadTransacciones());
+      setPlazosFijos(loadPlazosFijos());
+      setFondosComunes(loadFondosComunes());
+      setHistorial(loadHistorial());
+      setConfig(loadConfig());
+    };
+    window.addEventListener(EVENTO_PORTFOLIO_REEMPLAZADO, recargar);
+    return () => window.removeEventListener(EVENTO_PORTFOLIO_REEMPLAZADO, recargar);
+  }, []);
 
   const posiciones = useMemo(
     () => derivarPosiciones(transacciones, instruments, hoy),
@@ -103,6 +118,7 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
           capitalInvertido: Number(totales.capitalInvertido.toFixed(2)),
         });
         saveHistorial(next);
+        notificarCambioPortfolio();
         return next;
       });
     },
@@ -127,17 +143,20 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
 
   const persistirTransacciones = (next: Transaccion[]) => {
     saveTransacciones(next);
+    notificarCambioPortfolio();
     pendienteSnapshot.current = true;
     setTransacciones(next);
   };
   const persistirPlazosFijos = (next: PlazoFijo[]) => {
     savePlazosFijos(next);
+    notificarCambioPortfolio();
     pendienteSnapshot.current = true;
     setPlazosFijos(next);
   };
 
   const persistirFondos = (next: FondoComun[]) => {
     saveFondosComunes(next);
+    notificarCambioPortfolio();
     pendienteSnapshot.current = true;
     setFondosComunes(next);
   };
@@ -197,6 +216,7 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
   const cambiarDolarCasa = (casa: CasaDolar) => {
     const next = { ...config, dolarCasa: casa };
     saveConfig(next);
+    notificarCambioPortfolio();
     setConfig(next);
     pendienteSnapshot.current = true;
   };
@@ -213,6 +233,7 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
     setFondosComunes(backup.fondosComunes);
     setHistorial(backup.historial);
     setConfig(backup.config);
+    notificarCambioPortfolio();
   };
 
   const borrarTodo = () => {
@@ -224,6 +245,7 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
     setPlazosFijos([]);
     setFondosComunes([]);
     setHistorial([]);
+    notificarCambioPortfolio();
   };
 
   return {

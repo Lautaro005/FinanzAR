@@ -36,7 +36,7 @@ export default function PrivacyPolicyScreen() {
             2. Qué datos NO recolectamos
           </h2>
           <p>
-            FinanzAR no requiere registro ni inicio de sesión. No solicitamos nombre, correo electrónico, DNI/CUIT, datos bancarios ni ninguna información que permita identificarte personalmente para usar la aplicación.
+            FinanzAR no requiere registro ni inicio de sesión para usarse. No solicitamos DNI/CUIT, datos bancarios ni ninguna información que permita identificarte personalmente para consultar la aplicación. Crear una cuenta es opcional (ver sección 3 bis) y solo pide nombre, email y contraseña.
           </p>
         </section>
 
@@ -46,6 +46,15 @@ export default function PrivacyPolicyScreen() {
           </h2>
           <p>
             Para acelerar la carga y reducir pedidos innecesarios a las APIs públicas de terceros, FinanzAR guarda temporalmente en el almacenamiento local de tu navegador (localStorage): cotizaciones y tasas ya consultadas (con una vigencia corta, de minutos), los instrumentos que hayas marcado para comparar durante tu visita, y — si usás la sección Portfolio — las operaciones, plazos fijos, historial de valor y preferencia de cotización del dólar que cargues ahí (sin vencimiento: es tu dato, no una caché, y podés exportarlo o borrarlo desde la misma sección). Esta información queda únicamente en tu dispositivo, no se envía a ningún servidor propio de FinanzAR y podés borrarla en cualquier momento limpiando los datos del sitio desde la configuración de tu navegador.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="font-serif text-lg font-bold text-finanzar-primary mb-2">
+            3 bis. Cuenta opcional y sincronización del portfolio
+          </h2>
+          <p>
+            Si elegís crear una cuenta, guardamos tu nombre, tu email y tu contraseña (solo como hash con sal, nunca en texto plano) en una base de datos propia alojada en Turso. La sesión se mantiene con una cookie técnica httpOnly de 30 días. Tu portfolio se guarda en esa cuenta únicamente si activás la opción de <strong>sincronización</strong> desde la página Mi cuenta; en ese caso cada cambio que hagas en Portfolio se envía a tu cuenta para que puedas verlo desde otros dispositivos. Al desactivar la sincronización se borra la copia guardada en la cuenta, y al eliminar la cuenta se borran tus datos, tus sesiones y tu portfolio sincronizado. Nunca vendemos ni compartimos estos datos.
           </p>
         </section>
 

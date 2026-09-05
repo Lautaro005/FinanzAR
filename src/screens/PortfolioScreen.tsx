@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDocumentMeta } from "../hooks/useDocumentMeta";
 import { usePortfolio } from "../hooks/usePortfolio";
+import { useAuth } from "../hooks/useAuth";
 import { FondoComun, Instrumento, PlazoFijo, Transaccion } from "../types";
 import {
   armarBackup,
@@ -83,6 +84,8 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
   );
 
   const p = usePortfolio(instruments, isLive);
+  const auth = useAuth();
+  const syncActiva = !!auth.usuario?.syncEnabled;
   const [modal, setModal] = useState<ModalState>(null);
   const [verHistorialPf, setVerHistorialPf] = useState(false);
   const [verHistorialFci, setVerHistorialFci] = useState(false);
@@ -180,8 +183,36 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
             <li><button onClick={() => setModal({ tipo: "alta-fci" })} className={accionClass}>+ FCI</button></li>
             <li><button onClick={() => setModal({ tipo: "alta-pf" })} className={accionClass}>+ Plazo fijo</button></li>
             <li><span className="text-finanzar-borderStrong select-none">·</span></li>
-            <li><button onClick={exportar} disabled={!p.tieneDatos} className={accionClass}>⤓ Exportar backup</button></li>
-            <li><button onClick={() => fileRef.current?.click()} className={accionClass}>⤒ Importar</button></li>
+            {syncActiva ? (
+              /* Con sincronización activa, exportar/importar viven en la cuenta; acá solo se muestra el estado. */
+              <li>
+                <Link
+                  to="/account"
+                  className={`${accionClass} inline-flex items-center gap-1.5`}
+                  title={auth.errorSync || "Ver sincronización en Mi cuenta"}
+                >
+                  <span
+                    className={`w-2 h-2 rounded-full ${
+                      auth.estadoSync === "error"
+                        ? "bg-finanzar-negative"
+                        : auth.estadoSync === "sincronizando"
+                        ? "bg-finanzar-accent animate-pulse"
+                        : "bg-finanzar-positive"
+                    }`}
+                  />
+                  {auth.estadoSync === "error"
+                    ? "Error de sincronización"
+                    : auth.estadoSync === "sincronizando"
+                    ? "Sincronización en progreso…"
+                    : "Sincronizado con tu cuenta"}
+                </Link>
+              </li>
+            ) : (
+              <>
+                <li><button onClick={exportar} disabled={!p.tieneDatos} className={accionClass}>⤓ Exportar backup</button></li>
+                <li><button onClick={() => fileRef.current?.click()} className={accionClass}>⤒ Importar</button></li>
+              </>
+            )}
           </ul>
           <input
             ref={fileRef}
@@ -203,7 +234,8 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
         <span className="text-xs uppercase tracking-wider font-semibold text-finanzar-accent">Seguimiento personal</span>
         <h1 className="font-serif text-3xl sm:text-4xl font-bold text-finanzar-primary tracking-tight mt-1">Portfolio</h1>
         <p className="text-sm text-finanzar-textSecondary mt-1">
-          Cargá tus tenencias y seguí su valor con las mismas cotizaciones de Mercados. Todo queda guardado en este navegador.
+          Cargá tus tenencias y seguí su valor con las mismas cotizaciones de Mercados.{" "}
+          {syncActiva ? "Todo queda guardado en este navegador y sincronizado con tu cuenta." : "Todo queda guardado en este navegador."}
         </p>
       </div>
 
@@ -249,11 +281,18 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
             <BotonPrimario onClick={() => setModal({ tipo: "compra" })}>+ Agregar compra</BotonPrimario>
             <BotonSecundario onClick={() => setModal({ tipo: "alta-fci" })}>+ FCI</BotonSecundario>
             <BotonSecundario onClick={() => setModal({ tipo: "alta-pf" })}>+ Plazo fijo</BotonSecundario>
-            <BotonSecundario onClick={() => fileRef.current?.click()}>Importar backup</BotonSecundario>
+            {!syncActiva && <BotonSecundario onClick={() => fileRef.current?.click()}>Importar backup</BotonSecundario>}
           </div>
           <p className="text-[11px] text-finanzar-textMuted mt-6 max-w-lg mx-auto">
-            Sin cuenta ni servidor: los datos viven solo en el almacenamiento local de este navegador. Si borrás los datos del
-            sitio o cambiás de dispositivo, los perdés — por eso conviene exportar un backup cada tanto.
+            {syncActiva ? (
+              <>Tu portfolio se sincroniza con tu cuenta: lo que cargues acá aparece en cualquier dispositivo donde inicies sesión.</>
+            ) : (
+              <>
+                Los datos viven solo en el almacenamiento local de este navegador. Si borrás los datos del sitio o cambiás de
+                dispositivo, los perdés — exportá un backup cada tanto o{" "}
+                <Link to="/account" className="underline hover:text-finanzar-primary">activá la sincronización con una cuenta</Link>.
+              </>
+            )}
           </p>
         </div>
       ) : (
@@ -666,12 +705,14 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
           {/* Pie: privacidad + borrar todo */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-[11px] text-finanzar-textMuted border-t border-finanzar-borderSubtle pt-4">
             <p>
-              Tu portfolio se guarda solo en este navegador (sin cuenta ni servidor). Exportá un backup cada tanto: es la única copia.{" "}
+              {syncActiva
+                ? "Tu portfolio está sincronizado con tu cuenta. Podés exportar o importar un backup desde Mi cuenta."
+                : "Tu portfolio se guarda solo en este navegador (sin cuenta ni servidor). Exportá un backup cada tanto: es la única copia."}{" "}
               <Link to="/privacidad" className="underline hover:text-finanzar-primary">Más sobre privacidad</Link>.
             </p>
             {confirmBorrar ? (
               <span className="flex items-center gap-2">
-                ¿Borrar todo el portfolio de este navegador?
+                {syncActiva ? "¿Borrar todo el portfolio (también en tu cuenta)?" : "¿Borrar todo el portfolio de este navegador?"}
                 <button onClick={() => { p.borrarTodo(); setConfirmBorrar(false); }} className="text-finanzar-negative font-semibold underline">Sí, borrar</button>
                 <button onClick={() => setConfirmBorrar(false)} className="underline">Cancelar</button>
               </span>

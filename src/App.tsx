@@ -11,6 +11,9 @@ import AboutScreen from "./screens/AboutScreen";
 import NotFoundScreen from "./screens/NotFoundScreen";
 import PrivacyPolicyScreen from "./screens/PrivacyPolicyScreen";
 import PortfolioScreen from "./screens/PortfolioScreen";
+import AccountScreen from "./screens/AccountScreen";
+import SyncConflictModal from "./components/SyncConflictModal";
+import { AuthProvider, useAuth } from "./hooks/useAuth";
 import { useDocumentMeta } from "./hooks/useDocumentMeta";
 import { Categoria, Instrumento, PuntoHistorico } from "./types";
 import { useInstruments } from "./hooks/useInstruments";
@@ -653,6 +656,21 @@ function CompareScreen({
    APLICACIÓN PRINCIPAL (ROUTER + LAYOUT)
    ============================================================ */
 export default function App() {
+  return (
+    <AuthProvider>
+      <AppShell />
+    </AuthProvider>
+  );
+}
+
+/** Si la cuenta y este dispositivo tienen portfolios distintos, se pregunta cuál conservar (en cualquier ruta). */
+function ConflictoSyncGlobal() {
+  const { conflicto, resolverConflicto } = useAuth();
+  if (!conflicto) return null;
+  return <SyncConflictModal conflicto={conflicto} onResolver={(e) => void resolverConflicto(e)} />;
+}
+
+function AppShell() {
   const { instruments, categoryCounts, loading, isLive } = useInstruments();
   const [selectedCompareIds, setSelectedCompareIds] = useState<string[]>([]);
 
@@ -712,12 +730,14 @@ export default function App() {
               }
             />
             <Route path="/portfolio" element={<PortfolioScreen instruments={instruments} isLive={isLive} />} />
+            <Route path="/account" element={<AccountScreen />} />
             <Route path="/acerca" element={<AboutScreen />} />
             <Route path="/privacidad" element={<PrivacyPolicyScreen />} />
             <Route path="*" element={<NotFoundScreen />} />
           </Routes>
         </div>
         <Footer />
+        <ConflictoSyncGlobal />
       </div>
     </Router>
   );
