@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import {
   AiConfig,
   AiModelInfo,
   DEFAULT_GROQ_MODELS,
-  fetchGroqModels,
+  fetchGroqModelsWithStatus,
   fetchOpenRouterModels,
   getAiConfig,
   saveAiConfig,
@@ -210,12 +210,16 @@ export default function ApiKeysCard() {
   const [config, setConfig] = useState<AiConfig>(getAiConfig);
   const [mostrarKey, setMostrarKey] = useState(false);
 
-  // Cache de modelos en memoria del componente
+  // Modelos de Groq y estado de conexión
   const [groqModels, setGroqModels] = useState<AiModelInfo[]>(DEFAULT_GROQ_MODELS);
   const [cargandoGroq, setCargandoGroq] = useState(false);
+  const [groqIsLive, setGroqIsLive] = useState(false);
+  const [groqError, setGroqError] = useState<string | null>(null);
 
+  // Modelos de OpenRouter
   const [openRouterModels, setOpenRouterModels] = useState<AiModelInfo[]>([]);
   const [cargandoOpenRouter, setCargandoOpenRouter] = useState(false);
+
   const [guardadoAviso, setGuardadoAviso] = useState(false);
 
   // Guardar configuración automáticamente al mutar
@@ -229,43 +233,60 @@ export default function ApiKeysCard() {
     setTimeout(() => setGuardadoAviso(false), 2000);
   };
 
-  // Cargar modelos de Groq cuando cambia la key o al iniciar
+  // Función reutilizable para cargar modelos de Groq
+  const recargarGroq = useCallback(async (key: string) => {
+    const trimmed = key.trim();
+    if (!trimmed) {
+      setGroqModels(DEFAULT_GROQ_MODELS);
+      setGroqIsLive(false);
+      setGroqError(null);
+      return;
+    }
+    setCargandoGroq(true);
+    setGroqError(null);
+    try {
+      const { models, isLive, error } = await fetchGroqModelsWithStatus(trimmed);
+      setGroqModels(models);
+      setGroqIsLive(isLive);
+      setGroqError(error || null);
+    } catch {
+      setGroqModels(DEFAULT_GROQ_MODELS);
+      setGroqIsLive(false);
+      setGroqError("Error al conectar con Groq");
+    } finally {
+      setCargandoGroq(false);
+    }
+  }, []);
+
+  // Cargar modelos de Groq con debounce al ingresar la key
   useEffect(() => {
     let cancelado = false;
-    async function loadGroq() {
-      if (!config.groqApiKey.trim()) {
-        setGroqModels(DEFAULT_GROQ_MODELS);
-        return;
-      }
-      setCargandoGroq(true);
-      const res = await fetchGroqModels(config.groqApiKey);
+    const timer = setTimeout(() => {
       if (!cancelado) {
-        setGroqModels(res);
-        setCargandoGroq(false);
+        recargarGroq(config.groqApiKey);
       }
-    }
-    loadGroq();
+    }, config.groqApiKey.trim() ? 400 : 0);
+
     return () => {
       cancelado = true;
+      clearTimeout(timer);
     };
-  }, [config.groqApiKey]);
+  }, [config.groqApiKey, recargarGroq]);
 
   // Cargar modelos de OpenRouter al montar o al cambiar la key
-  useEffect(() => {
-    let cancelado = false;
-    async function loadOR() {
-      setCargandoOpenRouter(true);
-      const res = await fetchOpenRouterModels(config.openRouterApiKey);
-      if (!cancelado) {
-        setOpenRouterModels(res);
-        setCargandoOpenRouter(false);
-      }
+  const recargarOpenRouter = useCallback(async (key: string) => {
+    setCargandoOpenRouter(true);
+    try {
+      const res = await fetchOpenRouterModels(key);
+      setOpenRouterModels(res);
+    } finally {
+      setCargandoOpenRouter(false);
     }
-    loadOR();
-    return () => {
-      cancelado = true;
-    };
-  }, [config.openRouterApiKey]);
+  }, []);
+
+  useEffect(() => {
+    recargarOpenRouter(config.openRouterApiKey);
+  }, [config.openRouterApiKey, recargarOpenRouter]);
 
   const activeProvider = config.activeProvider;
 
@@ -380,18 +401,46 @@ export default function ApiKeysCard() {
                     {mostrarKey ? "Ocultar" : "Mostrar"}
                   </button>
                 </div>
-                <p className="text-[11px] text-finanzar-textMuted mt-1">
-                  {config.groqApiKey
-                    ? "Tu clave se almacena únicamente en tu navegador."
-                    : "Ingresá tu API key de Groq para acceder a sus modelos ultra rápidos."}
-                </p>
+                <div className="flex items-center justify-between mt-1 text-[11px]">
+                  <p className="text-finanzar-textMuted">
+                    {config.groqApiKey
+                      ? "Tu clave se almacena únicamente en tu navegador."
+                      : "Ingresá tu API key de Groq para consultar todos los modelos en tiempo real."}
+                  </p>
+                  {config.groqApiKey && (
+                    <button
+                      type="button"
+                      onClick={() => recargarGroq(config.groqApiKey)}
+                      disabled={cargandoGroq}
+                      className="text-finanzar-accent hover:underline inline-flex items-center gap-1 flex-shrink-0"
+                    >
+                      <span className={cargandoGroq ? "animate-spin" : ""}>↻</span>
+                      <span>{cargandoGroq ? "Actualizando…" : "Recargar"}</span>
+                    </button>
+                  )}
+                </div>
               </div>
 
               {/* Campo inferior: Dropdown personalizado de modelos */}
               <div>
-                <label className="block text-xs font-semibold text-finanzar-textMain mb-1">
-                  Modelo activo
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-finanzar-textMain">
+                    Modelo activo
+                  </label>
+                  {groqIsLive ? (
+                    <span className="text-[10px] text-finanzar-positive bg-finanzar-positiveBg border border-finanzar-positiveBorder px-1.5 py-0.2 rounded-xs font-medium">
+                      ● Modelos en vivo de Groq ({groqModels.length})
+                    </span>
+                  ) : config.groqApiKey ? (
+                    <span className="text-[10px] text-finanzar-textSecondary bg-finanzar-bg border border-finanzar-border px-1.5 py-0.2 rounded-xs">
+                      {groqError || "Modelos de respaldo"}
+                    </span>
+                  ) : (
+                    <span className="text-[10px] text-finanzar-textMuted">
+                      Modelos recomendados ({groqModels.length})
+                    </span>
+                  )}
+                </div>
                 <CustomModelDropdown
                   models={groqModels}
                   selectedModelId={config.groqModel}
@@ -401,9 +450,12 @@ export default function ApiKeysCard() {
                 />
                 <div className="flex items-center justify-between mt-1 text-[11px] text-finanzar-textMuted">
                   <span>
-                    Modelo seleccionado: <strong className="font-mono text-finanzar-primary">{config.groqModel || "Ninguno"}</strong>
+                    Modelo seleccionado:{" "}
+                    <strong className="font-mono text-finanzar-primary">
+                      {config.groqModel || "Ninguno"}
+                    </strong>
                   </span>
-                  {cargandoGroq && <span>Actualizando lista…</span>}
+                  {cargandoGroq && <span>Consultando API de Groq…</span>}
                 </div>
               </div>
             </>
@@ -445,11 +497,22 @@ export default function ApiKeysCard() {
                     {mostrarKey ? "Ocultar" : "Mostrar"}
                   </button>
                 </div>
-                <p className="text-[11px] text-finanzar-textMuted mt-1">
-                  {config.openRouterApiKey
-                    ? "Tu clave se almacena únicamente en tu navegador."
-                    : "OpenRouter unifica cientos de modelos de IA con una sola API key."}
-                </p>
+                <div className="flex items-center justify-between mt-1 text-[11px]">
+                  <p className="text-finanzar-textMuted">
+                    {config.openRouterApiKey
+                      ? "Tu clave se almacena únicamente en tu navegador."
+                      : "OpenRouter unifica cientos de modelos de IA con una sola API key."}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => recargarOpenRouter(config.openRouterApiKey)}
+                    disabled={cargandoOpenRouter}
+                    className="text-finanzar-accent hover:underline inline-flex items-center gap-1 flex-shrink-0"
+                  >
+                    <span className={cargandoOpenRouter ? "animate-spin" : ""}>↻</span>
+                    <span>{cargandoOpenRouter ? "Actualizando…" : "Recargar"}</span>
+                  </button>
+                </div>
               </div>
 
               {/* Casilla: Filtrar solo modelos gratis */}
@@ -485,7 +548,10 @@ export default function ApiKeysCard() {
                 />
                 <div className="flex items-center justify-between mt-1 text-[11px] text-finanzar-textMuted">
                   <span>
-                    Modelo seleccionado: <strong className="font-mono text-finanzar-primary">{config.openRouterModel || "Ninguno"}</strong>
+                    Modelo seleccionado:{" "}
+                    <strong className="font-mono text-finanzar-primary">
+                      {config.openRouterModel || "Ninguno"}
+                    </strong>
                   </span>
                   <span>{openRouterFiltrados.length} disponibles</span>
                 </div>

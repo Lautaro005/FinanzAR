@@ -17,6 +17,18 @@ export interface VersionChangelog {
 
 export const CHANGELOG: VersionChangelog[] = [
   {
+    version: "0.3.1",
+    fecha: "2026-09-06",
+    titulo: "Actualización de modelos de Groq en vivo y nuevo README del proyecto",
+    cambios: [
+      "Extracción en tiempo real de los modelos vigentes de Groq al ingresar la API key (consultando endpoint oficial https://api.groq.com/openai/v1/models con debounce).",
+      "Actualización de los modelos recomendados de respaldo para Groq (Llama 3.3 70B, Llama 3.1 8B, OpenAI GPT-OSS 120B/20B, Qwen 3.6 27B, DeepSeek R1 Distill 70B) y remoción de modelos discontinuados.",
+      "Migración transparente automática: si un usuario tenía configurado un modelo dado de baja, se migra a Llama 3.3 70B Versatile.",
+      "Indicador visual dinámico en el selector de modelos (badge verde con conteo en vivo de modelos o estado de respaldo) y botón de recarga manual a demanda.",
+      "Rediseño integral del README del proyecto en GitHub, enfocado en el usuario y explicando las capacidades de la app de forma clara y accesible.",
+    ],
+  },
+  {
     version: "0.3.0",
     fecha: "2026-09-06",
     titulo: "Soporte para IA (Groq y OpenRouter) y mejoras de interfaz en Portfolio",
