@@ -20,6 +20,7 @@ export default function Header({ isLive = true }: { isLive?: boolean }) {
     { to: "/", label: "Mercados" },
     { to: "/comparar", label: "Comparador" },
     { to: "/portfolio", label: "Portfolio" },
+    { to: "/chat", label: "Chat IA" },
     { to: "/acerca", label: "Acerca de" },
   ];
 

@@ -13,6 +13,8 @@ import PrivacyPolicyScreen from "./screens/PrivacyPolicyScreen";
 import PortfolioScreen from "./screens/PortfolioScreen";
 import AccountScreen from "./screens/AccountScreen";
 import ChangelogScreen from "./screens/ChangelogScreen";
+import ChatScreen from "./screens/ChatScreen";
+import FloatingChatWidget from "./components/chat/FloatingChatWidget";
 import SyncConflictModal from "./components/SyncConflictModal";
 import { AuthProvider, useAuth } from "./hooks/useAuth";
 import { useDocumentMeta } from "./hooks/useDocumentMeta";
@@ -731,6 +733,7 @@ function AppShell() {
               }
             />
             <Route path="/portfolio" element={<PortfolioScreen instruments={instruments} isLive={isLive} />} />
+            <Route path="/chat" element={<ChatScreen instruments={instruments} isLive={isLive} />} />
             <Route path="/account" element={<AccountScreen />} />
             <Route path="/acerca" element={<AboutScreen />} />
             <Route path="/privacidad" element={<PrivacyPolicyScreen />} />
@@ -740,6 +743,7 @@ function AppShell() {
         </div>
         <Footer />
         <ConflictoSyncGlobal />
+        <FloatingChatWidget instruments={instruments} isLive={isLive} />
       </div>
     </Router>
   );

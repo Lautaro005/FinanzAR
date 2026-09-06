@@ -17,6 +17,19 @@ export interface VersionChangelog {
 
 export const CHANGELOG: VersionChangelog[] = [
   {
+    version: "0.4.0",
+    fecha: "2026-09-06",
+    titulo: "Chat IA patrimonial con datos de mercado en vivo, widget flotante y optimizaciones en Portfolio",
+    cambios: [
+      "Sistema de Chat IA (Groq y OpenRouter) con streaming en tiempo real: responde consultas patrimoniales y financieras con conocimiento contextual de las tenencias del usuario y de las cotizaciones en vivo del mercado.",
+      "Botón flotante en la esquina inferior derecha con ventana de chat adaptable: modo ventana flotante, panel lateral acoplado (sidebar en desktop) y pantalla completa (en tablet y mobile), con historial local de conversaciones en el dispositivo.",
+      "Nueva pantalla dedicada /chat accesible desde la barra de navegación principal a la derecha de Portfolio, con barra lateral de historial de consultas, botón para nuevo chat y sugerencias rápidas.",
+      "Acceso exclusivo al Chat IA para usuarios con cuenta iniciada, con pantalla de autenticación informativa.",
+      "Desvinculación del cambio de divisa (ARS/USD): cambiar la moneda de visualización ahora es 100% local en el dispositivo, evitando escrituras y lecturas innecesarias en la base de datos (Turso).",
+      "Mejoras en el gráfico de evolución del portfolio: la línea ahora arranca desde cero al añadir un nuevo activo y asciende hasta el capital invertido (reflejando caídas proporcionales en retiros de efectivo), y las etiquetas del eje vertical muestran números enteros redondos sin decimales ni comas (ej. $11k, $10k, $1M, $500).",
+    ],
+  },
+  {
     version: "0.3.1",
     fecha: "2026-09-06",
     titulo: "Actualización de modelos de Groq en vivo y nuevo README del proyecto",

@@ -25,17 +25,16 @@ interface PuntoSerie {
   label: string;
   valorTotal: number | null;
   capitalInvertido: number | null;
-  /** true en los días previos al primer punto guardado (línea plana con el primer valor real). */
+  /** true en los días previos al primer punto guardado (línea plana o reconstrucción con el primer valor real). */
   estimado: boolean;
 }
 
 /**
  * Gráfico de evolución del portfolio (forward-only): el eje X cubre todo el
  * rango elegido (últimos 7/30/90/365 días) aunque todavía no haya puntos, y
- * la serie se construye día a día: desde que el usuario tenía algo cargado
- * hasta el primer punto guardado se dibuja una línea plana con ese primer
- * valor, y entre puntos guardados se arrastra el último valor conocido. Con
- * los días la línea plana se va convirtiendo en curva real.
+ * la serie se construye día a día. Cuando se añade un nuevo activo, la serie
+ * parte desde 0 y sube hasta el capital invertido. Al retirar efectivo o vender,
+ * la curva refleja la baja correspondiente.
  */
 export default function PortfolioChart({
   historial,
@@ -74,11 +73,19 @@ export default function PortfolioChart({
     // Arranque de la serie: lo más antiguo entre el primer punto guardado y la primera tenencia cargada.
     const inicioSerie =
       primerReal && fechaInicioTenencias ? (fechaInicioTenencias < primerReal ? fechaInicioTenencias : primerReal) : primerReal ?? fechaInicioTenencias;
+
+    // Día cero: día anterior al arranque para que la línea inicie desde cero y suba a lo invertido
+    const diaCero = inicioSerie ? sumarDias(inicioSerie, -1) : null;
+
     let desde: string;
-    if (dias !== null) desde = sumarDias(hoy, -(dias - 1));
-    else desde = inicioSerie && inicioSerie < hoy ? inicioSerie : sumarDias(hoy, -6);
-    // Para MÁX, si la serie arranca antes del rango mínimo, se muestra completa.
-    if (dias === null && inicioSerie && inicioSerie < desde) desde = inicioSerie;
+    if (dias !== null) {
+      desde = sumarDias(hoy, -(dias - 1));
+    } else {
+      desde = diaCero && diaCero < hoy ? diaCero : sumarDias(hoy, -6);
+    }
+    // Para MÁX, si la serie arranca antes del rango mínimo, se muestra completa desde diaCero
+    if (dias === null && diaCero && diaCero < desde) desde = diaCero;
+
     // Tope de puntos dibujados para no romper el render (una vez por día).
     const puntos: PuntoSerie[] = [];
     let idx = 0; // índice del último punto guardado con fecha <= d
@@ -88,7 +95,13 @@ export default function PortfolioChart({
       let valorTotal: number | null = null;
       let capital: number | null = null;
       let estimado = false;
-      if (inicioSerie && d >= inicioSerie) {
+
+      if (diaCero && d === diaCero) {
+        // Al añadir un nuevo activo, la curva nace en 0 y sube a lo que invirtió
+        valorTotal = 0;
+        capital = 0;
+        estimado = false;
+      } else if (inicioSerie && d >= inicioSerie) {
         if (ultimo) {
           valorTotal = ultimo.valorTotal;
           capital = ultimo.capitalInvertido;
@@ -125,13 +138,22 @@ export default function PortfolioChart({
 
   const xAxisInterval = Math.max(0, Math.ceil(data.length / 8) - 1);
   const simbolo = monedaMostrada === "USD" ? "US$" : "$";
-  /** Etiquetas del eje Y: compactas pero con decimales suficientes para distinguir valores cercanos. */
+
+  /**
+   * Etiquetas del eje Y: números enteros redondos estrictos sin decimales ni comas
+   * (ejemplo: $11k, $10k, $1M, $500, $0).
+   */
   const compacto = (v: number) => {
     const abs = Math.abs(v);
-    const fmt = (n: number, dec: number) => n.toLocaleString("es-AR", { minimumFractionDigits: 0, maximumFractionDigits: dec });
-    if (abs >= 1_000_000) return `${simbolo}${fmt(v / 1_000_000, abs < 10_000_000 ? 2 : 1)}M`;
-    if (abs >= 1_000) return `${simbolo}${fmt(v / 1_000, abs < 10_000 ? 2 : abs < 100_000 ? 1 : 0)}k`;
-    return `${simbolo}${fmt(v, abs < 100 ? 1 : 0)}`;
+    if (abs >= 1_000_000) {
+      const m = Math.round(v / 1_000_000);
+      return `${simbolo}${m.toLocaleString("es-AR")}M`;
+    }
+    if (abs >= 1_000) {
+      const k = Math.round(v / 1_000);
+      return `${simbolo}${k.toLocaleString("es-AR")}k`;
+    }
+    return `${simbolo}${Math.round(v).toLocaleString("es-AR")}`;
   };
 
   return (
@@ -152,18 +174,19 @@ export default function PortfolioChart({
               type="checkbox"
               checked={mostrarCapital}
               onChange={(e) => setMostrarCapital(e.target.checked)}
-              className="accent-[#C89B3C]"
+              className="w-3.5 h-3.5 rounded-xs border-finanzar-border text-finanzar-primary focus:ring-finanzar-accent accent-finanzar-primary cursor-pointer"
             />
-            Capital invertido
+            <span>Capital invertido</span>
           </label>
-          <div className="inline-flex p-1 bg-finanzar-bg border border-finanzar-borderSubtle rounded-md">
+          <div className="inline-flex p-1 bg-finanzar-bg border border-finanzar-borderSubtle rounded-md space-x-1">
             {RANGOS.map((r) => (
               <button
                 key={r.value}
+                type="button"
                 onClick={() => setRango(r.value)}
-                className={`px-3 py-1 text-xs font-medium rounded-sm transition-all duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-finanzar-accent ${
+                className={`px-2.5 py-1 text-xs font-medium rounded-xs transition-colors ${
                   rango === r.value
-                    ? "bg-finanzar-surface text-finanzar-primary font-semibold shadow-sm border border-finanzar-border"
+                    ? "bg-finanzar-surface text-finanzar-primary font-semibold shadow-xs border border-finanzar-border"
                     : "text-finanzar-textSecondary hover:text-finanzar-textMain"
                 }`}
               >
@@ -201,7 +224,7 @@ export default function PortfolioChart({
                 tick={{ fill: "#8B8478", fontSize: 11, fontFamily: "Plus Jakarta Sans" }}
                 tickFormatter={compacto}
                 domain={[
-                  (min: number) => (Number.isFinite(min) ? min - Math.max(Math.abs(min) * 0.06, 1) : 0),
+                  (min: number) => (Number.isFinite(min) ? Math.min(0, min) : 0),
                   (max: number) => (Number.isFinite(max) ? max + Math.max(Math.abs(max) * 0.06, 1) : 1),
                 ]}
                 allowDecimals={false}

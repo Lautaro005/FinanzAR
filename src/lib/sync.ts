@@ -28,7 +28,12 @@ export function aplicarBackupLocal(backup: PortfolioBackup) {
   savePlazosFijos(backup.plazosFijos);
   saveFondosComunes(backup.fondosComunes);
   saveHistorial(backup.historial);
-  saveConfig(backup.config);
+  // Preservar la moneda de visualización local (ARS/USD) elegida en este dispositivo
+  const currentConfig = loadConfig();
+  saveConfig({
+    ...backup.config,
+    monedaVista: currentConfig.monedaVista ?? backup.config.monedaVista,
+  });
   saveEventos(backup.eventos || []);
   saveEfectivo(backup.efectivo || []);
   notificarPortfolioReemplazado();
@@ -37,9 +42,11 @@ export function aplicarBackupLocal(backup: PortfolioBackup) {
 export const portfolioVacio = (b: PortfolioBackup | null | undefined): boolean =>
   !b || (b.transacciones.length === 0 && b.plazosFijos.length === 0 && b.fondosComunes.length === 0);
 
-/** Huella del contenido (sin `exportadoEn`) para saber si dos copias son iguales. */
+/** Huella del contenido (sin `exportadoEn` ni `monedaVista` local) para saber si dos copias son iguales. */
 export function huellaPortfolio(b: PortfolioBackup): string {
-  const s = JSON.stringify([b.transacciones, b.plazosFijos, b.fondosComunes, b.historial, b.config, b.eventos, b.efectivo]);
+  const configSinMoneda = { ...b.config };
+  delete configSinMoneda.monedaVista;
+  const s = JSON.stringify([b.transacciones, b.plazosFijos, b.fondosComunes, b.historial, configSinMoneda, b.eventos, b.efectivo]);
   let h = 0;
   for (let i = 0; i < s.length; i++) h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
   return `${s.length}:${h}`;
@@ -79,6 +86,9 @@ export function actualizarConfigPortfolio(parcial: Partial<PortfolioBackup["conf
   const next = { ...loadConfig(), ...parcial };
   saveConfig(next);
   window.dispatchEvent(new Event(EVENTO_CONFIG_CAMBIO));
-  notificarCambioPortfolio();
+  // Si el cambio fue exclusivamente monedaVista, no disparar sync a Turso
+  if (!("monedaVista" in parcial && Object.keys(parcial).length === 1)) {
+    notificarCambioPortfolio();
+  }
   return next;
 }

@@ -336,7 +336,8 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
   const cambiarMonedaVista = (moneda: MonedaVista) => {
     const next = { ...config, monedaVista: moneda };
     saveConfig(next);
-    notificarCambioPortfolio();
+    // La moneda de visualización (ARS/USD) es meramente local/decorativa;
+    // se desvincula de Turso para evitar writes/reads innecesarios en la base de datos.
     setConfig(next);
   };
 
