@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDocumentMeta } from "../hooks/useDocumentMeta";
 import { usePortfolio } from "../hooks/usePortfolio";
@@ -108,6 +108,20 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
   const [verHistorialPf, setVerHistorialPf] = useState(false);
   const [verHistorialFci, setVerHistorialFci] = useState(false);
   const [confirmBorrar, setConfirmBorrar] = useState(false);
+  const [portfolioInfoAbierta, setPortfolioInfoAbierta] = useState(false);
+  const portfolioInfoRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!portfolioInfoAbierta) return;
+    const cerrar = (e: MouseEvent) => {
+      if (portfolioInfoRef.current && !portfolioInfoRef.current.contains(e.target as Node)) {
+        setPortfolioInfoAbierta(false);
+        setConfirmBorrar(false);
+      }
+    };
+    document.addEventListener("mousedown", cerrar);
+    return () => document.removeEventListener("mousedown", cerrar);
+  }, [portfolioInfoAbierta]);
   const [aviso, setAviso] = useState<{ tipo: "ok" | "error"; texto: string } | null>(null);
   const [reinvertir, setReinvertir] = useState<{ origen: string; monto: number } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -324,7 +338,75 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
       <div className="mb-6">
         <span className="text-xs uppercase tracking-wider font-semibold text-finanzar-accent">Seguimiento personal</span>
         <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 mt-1">
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-finanzar-primary tracking-tight">Portfolio</h1>
+          <div ref={portfolioInfoRef} className="relative flex items-center gap-2">
+            <h1 className="font-serif text-3xl sm:text-4xl font-bold text-finanzar-primary tracking-tight">Portfolio</h1>
+            <button
+              type="button"
+              onClick={() => setPortfolioInfoAbierta((v) => !v)}
+              aria-label="Información y opciones del portfolio"
+              aria-expanded={portfolioInfoAbierta}
+              className={`inline-flex items-center justify-center w-6 h-6 rounded-full border text-[11px] font-serif font-bold italic transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-finanzar-accent ${
+                portfolioInfoAbierta
+                  ? "bg-finanzar-primary border-finanzar-primary text-finanzar-surface"
+                  : "bg-finanzar-surface border-finanzar-border text-finanzar-textSecondary hover:text-finanzar-primary hover:border-finanzar-accent"
+              }`}
+            >
+              i
+            </button>
+            {portfolioInfoAbierta && (
+              <div
+                role="tooltip"
+                className="absolute left-0 top-full mt-2 z-30 w-72 sm:w-80 bg-finanzar-surface border border-finanzar-border rounded-md shadow-md p-3 text-xs text-finanzar-textSecondary animate-fadeIn"
+              >
+                <p>
+                  {syncActiva
+                    ? "Tu portfolio está sincronizado con tu cuenta. Podés exportar o importar un backup desde Mi cuenta."
+                    : "Tu portfolio se guarda solo en este navegador (sin cuenta ni servidor). Exportá un backup cada tanto: es la única copia."}{" "}
+                  <Link to="/privacidad" className="underline text-finanzar-primary hover:text-finanzar-accent">
+                    Más sobre privacidad
+                  </Link>
+                  .
+                </p>
+                <div className="mt-3 pt-2.5 border-t border-finanzar-borderSubtle">
+                  {confirmBorrar ? (
+                    <div className="flex flex-col gap-1.5">
+                      <span className="text-finanzar-textMain font-medium">
+                        {syncActiva ? "¿Borrar todo el portfolio (también en tu cuenta)?" : "¿Borrar todo el portfolio de este navegador?"}
+                      </span>
+                      <div className="flex items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            p.borrarTodo();
+                            setConfirmBorrar(false);
+                            setPortfolioInfoAbierta(false);
+                          }}
+                          className="text-finanzar-negative font-semibold underline hover:text-red-700"
+                        >
+                          Sí, borrar
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setConfirmBorrar(false)}
+                          className="text-finanzar-textSecondary hover:underline"
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setConfirmBorrar(true)}
+                      className="text-finanzar-textSecondary hover:text-finanzar-negative underline text-left block"
+                    >
+                      Borrar el portfolio
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
           <CurrencyToggle
             value={vista}
             onChange={p.cambiarMonedaVista}
@@ -896,26 +978,7 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
             </div>
           </section>
 
-          {/* Pie: privacidad + borrar todo */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-[11px] text-finanzar-textMuted border-t border-finanzar-borderSubtle pt-4">
-            <p>
-              {syncActiva
-                ? "Tu portfolio está sincronizado con tu cuenta. Podés exportar o importar un backup desde Mi cuenta."
-                : "Tu portfolio se guarda solo en este navegador (sin cuenta ni servidor). Exportá un backup cada tanto: es la única copia."}{" "}
-              <Link to="/privacidad" className="underline hover:text-finanzar-primary">Más sobre privacidad</Link>.
-            </p>
-            {confirmBorrar ? (
-              <span className="flex items-center gap-2">
-                {syncActiva ? "¿Borrar todo el portfolio (también en tu cuenta)?" : "¿Borrar todo el portfolio de este navegador?"}
-                <button onClick={() => { p.borrarTodo(); setConfirmBorrar(false); }} className="text-finanzar-negative font-semibold underline">Sí, borrar</button>
-                <button onClick={() => setConfirmBorrar(false)} className="underline">Cancelar</button>
-              </span>
-            ) : (
-              <button onClick={() => setConfirmBorrar(true)} className="text-finanzar-textSecondary hover:text-finanzar-negative underline self-start">
-                Borrar todo el portfolio
-              </button>
-            )}
-          </div>
+
         </>
       )}
 

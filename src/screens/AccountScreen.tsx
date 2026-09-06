@@ -5,6 +5,7 @@ import { useAuth } from "../hooks/useAuth";
 import { ApiError } from "../lib/auth";
 import { armarBackup } from "../lib/portfolio";
 import { BotonPrimario, BotonSecundario, Campo, inputClass } from "../components/portfolio/Modal";
+import ApiKeysCard from "../components/account/ApiKeysCard";
 
 type Aviso = { tipo: "ok" | "error"; texto: string } | null;
 
@@ -340,6 +341,9 @@ function PanelCuenta() {
           </div>
         )}
       </section>
+
+      {/* API Keys (solo usuarios logueados, debajo de sincronización) */}
+      <ApiKeysCard />
 
       {/* Eliminar cuenta */}
       <section className="border border-finanzar-negativeBorder rounded-md p-6">

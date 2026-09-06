@@ -17,6 +17,19 @@ export interface VersionChangelog {
 
 export const CHANGELOG: VersionChangelog[] = [
   {
+    version: "0.3.0",
+    fecha: "2026-09-06",
+    titulo: "Soporte para IA (Groq y OpenRouter) y mejoras de interfaz en Portfolio",
+    cambios: [
+      "Soporte de API Keys para Groq y OpenRouter en Mi cuenta (visible con sesión iniciada), organizado en panel de dos columnas con selector de proveedor.",
+      "Selector de modelos personalizado (sin dropdown nativo de HTML) con buscador en tiempo real y soporte para filtrar solo modelos gratuitos en OpenRouter.",
+      "Persistencia local de claves y modelo activo seleccionado para cada proveedor de IA.",
+      "Portfolio: el estado de sincronización, el link a privacidad y la acción para borrar el portfolio se trasladaron al ícono de información (ⓘ) junto al título principal.",
+      "Eliminada la línea divisoria y la fila inferior del pie en Portfolio para una interfaz más despejada.",
+      "Ajuste en el popover de información US$ de Portfolio: se removió la indicación sobre cambiar la cotización en Mi cuenta.",
+    ],
+  },
+  {
     version: "0.2.0",
     fecha: "2026-09-06",
     titulo: "Efectivo, Movimientos unificado y grafico con devengado real",

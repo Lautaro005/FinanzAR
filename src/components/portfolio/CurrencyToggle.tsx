@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import { MonedaVista } from "../../types";
 
 /** Banderas minimalistas en SVG (sin dependencias ni emojis, para que se vean igual en todos los sistemas). */
@@ -121,10 +120,6 @@ export default function CurrencyToggle({
                 Los valores en pesos se convierten a dólares porque elegiste la conversión{" "}
                 <strong className="text-finanzar-primary">{casaLabel}</strong>
                 {dolarTexto ? <> (hoy {dolarTexto})</> : <> (sin cotización en vivo ahora)</>}.
-              </p>
-              <p className="mt-1.5">
-                Podés cambiar la cotización en{" "}
-                <Link to="/account" className="underline text-finanzar-primary hover:text-finanzar-accent">Mi cuenta → Configuración</Link>.
               </p>
             </div>
           )}
