@@ -3,10 +3,12 @@ import { Link } from "react-router-dom";
 import { useDocumentMeta } from "../hooks/useDocumentMeta";
 import { usePortfolio } from "../hooks/usePortfolio";
 import { useAuth } from "../hooks/useAuth";
-import { FondoComun, Instrumento, PlazoFijo, Transaccion } from "../types";
+import { CasaDolar, EventoMovimiento, FondoComun, Instrumento, PlazoFijo, TipoMovimiento, Transaccion } from "../types";
 import {
   armarBackup,
+  calcularTotalesEnFecha,
   CASAS_DOLAR,
+  cotizacionDolar,
   devengadoPlazoFijo,
   estadoEfectivo,
   formatCantidad,
@@ -24,6 +26,7 @@ import PortfolioChart from "../components/portfolio/PortfolioChart";
 import TransactionModal from "../components/portfolio/TransactionModal";
 import PlazoFijoModal from "../components/portfolio/PlazoFijoModal";
 import FondoComunModal from "../components/portfolio/FondoComunModal";
+import EfectivoModal from "../components/portfolio/EfectivoModal";
 import CurrencyToggle from "../components/portfolio/CurrencyToggle";
 import { BotonPrimario, BotonSecundario } from "../components/portfolio/Modal";
 
@@ -65,16 +68,30 @@ const ESTADO_PF: Record<PlazoFijo["estado"], { label: string; cls: string; dot: 
   retirado: { label: "Retirado", cls: "bg-finanzar-bg text-finanzar-textSecondary border-finanzar-border", dot: "bg-finanzar-textMuted" },
 };
 
+/** Estilo + etiqueta de cada tipo de evento en "Movimientos" (además de compra/venta, que ya tienen las suyas más abajo). */
+const MOVIMIENTO_LABEL: Record<TipoMovimiento, { label: string; cls: string }> = {
+  compra: { label: "compra", cls: "bg-finanzar-positiveBg text-finanzar-positive border-finanzar-positiveBorder" },
+  venta: { label: "venta", cls: "bg-finanzar-negativeBg text-finanzar-negative border-finanzar-negativeBorder" },
+  alta_pf: { label: "alta plazo fijo", cls: "bg-finanzar-bg text-finanzar-textSecondary border-finanzar-border" },
+  renovacion_pf: { label: "renovación PF", cls: "bg-finanzar-bg text-finanzar-textSecondary border-finanzar-border" },
+  retiro_pf: { label: "retiro PF", cls: "bg-finanzar-accentSubtle text-finanzar-accent border-finanzar-border" },
+  alta_fci: { label: "alta FCI", cls: "bg-finanzar-bg text-finanzar-textSecondary border-finanzar-border" },
+  rescate_fci: { label: "rescate FCI", cls: "bg-finanzar-accentSubtle text-finanzar-accent border-finanzar-border" },
+  efectivo_ingreso: { label: "ingreso efectivo", cls: "bg-finanzar-positiveBg text-finanzar-positive border-finanzar-positiveBorder" },
+  efectivo_retiro: { label: "retiro efectivo", cls: "bg-finanzar-negativeBg text-finanzar-negative border-finanzar-negativeBorder" },
+};
+
 type ModalState =
-  | { tipo: "compra"; montoInicial?: number }
+  | { tipo: "compra"; montoInicial?: number; deEfectivo?: boolean }
   | { tipo: "venta"; posicion: Posicion }
   | { tipo: "editar-tx"; transaccion: Transaccion }
   | { tipo: "alta-pf" }
   | { tipo: "renovar-pf"; plazoFijo: PlazoFijo }
   | { tipo: "editar-pf"; plazoFijo: PlazoFijo }
-  | { tipo: "alta-fci"; capitalInicial?: number }
+  | { tipo: "alta-fci"; capitalInicial?: number; deEfectivo?: boolean }
   | { tipo: "editar-fci"; fondo: FondoComunValuado }
   | { tipo: "rescate-fci"; fondo: FondoComunValuado }
+  | { tipo: "efectivo"; modoInicial?: "ingreso" | "retiro" }
   | null;
 
 export default function PortfolioScreen({ instruments, isLive }: { instruments: Instrumento[]; isLive: boolean }) {
@@ -109,20 +126,45 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
   const fondosActivos = useMemo(() => p.fondosValuados.filter((f) => f.estado === "activo"), [p.fondosValuados]);
   const fondosHistorial = useMemo(() => p.fondosValuados.filter((f) => f.estado !== "activo"), [p.fondosValuados]);
 
-  const movimientos = useMemo(
-    () => [...p.transacciones].sort((a, b) => b.fecha.localeCompare(a.fecha) || b.id.localeCompare(a.id)),
-    [p.transacciones]
-  );
+  /** Fila unificada de "Movimientos": compras/ventas (Transaccion) + altas/retiros/rescates de PF, FCI y Efectivo (EventoMovimiento). */
+  type FilaMovimiento = { fuente: "tx"; tx: Transaccion } | { fuente: "evento"; evento: EventoMovimiento };
+  const movimientos = useMemo<FilaMovimiento[]>(() => {
+    const filas: FilaMovimiento[] = [
+      ...p.transacciones.map((tx): FilaMovimiento => ({ fuente: "tx", tx })),
+      ...p.eventos.map((evento): FilaMovimiento => ({ fuente: "evento", evento })),
+    ];
+    const fechaDe = (f: FilaMovimiento) => (f.fuente === "tx" ? f.tx.fecha : f.evento.fecha);
+    const idDe = (f: FilaMovimiento) => (f.fuente === "tx" ? f.tx.id : f.evento.id);
+    return filas.sort((a, b) => fechaDe(b).localeCompare(fechaDe(a)) || idDe(b).localeCompare(idDe(a)));
+  }, [p.transacciones, p.eventos]);
 
-  /** Fecha más antigua en que el usuario tenía algo cargado (para arrancar el gráfico con una línea plana). */
+  /** Fecha más antigua en que el usuario tenía algo cargado (arranque de la reconstrucción retroactiva del gráfico). */
   const fechaInicioTenencias = useMemo(() => {
     const fechas = [
       ...p.transacciones.map((t) => t.fecha),
       ...p.plazosFijos.map((pf) => pf.fechaInicio),
       ...p.fondosComunes.map((fc) => fc.fechaInicio),
+      ...p.efectivoMovs.map((m) => m.fecha),
     ].filter(Boolean);
     return fechas.length ? fechas.reduce((a, b) => (a < b ? a : b)) : null;
-  }, [p.transacciones, p.plazosFijos, p.fondosComunes]);
+  }, [p.transacciones, p.plazosFijos, p.fondosComunes, p.efectivoMovs]);
+
+  /** Reconstruye un día anterior al primer punto guardado del gráfico (ver calcularTotalesEnFecha). */
+  const calcularRetroactivo = useMemo(() => {
+    return (fecha: string) => {
+      const t = calcularTotalesEnFecha(
+        fecha,
+        p.transacciones,
+        p.plazosFijos,
+        p.fondosComunes,
+        instruments,
+        p.eventos,
+        p.efectivoMovs,
+        p.dolar
+      );
+      return { valorTotal: t.valorTotal, capitalInvertido: t.capitalInvertido };
+    };
+  }, [p.transacciones, p.plazosFijos, p.fondosComunes, p.eventos, p.efectivoMovs, instruments, p.dolar]);
 
   const aArs = (monto: number, moneda: "ARS" | "USD") => (moneda === "USD" ? (p.dolar ?? 0) * monto : monto);
 
@@ -211,6 +253,26 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
             <li><button onClick={() => setModal({ tipo: "compra" })} className={`${accionClass} text-finanzar-primary font-semibold`}>+ Agregar compra</button></li>
             <li><button onClick={() => setModal({ tipo: "alta-fci" })} className={accionClass}>+ FCI</button></li>
             <li><button onClick={() => setModal({ tipo: "alta-pf" })} className={accionClass}>+ Plazo fijo</button></li>
+            <li><button onClick={() => setModal({ tipo: "efectivo", modoInicial: "ingreso" })} className={accionClass}>+ Efectivo</button></li>
+            <li><span className="text-finanzar-borderStrong select-none">·</span></li>
+            <li>
+              <select
+                value={p.config.dolarCasa}
+                onChange={(e) => p.cambiarDolarCasa(e.target.value as CasaDolar)}
+                title="Cotización del dólar para consolidar el portfolio en pesos"
+                className="bg-transparent border-none text-xs font-medium text-finanzar-textSecondary hover:text-finanzar-primary rounded-sm px-1 py-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-finanzar-accent"
+              >
+                {CASAS_DOLAR.map((c) => {
+                  const valor = cotizacionDolar(instruments, c.id);
+                  return (
+                    <option key={c.id} value={c.id}>
+                      {c.label}
+                      {valor !== null ? ` — ${formatMoneda(valor)}` : ""}
+                    </option>
+                  );
+                })}
+              </select>
+            </li>
             <li><span className="text-finanzar-borderStrong select-none">·</span></li>
             {syncActiva ? (
               /* Con sincronización activa, exportar/importar viven en la cuenta; acá solo se muestra el estado. */
@@ -295,10 +357,10 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
             {reinvertir.origen}: quedaron disponibles <strong>{fm(reinvertir.monto, "ARS", false)}</strong>. ¿Los reinvertís?
           </span>
           <div className="flex gap-2">
-            <BotonSecundario onClick={() => { setModal({ tipo: "compra", montoInicial: reinvertir.monto }); setReinvertir(null); }}>
+            <BotonSecundario onClick={() => { setModal({ tipo: "compra", montoInicial: reinvertir.monto, deEfectivo: true }); setReinvertir(null); }}>
               En un instrumento
             </BotonSecundario>
-            <BotonSecundario onClick={() => { setModal({ tipo: "alta-fci", capitalInicial: reinvertir.monto }); setReinvertir(null); }}>
+            <BotonSecundario onClick={() => { setModal({ tipo: "alta-fci", capitalInicial: reinvertir.monto, deEfectivo: true }); setReinvertir(null); }}>
               En un FCI
             </BotonSecundario>
             <BotonSecundario onClick={() => setReinvertir(null)}>Ahora no</BotonSecundario>
@@ -363,8 +425,6 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
                   (última guardada, {formatFechaCorta(p.config.ultimoDolar.fecha)})
                 </span>
               )}
-              <span className="text-finanzar-borderStrong select-none">·</span>
-              <Link to="/account" className="underline hover:text-finanzar-primary">Cambiar cotización</Link>
             </div>
             <div>
               {!isLive
@@ -381,6 +441,7 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
               moneda={vista}
               dolar={p.dolar}
               fechaInicioTenencias={fechaInicioTenencias}
+              calcularRetroactivo={calcularRetroactivo}
             />
           </div>
 
@@ -674,6 +735,75 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
             </div>
           </section>
 
+          {/* Efectivo */}
+          <section className="mb-8">
+            <div className="flex items-end justify-between mb-2 px-1">
+              <div>
+                <h2 className="font-serif text-xl font-bold text-finanzar-primary">Efectivo</h2>
+                <p className="text-xs text-finanzar-textSecondary">
+                  Dinero dentro del portfolio sin invertir: lo que cargás a mano, o lo que queda disponible tras un
+                  rescate de FCI o el retiro de un plazo fijo.
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <BotonSecundario onClick={() => setModal({ tipo: "efectivo", modoInicial: "retiro" })} disabled={p.efectivoActual <= 0}>
+                  − Retiro
+                </BotonSecundario>
+                <BotonSecundario onClick={() => setModal({ tipo: "efectivo", modoInicial: "ingreso" })}>+ Ingreso</BotonSecundario>
+              </div>
+            </div>
+            <div className="w-full bg-finanzar-surface rounded-md border border-finanzar-border shadow-sm overflow-hidden">
+              <div className="px-4 py-3 flex items-center justify-between border-b border-finanzar-borderSubtle">
+                <span className="text-xs text-finanzar-textSecondary">Disponible hoy</span>
+                <span className="font-serif text-lg font-bold text-finanzar-primary tabular-nums">{fm(p.efectivoActual)}</span>
+              </div>
+              {p.efectivoMovs.length === 0 ? (
+                <p className="px-4 py-8 text-center text-sm text-finanzar-textSecondary">Sin movimientos de efectivo todavía.</p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs">
+                    <thead className="bg-finanzar-bg text-[11px] uppercase tracking-wider text-finanzar-textSecondary">
+                      <tr>
+                        <th className="text-left px-4 py-2.5 font-medium">Fecha</th>
+                        <th className="text-left px-3 py-2.5 font-medium">Tipo</th>
+                        <th className="text-right px-3 py-2.5 font-medium">Monto</th>
+                        <th className="text-left px-3 py-2.5 font-medium">Notas</th>
+                        <th className="text-right px-4 py-2.5 font-medium">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-finanzar-borderSubtle">
+                      {[...p.efectivoMovs]
+                        .sort((a, b) => b.fecha.localeCompare(a.fecha) || b.id.localeCompare(a.id))
+                        .map((m) => (
+                          <tr key={m.id} className="hover:bg-finanzar-surfaceHover">
+                            <td className="px-4 py-2.5 font-mono tabular-nums text-finanzar-textSecondary">{formatFechaCorta(m.fecha)}</td>
+                            <td className="px-3 py-2.5">
+                              <span
+                                className={`px-1.5 py-0.5 rounded-xs text-[10px] uppercase tracking-wider font-semibold border ${
+                                  m.tipo === "ingreso"
+                                    ? "bg-finanzar-positiveBg text-finanzar-positive border-finanzar-positiveBorder"
+                                    : "bg-finanzar-negativeBg text-finanzar-negative border-finanzar-negativeBorder"
+                                }`}
+                              >
+                                {m.tipo}
+                              </span>
+                            </td>
+                            <td className="px-3 py-2.5 text-right font-mono tabular-nums font-semibold">{fm(m.monto)}</td>
+                            <td className="px-3 py-2.5 text-finanzar-textMuted truncate max-w-[220px]">{m.notas || ""}</td>
+                            <td className="px-4 py-2.5 text-right whitespace-nowrap">
+                              <button onClick={() => p.eliminarMovimientoEfectivo(m.id)} className="text-finanzar-textSecondary hover:text-finanzar-negative underline">
+                                Eliminar
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </section>
+
           {/* Movimientos */}
           <section className="mb-8">
             <div className="flex items-end justify-between mb-2 px-1">
@@ -701,31 +831,60 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-finanzar-borderSubtle">
-                      {movimientos.map((tx) => {
-                        const moneda = tx.unidad === "precio_usd" ? "USD" : "ARS";
+                      {movimientos.map((fila) => {
+                        if (fila.fuente === "tx") {
+                          const tx = fila.tx;
+                          const moneda = tx.unidad === "precio_usd" ? "USD" : "ARS";
+                          return (
+                            <tr key={`tx-${tx.id}`} className="hover:bg-finanzar-surfaceHover">
+                              <td className="px-4 py-2.5 font-mono tabular-nums text-finanzar-textSecondary">{formatFechaCorta(tx.fecha)}</td>
+                              <td className="px-3 py-2.5">
+                                <span className={`px-1.5 py-0.5 rounded-xs text-[10px] uppercase tracking-wider font-semibold border ${MOVIMIENTO_LABEL[tx.tipo].cls}`}>
+                                  {MOVIMIENTO_LABEL[tx.tipo].label}
+                                </span>
+                              </td>
+                              <td className="px-3 py-2.5 text-finanzar-textMain">
+                                <span className="font-medium">{tx.instrumentoNombre}</span>
+                                {tx.ticker && <span className="ml-1.5 font-mono text-[10px] text-finanzar-textSecondary">{tx.ticker}</span>}
+                              </td>
+                              <td className="px-3 py-2.5 text-right font-mono tabular-nums">{formatCantidad(tx.cantidad, tx.categoria)}</td>
+                              <td className="px-3 py-2.5 text-right font-mono tabular-nums text-finanzar-textSecondary">{fp(tx.precioUnitario, moneda)}</td>
+                              <td className="px-3 py-2.5 text-right font-mono tabular-nums font-semibold">{fm(tx.cantidad * tx.precioUnitario, moneda)}</td>
+                              <td className="px-3 py-2.5 text-finanzar-textMuted truncate max-w-[160px]">{tx.notas || ""}</td>
+                              <td className="px-4 py-2.5 text-right whitespace-nowrap">
+                                <button onClick={() => setModal({ tipo: "editar-tx", transaccion: tx })} className="text-finanzar-primary hover:text-finanzar-accent underline mr-3">Editar</button>
+                                <button onClick={() => p.eliminarTransaccion(tx.id)} className="text-finanzar-textSecondary hover:text-finanzar-negative underline">Eliminar</button>
+                              </td>
+                            </tr>
+                          );
+                        }
+                        const evento = fila.evento;
                         return (
-                          <tr key={tx.id} className="hover:bg-finanzar-surfaceHover">
-                            <td className="px-4 py-2.5 font-mono tabular-nums text-finanzar-textSecondary">{formatFechaCorta(tx.fecha)}</td>
+                          <tr key={`ev-${evento.id}`} className="hover:bg-finanzar-surfaceHover">
+                            <td className="px-4 py-2.5 font-mono tabular-nums text-finanzar-textSecondary">{formatFechaCorta(evento.fecha)}</td>
                             <td className="px-3 py-2.5">
-                              <span className={`px-1.5 py-0.5 rounded-xs text-[10px] uppercase tracking-wider font-semibold border ${
-                                tx.tipo === "compra"
-                                  ? "bg-finanzar-positiveBg text-finanzar-positive border-finanzar-positiveBorder"
-                                  : "bg-finanzar-negativeBg text-finanzar-negative border-finanzar-negativeBorder"
-                              }`}>
-                                {tx.tipo}
+                              <span className={`px-1.5 py-0.5 rounded-xs text-[10px] uppercase tracking-wider font-semibold border ${MOVIMIENTO_LABEL[evento.tipo].cls}`}>
+                                {MOVIMIENTO_LABEL[evento.tipo].label}
                               </span>
                             </td>
                             <td className="px-3 py-2.5 text-finanzar-textMain">
-                              <span className="font-medium">{tx.instrumentoNombre}</span>
-                              {tx.ticker && <span className="ml-1.5 font-mono text-[10px] text-finanzar-textSecondary">{tx.ticker}</span>}
+                              <span className="font-medium">{evento.descripcion}</span>
                             </td>
-                            <td className="px-3 py-2.5 text-right font-mono tabular-nums">{formatCantidad(tx.cantidad, tx.categoria)}</td>
-                            <td className="px-3 py-2.5 text-right font-mono tabular-nums text-finanzar-textSecondary">{fp(tx.precioUnitario, moneda)}</td>
-                            <td className="px-3 py-2.5 text-right font-mono tabular-nums font-semibold">{fm(tx.cantidad * tx.precioUnitario, moneda)}</td>
-                            <td className="px-3 py-2.5 text-finanzar-textMuted truncate max-w-[160px]">{tx.notas || ""}</td>
+                            <td className="px-3 py-2.5 text-right font-mono tabular-nums text-finanzar-textMuted">—</td>
+                            <td className="px-3 py-2.5 text-right font-mono tabular-nums text-finanzar-textMuted">—</td>
+                            <td className="px-3 py-2.5 text-right font-mono tabular-nums font-semibold">{fm(evento.monto, evento.moneda)}</td>
+                            <td className="px-3 py-2.5 text-finanzar-textMuted truncate max-w-[160px]">{evento.notas || ""}</td>
                             <td className="px-4 py-2.5 text-right whitespace-nowrap">
-                              <button onClick={() => setModal({ tipo: "editar-tx", transaccion: tx })} className="text-finanzar-primary hover:text-finanzar-accent underline mr-3">Editar</button>
-                              <button onClick={() => p.eliminarTransaccion(tx.id)} className="text-finanzar-textSecondary hover:text-finanzar-negative underline">Eliminar</button>
+                              {evento.tipo.startsWith("efectivo_") && evento.refId ? (
+                                <button
+                                  onClick={() => p.eliminarMovimientoEfectivo(evento.refId!)}
+                                  className="text-finanzar-textSecondary hover:text-finanzar-negative underline"
+                                >
+                                  Eliminar
+                                </button>
+                              ) : (
+                                <span className="text-finanzar-textMuted">—</span>
+                              )}
                             </td>
                           </tr>
                         );
@@ -767,7 +926,13 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
           instruments={instruments}
           montoInicial={modal.montoInicial}
           onClose={() => setModal(null)}
-          onSubmit={(tx) => { p.agregarTransaccion(tx); setModal(null); }}
+          onSubmit={(tx) => {
+            p.agregarTransaccion(tx);
+            if (modal.deEfectivo && modal.montoInicial) {
+              p.retirarEfectivo(modal.montoInicial, tx.fecha, `Reinversión en ${tx.instrumentoNombre}`);
+            }
+            setModal(null);
+          }}
         />
       )}
       {modal?.tipo === "venta" && (
@@ -822,7 +987,25 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
           instruments={instruments}
           capitalInicial={modal.capitalInicial}
           onClose={() => setModal(null)}
-          onSubmit={(fc) => { p.agregarFondoComun(fc); setModal(null); }}
+          onSubmit={(fc) => {
+            p.agregarFondoComun(fc);
+            if (modal.deEfectivo && modal.capitalInicial) {
+              p.retirarEfectivo(modal.capitalInicial, fc.fechaInicio, `Reinversión en FCI: ${fc.fondo}`);
+            }
+            setModal(null);
+          }}
+        />
+      )}
+      {modal?.tipo === "efectivo" && (
+        <EfectivoModal
+          modoInicial={modal.modoInicial}
+          saldoDisponible={p.efectivoActual}
+          onClose={() => setModal(null)}
+          onSubmit={(mov) => {
+            if (mov.tipo === "ingreso") p.agregarEfectivo(mov.monto, mov.fecha, mov.notas);
+            else p.retirarEfectivo(mov.monto, mov.fecha, mov.notas);
+            setModal(null);
+          }}
         />
       )}
       {modal?.tipo === "editar-fci" && (

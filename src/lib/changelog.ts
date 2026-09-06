@@ -17,6 +17,19 @@ export interface VersionChangelog {
 
 export const CHANGELOG: VersionChangelog[] = [
   {
+    version: "0.2.0",
+    fecha: "2026-09-06",
+    titulo: "Efectivo, Movimientos unificado y grafico con devengado real",
+    cambios: [
+      "Nueva seccion \"Efectivo\" en Portfolio: dinero que no esta invertido en ningun instrumento. Se carga a mano (+ Ingreso / - Retiro) y tambien se acredita solo al rescatar un FCI o retirar un plazo fijo.",
+      "\"Movimientos\" ahora muestra TODO: antes solo listaba compras/ventas y un alta de plazo fijo, FCI o un rescate no aparecia. Se unifico con un historial de eventos (alta y retiro de plazo fijo, alta y rescate de FCI, ingreso y retiro de efectivo).",
+      "El selector de cotizacion del dolar volvio a Portfolio (barra de acciones, debajo del header, junto al resto de las opciones) y se saco de Mi cuenta.",
+      "El grafico de evolucion ahora reconstruye el devengado real de cada plazo fijo/FCI y el precio historico de cada posicion de mercado para los dias previos al primer punto guardado, en vez de una linea plana: si algo cargado hace unos dias viene ganando (o perdiendo), se ve la curva.",
+      "El eje vertical del grafico ahora se ajusta al rango real de valores de cada vista, en vez de mostrar siempre la misma escala fija sin importar los datos.",
+      "Retirar efectivo ahora baja el valor total mostrado en el grafico, igual que cualquier otra baja de valor.",
+    ],
+  },
+  {
     version: "0.1.0",
     fecha: "2026-09-05",
     titulo: "Cuenta, sincronización y portfolio en pesos o dólares",

@@ -731,7 +731,7 @@ function AppShell() {
               }
             />
             <Route path="/portfolio" element={<PortfolioScreen instruments={instruments} isLive={isLive} />} />
-            <Route path="/account" element={<AccountScreen instruments={instruments} />} />
+            <Route path="/account" element={<AccountScreen />} />
             <Route path="/acerca" element={<AboutScreen />} />
             <Route path="/privacidad" element={<PrivacyPolicyScreen />} />
             <Route path="/changelog" element={<ChangelogScreen />} />

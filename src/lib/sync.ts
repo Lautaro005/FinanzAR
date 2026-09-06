@@ -5,6 +5,8 @@ import {
   loadConfig,
   PortfolioBackup,
   saveConfig,
+  saveEfectivo,
+  saveEventos,
   saveFondosComunes,
   saveHistorial,
   savePlazosFijos,
@@ -27,6 +29,8 @@ export function aplicarBackupLocal(backup: PortfolioBackup) {
   saveFondosComunes(backup.fondosComunes);
   saveHistorial(backup.historial);
   saveConfig(backup.config);
+  saveEventos(backup.eventos || []);
+  saveEfectivo(backup.efectivo || []);
   notificarPortfolioReemplazado();
 }
 
@@ -35,7 +39,7 @@ export const portfolioVacio = (b: PortfolioBackup | null | undefined): boolean =
 
 /** Huella del contenido (sin `exportadoEn`) para saber si dos copias son iguales. */
 export function huellaPortfolio(b: PortfolioBackup): string {
-  const s = JSON.stringify([b.transacciones, b.plazosFijos, b.fondosComunes, b.historial, b.config]);
+  const s = JSON.stringify([b.transacciones, b.plazosFijos, b.fondosComunes, b.historial, b.config, b.eventos, b.efectivo]);
   let h = 0;
   for (let i = 0; i < s.length; i++) h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
   return `${s.length}:${h}`;

@@ -6,10 +6,13 @@
 import {
   CasaDolar,
   Categoria,
+  EventoMovimiento,
   FondoComun,
   Instrumento,
+  MovimientoEfectivo,
   PlazoFijo,
   PortfolioConfig,
+  PuntoHistorico,
   PuntoPortfolio,
   Transaccion,
 } from "../types";
@@ -22,6 +25,8 @@ export const KEY_PLAZOS_FIJOS = "finanzar_portfolio_plazos_fijos_v1";
 export const KEY_FONDOS_COMUNES = "finanzar_portfolio_fci_v1";
 export const KEY_HISTORIAL = "finanzar_portfolio_historial_v1";
 export const KEY_CONFIG = "finanzar_portfolio_config_v1";
+export const KEY_EVENTOS = "finanzar_portfolio_eventos_v1";
+export const KEY_EFECTIVO = "finanzar_portfolio_efectivo_v1";
 
 /** Tope de puntos del gráfico (~2 años), mismo criterio que el snapshot histórico. */
 export const MAX_PUNTOS_HISTORIAL = 730;
@@ -71,6 +76,17 @@ export const loadConfig = (): PortfolioConfig => ({
   ...readJson<Partial<PortfolioConfig>>(KEY_CONFIG, {}),
 });
 export const saveConfig = (c: PortfolioConfig) => writeJson(KEY_CONFIG, c);
+export const loadEventos = () => readJson<EventoMovimiento[]>(KEY_EVENTOS, []);
+export const saveEventos = (e: EventoMovimiento[]) => writeJson(KEY_EVENTOS, e);
+export const loadEfectivo = () => readJson<MovimientoEfectivo[]>(KEY_EFECTIVO, []);
+export const saveEfectivo = (e: MovimientoEfectivo[]) => writeJson(KEY_EFECTIVO, e);
+
+/** Saldo de efectivo disponible (ingresos − retiros) hasta una fecha dada (por defecto, hoy). */
+export function saldoEfectivo(movimientos: MovimientoEfectivo[], hasta = hoyISO()): number {
+  return movimientos
+    .filter((m) => m.fecha <= hasta)
+    .reduce((acc, m) => acc + (m.tipo === "ingreso" ? m.monto : -m.monto), 0);
+}
 
 export const nuevoId = (): string =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
@@ -245,6 +261,48 @@ export function derivarPosiciones(
   return posiciones;
 }
 
+/**
+ * Busca el precio histórico de un instrumento en una fecha dada, usando su
+ * propio `historico` (el mismo array que ya usa el gráfico individual de
+ * Mercados): el punto más reciente con `fecha <= fecha` pedida, o si todos
+ * los puntos son posteriores, el más antiguo disponible (mejor aproximación
+ * que nada). Null si el instrumento no tiene histórico cargado.
+ */
+export function precioHistoricoEnFecha(instrumento: Instrumento | undefined, fecha: string): number | null {
+  if (!instrumento || !instrumento.historico || instrumento.historico.length === 0) return null;
+  const puntos = instrumento.historico;
+  let candidato: PuntoHistorico | null = null;
+  for (const punto of puntos) {
+    if (punto.fecha <= fecha && (!candidato || punto.fecha > candidato.fecha)) candidato = punto;
+  }
+  if (candidato) return candidato.valor;
+  return puntos.reduce((min, p) => (p.fecha < min.fecha ? p : min), puntos[0]).valor;
+}
+
+/**
+ * Como `derivarPosiciones`, pero pensada para reconstruir un día pasado (el
+ * tramo del gráfico previo al primer punto guardado, ver `PortfolioChart`):
+ * solo cuenta las transacciones ya cargadas a esa fecha, y valúa cada
+ * posición de mercado (no TNA) con el precio histórico del instrumento en
+ * esa fecha en lugar de la cotización de hoy — así una suba o baja real de
+ * precio entre la fecha de compra y el primer snapshot se refleja en la
+ * curva en vez de quedar como una línea plana.
+ */
+export function derivarPosicionesEnFecha(
+  transacciones: Transaccion[],
+  instrumentos: Instrumento[],
+  fecha: string
+): Posicion[] {
+  const hastaFecha = transacciones.filter((t) => t.fecha <= fecha);
+  const posiciones = derivarPosiciones(hastaFecha, instrumentos, fecha);
+  return posiciones.map((p) => {
+    if (!p.instrumento || p.cantidad <= 0 || p.valorEstimadoPorTna) return p; // TNA ya se devenga correctamente para la fecha pedida
+    const historico = precioHistoricoEnFecha(p.instrumento, fecha);
+    if (historico === null) return p; // sin histórico: mejor dejar el precio de hoy que no valuar nada
+    return { ...p, precioActual: historico, valorActual: p.cantidad * historico };
+  });
+}
+
 /* ------------------------------------------------------------------
    Plazos fijos — devengo determinístico (interés simple, lineal)
    ------------------------------------------------------------------ */
@@ -351,6 +409,8 @@ export function calcularTotales(
   plazosFijos: PlazoFijo[],
   fondosComunes: FondoComunValuado[],
   dolar: number | null,
+  /** Saldo de efectivo (ARS) a incluir en el total; cuenta como capital invertido a su propio valor (no gana ni pierde). */
+  efectivo = 0,
   hoy = hoyISO()
 ): TotalesPortfolio {
   const aArs = (monto: number, moneda: "ARS" | "USD") =>
@@ -388,6 +448,13 @@ export function calcularTotales(
     valorTotal += fc.valorActual;
   });
 
+  // Efectivo: no invierte ni devenga, pero cuenta como capital "propio" (su
+  // costo es su mismo valor) — así retirarlo del portfolio sí baja el total,
+  // y un rescate que pasa a efectivo no cambia el valor total, solo el
+  // resultado no realizado (la ganancia queda "cobrada").
+  capitalInvertido += efectivo;
+  valorTotal += efectivo;
+
   const resultado = valorTotal - capitalInvertido;
   return {
     valorTotal,
@@ -397,6 +464,58 @@ export function calcularTotales(
     realizada,
     sinValuar,
   };
+}
+
+/**
+ * Reconstruye los totales del portfolio en una fecha pasada, usando solo las
+ * transacciones/plazos fijos/FCI/efectivo ya cargados a esa fecha y, para
+ * posiciones de mercado, el precio histórico del instrumento (no el de hoy).
+ * Se usa exclusivamente para dibujar el tramo del gráfico anterior al primer
+ * punto guardado (ver `PortfolioChart`) — el historial real forward-only no
+ * se toca ni se recalcula con esta función.
+ */
+export function calcularTotalesEnFecha(
+  fecha: string,
+  transacciones: Transaccion[],
+  plazosFijos: PlazoFijo[],
+  fondosComunes: FondoComun[],
+  instrumentos: Instrumento[],
+  eventos: EventoMovimiento[],
+  efectivoMovs: MovimientoEfectivo[],
+  dolar: number | null
+): TotalesPortfolio {
+  const posiciones = derivarPosicionesEnFecha(transacciones, instrumentos, fecha);
+
+  const pfEnFecha = plazosFijos
+    .filter((pf) => {
+      if (fecha < pf.fechaInicio) return false;
+      if (pf.estado === "activo" || pf.estado === "vencido") return true;
+      // Renovado/retirado: solo cuenta si la fecha pedida es anterior al evento que lo dio de baja.
+      const evento = eventos.find((e) => e.refId === pf.id && (e.tipo === "retiro_pf" || e.tipo === "renovacion_pf"));
+      return evento ? fecha < evento.fecha : false;
+    })
+    // calcularTotales solo suma los PF con estado "activo" (esPlazoFijoVigente) — acá ya
+    // determinamos que estaban vigentes a esta fecha, sin importar su estado actual.
+    .map((pf) => ({ ...pf, estado: "activo" as const }));
+
+  const fondosEnFecha = fondosComunes
+    .filter((fc) => fecha >= fc.fechaInicio)
+    .map((fc): FondoComunValuado | null => {
+      if (fc.estado === "activo") return valuarFondoComun(fc, instrumentos, fecha);
+      const primerRescate = fc.rescates[0]?.fecha;
+      if (primerRescate && fecha < primerRescate) {
+        // Aproximación: antes del primer rescate el capital era el actual (0 si se rescató todo)
+        // más lo que se retiró después, menos la ganancia ya realizada.
+        const capitalAprox = fc.capital + fc.rescates.reduce((s, r) => s + r.monto, 0) - fc.realizada;
+        if (capitalAprox <= 0) return null;
+        return valuarFondoComun({ ...fc, capital: capitalAprox, estado: "activo" }, instrumentos, fecha);
+      }
+      return null;
+    })
+    .filter((f): f is FondoComunValuado => f !== null);
+
+  const efectivo = saldoEfectivo(efectivoMovs, fecha);
+  return calcularTotales(posiciones, pfEnFecha, fondosEnFecha, dolar, efectivo, fecha);
 }
 
 /* ------------------------------------------------------------------
@@ -470,6 +589,8 @@ export interface PortfolioBackup {
   fondosComunes: FondoComun[];
   historial: PuntoPortfolio[];
   config: PortfolioConfig;
+  eventos: EventoMovimiento[];
+  efectivo: MovimientoEfectivo[];
 }
 
 export function armarBackup(): PortfolioBackup {
@@ -482,6 +603,8 @@ export function armarBackup(): PortfolioBackup {
     fondosComunes: loadFondosComunes(),
     historial: loadHistorial(),
     config: loadConfig(),
+    eventos: loadEventos(),
+    efectivo: loadEfectivo(),
   };
 }
 
@@ -507,6 +630,17 @@ export function parsearBackup(texto: string): PortfolioBackup {
     (f: any) => f && typeof f.id === "string" && typeof f.fondo === "string" && typeof f.capital === "number" && typeof f.fechaInicio === "string"
   );
   if (!txOk || !pfOk || !fcOk) throw new Error("El backup tiene registros con un formato que no se reconoce.");
+  // eventos/efectivo son nuevos (backups viejos no los traen) — se aceptan si están, si no arrancan vacíos.
+  const eventos = Array.isArray(data.eventos)
+    ? data.eventos.filter(
+        (e: any) => e && typeof e.id === "string" && typeof e.fecha === "string" && typeof e.tipo === "string" && typeof e.monto === "number"
+      )
+    : [];
+  const efectivo = Array.isArray(data.efectivo)
+    ? data.efectivo.filter(
+        (e: any) => e && typeof e.id === "string" && typeof e.fecha === "string" && (e.tipo === "ingreso" || e.tipo === "retiro") && typeof e.monto === "number"
+      )
+    : [];
   return {
     app: "FinanzAR",
     version: 1,
@@ -516,5 +650,7 @@ export function parsearBackup(texto: string): PortfolioBackup {
     fondosComunes: fondos.map((f: any) => ({ realizada: 0, rescates: [], estado: "activo", ...f })),
     historial: Array.isArray(data.historial) ? data.historial : [],
     config: { ...DEFAULT_CONFIG, ...(data.config || {}) },
+    eventos,
+    efectivo,
   };
 }

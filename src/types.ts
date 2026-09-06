@@ -115,3 +115,52 @@ export interface FondoComun {
   rescates: { fecha: string; monto: number }[];
   notas?: string;
 }
+
+/* ------------------------------------------------------------------
+   Movimientos (ver src/lib/portfolio.ts) — historial unificado
+   ------------------------------------------------------------------ */
+
+/** Tipos de evento que puede tener el historial de "Movimientos" (además de compra/venta, que salen de Transaccion). */
+export type TipoMovimiento =
+  | "compra"
+  | "venta"
+  | "alta_pf"
+  | "renovacion_pf"
+  | "retiro_pf"
+  | "alta_fci"
+  | "rescate_fci"
+  | "efectivo_ingreso"
+  | "efectivo_retiro";
+
+/**
+ * Evento que no sale de un log de Transaccion (altas/renovaciones/retiros de
+ * plazo fijo, altas/rescates de FCI, ingresos/retiros de efectivo) pero que
+ * tiene que aparecer igual en "Movimientos". Es un registro de solo lectura:
+ * se agrega en el momento de cada acción, no se deriva de otro estado.
+ */
+export interface EventoMovimiento {
+  id: string;
+  fecha: string;
+  tipo: TipoMovimiento;
+  /** Entidad/fondo/instrumento involucrado, o "Efectivo". */
+  descripcion: string;
+  monto: number;
+  moneda: "ARS" | "USD";
+  notas?: string;
+  /** id del PlazoFijo / FondoComun / MovimientoEfectivo relacionado, para poder limpiar el log si se borra el origen. */
+  refId?: string;
+}
+
+/**
+ * Efectivo: dinero dentro del portfolio que no está invertido (ingresos
+ * manuales del usuario + lo que queda disponible tras un rescate/retiro de
+ * otro instrumento). Siempre en ARS. Se modela como un log de movimientos
+ * (como Transaccion), no como un saldo — el saldo se deriva sumando.
+ */
+export interface MovimientoEfectivo {
+  id: string;
+  fecha: string;
+  tipo: "ingreso" | "retiro";
+  monto: number;
+  notas?: string;
+}

@@ -1,9 +1,24 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { CasaDolar, FondoComun, MonedaVista, Instrumento, PlazoFijo, PortfolioConfig, PuntoPortfolio, Transaccion } from "../types";
+import {
+  CasaDolar,
+  EventoMovimiento,
+  FondoComun,
+  MonedaVista,
+  Instrumento,
+  MovimientoEfectivo,
+  PlazoFijo,
+  PortfolioConfig,
+  PuntoPortfolio,
+  Transaccion,
+} from "../types";
 import {
   agregarPuntoHistorial,
   aplicarRescate,
+  loadEfectivo,
+  loadEventos,
   loadFondosComunes,
+  saveEfectivo,
+  saveEventos,
   saveFondosComunes,
   valuarFondoComun,
   calcularTotales,
@@ -16,6 +31,7 @@ import {
   loadTransacciones,
   nuevoId,
   PortfolioBackup,
+  saldoEfectivo,
   saveConfig,
   saveHistorial,
   savePlazosFijos,
@@ -36,6 +52,8 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
   const [fondosComunes, setFondosComunes] = useState<FondoComun[]>(() => loadFondosComunes());
   const [historial, setHistorial] = useState<PuntoPortfolio[]>(() => loadHistorial());
   const [config, setConfig] = useState<PortfolioConfig>(() => loadConfig());
+  const [eventos, setEventos] = useState<EventoMovimiento[]>(() => loadEventos());
+  const [efectivoMovs, setEfectivoMovs] = useState<MovimientoEfectivo[]>(() => loadEfectivo());
 
   const hoy = hoyISO();
 
@@ -48,6 +66,8 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
       setFondosComunes(loadFondosComunes());
       setHistorial(loadHistorial());
       setConfig(loadConfig());
+      setEventos(loadEventos());
+      setEfectivoMovs(loadEfectivo());
     };
     const recargarConfig = () => setConfig(loadConfig());
     window.addEventListener(EVENTO_PORTFOLIO_REEMPLAZADO, recargar);
@@ -101,12 +121,15 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
     });
   }, [dolarEnVivo, hoy]);
 
+  const efectivoActual = useMemo(() => saldoEfectivo(efectivoMovs, hoy), [efectivoMovs, hoy]);
+
   const totales = useMemo(
-    () => calcularTotales(posiciones, plazosFijos, fondosValuados, dolar, hoy),
-    [posiciones, plazosFijos, fondosValuados, dolar, hoy]
+    () => calcularTotales(posiciones, plazosFijos, fondosValuados, dolar, efectivoActual, hoy),
+    [posiciones, plazosFijos, fondosValuados, dolar, efectivoActual, hoy]
   );
 
-  const tieneDatos = transacciones.length > 0 || plazosFijos.length > 0 || fondosComunes.length > 0;
+  const tieneDatos =
+    transacciones.length > 0 || plazosFijos.length > 0 || fondosComunes.length > 0 || efectivoMovs.length > 0;
 
   /** ¿Se puede valuar todo con datos reales? (nada sin cotización en vivo). */
   const valuacionCompleta = isLive && totales.sinValuar === 0 && !dolarEsRespaldo;
@@ -144,7 +167,7 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
     if (!pendienteSnapshot.current) return;
     pendienteSnapshot.current = false;
     registrarPunto(true);
-  }, [transacciones, plazosFijos, fondosComunes, registrarPunto]);
+  }, [transacciones, plazosFijos, fondosComunes, efectivoMovs, registrarPunto]);
 
   const persistirTransacciones = (next: Transaccion[]) => {
     saveTransacciones(next);
@@ -166,9 +189,42 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
     setFondosComunes(next);
   };
 
+  /**
+   * Registra un evento en "Movimientos" (altas/renovaciones/retiros de PF,
+   * altas/rescates de FCI, ingresos/retiros de efectivo). Usa la forma
+   * funcional de setState porque más de un evento puede registrarse dentro
+   * del mismo handler (ej. un retiro de plazo fijo también acredita
+   * efectivo) — con la forma no funcional, la segunda llamada pisaría a la
+   * primera al partir del mismo `eventos` capturado por closure.
+   */
+  const registrarEvento = (ev: Omit<EventoMovimiento, "id">) => {
+    setEventos((prev) => {
+      const next = [...prev, { ...ev, id: nuevoId() }];
+      saveEventos(next);
+      return next;
+    });
+    notificarCambioPortfolio();
+  };
+
+  /**
+   * Acredita efectivo sin generar su propio evento en Movimientos — se usa
+   * cuando el ingreso ya queda documentado por el evento que lo originó
+   * (retiro de plazo fijo, rescate de FCI), para no duplicar la fila.
+   */
+  const acreditarEfectivo = (monto: number, fecha: string, notas?: string) => {
+    setEfectivoMovs((prev) => {
+      const next = [...prev, { id: nuevoId(), fecha, tipo: "ingreso" as const, monto: Number(monto.toFixed(2)), notas }];
+      saveEfectivo(next);
+      return next;
+    });
+    pendienteSnapshot.current = true;
+  };
+
   /* ---------------- Acciones: fondos comunes ---------------- */
   const agregarFondoComun = (fc: Omit<FondoComun, "id" | "estado" | "realizada" | "rescates">) => {
-    persistirFondos([...fondosComunes, { ...fc, id: nuevoId(), estado: "activo", realizada: 0, rescates: [] }]);
+    const id = nuevoId();
+    persistirFondos([...fondosComunes, { ...fc, id, estado: "activo", realizada: 0, rescates: [] }]);
+    registrarEvento({ tipo: "alta_fci", descripcion: fc.fondo, monto: fc.capital, moneda: "ARS", fecha: fc.fechaInicio, notas: fc.notas, refId: id });
   };
   const editarFondoComun = (fc: FondoComun) => {
     persistirFondos(fondosComunes.map((f) => (f.id === fc.id ? fc : f)));
@@ -176,12 +232,14 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
   const eliminarFondoComun = (id: string) => {
     persistirFondos(fondosComunes.filter((f) => f.id !== id));
   };
-  /** Rescate total o parcial; devuelve el monto retirado (para ofrecer reinvertirlo). */
+  /** Rescate total o parcial: el monto retirado pasa a Efectivo; devuelve el monto (para ofrecer reinvertirlo). */
   const rescatarFondoComun = (id: string, monto: number) => {
     const fc = fondosValuados.find((f) => f.id === id);
     if (!fc) return 0;
     const retirado = Math.min(monto, fc.valorActual);
     persistirFondos(fondosComunes.map((f) => (f.id === id ? aplicarRescate(fc, retirado, hoy) : f)));
+    registrarEvento({ tipo: "rescate_fci", descripcion: fc.fondo, monto: retirado, moneda: "ARS", fecha: hoy, refId: id });
+    acreditarEfectivo(retirado, hoy, `Rescate de FCI: ${fc.fondo}`);
     return retirado;
   };
 
@@ -198,7 +256,9 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
 
   /* ---------------- Acciones: plazos fijos ---------------- */
   const agregarPlazoFijo = (pf: Omit<PlazoFijo, "id" | "estado">) => {
-    persistirPlazosFijos([...plazosFijos, { ...pf, id: nuevoId(), estado: "activo" }]);
+    const id = nuevoId();
+    persistirPlazosFijos([...plazosFijos, { ...pf, id, estado: "activo" }]);
+    registrarEvento({ tipo: "alta_pf", descripcion: pf.entidad, monto: pf.capital, moneda: "ARS", fecha: pf.fechaInicio, notas: pf.notas, refId: id });
   };
   const editarPlazoFijo = (pf: PlazoFijo) => {
     persistirPlazosFijos(plazosFijos.map((p) => (p.id === pf.id ? pf : p)));
@@ -208,13 +268,60 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
   };
   /** Renovar: el viejo queda "renovado" y nace uno nuevo con el capital final como capital. */
   const renovarPlazoFijo = (id: string, nuevo: Omit<PlazoFijo, "id" | "estado">) => {
+    const nuevoIdPf = nuevoId();
     persistirPlazosFijos([
       ...plazosFijos.map((p) => (p.id === id ? { ...p, estado: "renovado" as const } : p)),
-      { ...nuevo, id: nuevoId(), estado: "activo" },
+      { ...nuevo, id: nuevoIdPf, estado: "activo" },
     ]);
+    registrarEvento({ tipo: "renovacion_pf", descripcion: nuevo.entidad, monto: nuevo.capital, moneda: "ARS", fecha: nuevo.fechaInicio, refId: id });
   };
+  /** Retirar: el plazo fijo queda "retirado" y su valor final pasa a Efectivo. */
   const retirarPlazoFijo = (id: string) => {
+    const pf = plazosFijos.find((p) => p.id === id);
     persistirPlazosFijos(plazosFijos.map((p) => (p.id === id ? { ...p, estado: "retirado" as const } : p)));
+    if (!pf) return;
+    const monto = Number(valorFinalPlazoFijo(pf).toFixed(2));
+    registrarEvento({ tipo: "retiro_pf", descripcion: pf.entidad, monto, moneda: "ARS", fecha: hoy, refId: id });
+    acreditarEfectivo(monto, hoy, `Retiro de plazo fijo: ${pf.entidad}`);
+  };
+
+  /* ---------------- Acciones: efectivo ---------------- */
+  const agregarEfectivo = (monto: number, fecha: string, notas?: string) => {
+    const entry: MovimientoEfectivo = { id: nuevoId(), fecha, tipo: "ingreso", monto: Number(monto.toFixed(2)), notas };
+    setEfectivoMovs((prev) => {
+      const next = [...prev, entry];
+      saveEfectivo(next);
+      return next;
+    });
+    notificarCambioPortfolio();
+    pendienteSnapshot.current = true;
+    registrarEvento({ tipo: "efectivo_ingreso", descripcion: "Efectivo", monto: entry.monto, moneda: "ARS", fecha, notas, refId: entry.id });
+  };
+  /** Retiro manual de efectivo (sale del portfolio) o consumo al reinvertir un rescate en una nueva compra/FCI. */
+  const retirarEfectivo = (monto: number, fecha: string, notas?: string) => {
+    const entry: MovimientoEfectivo = { id: nuevoId(), fecha, tipo: "retiro", monto: Number(monto.toFixed(2)), notas };
+    setEfectivoMovs((prev) => {
+      const next = [...prev, entry];
+      saveEfectivo(next);
+      return next;
+    });
+    notificarCambioPortfolio();
+    pendienteSnapshot.current = true;
+    registrarEvento({ tipo: "efectivo_retiro", descripcion: "Efectivo", monto: entry.monto, moneda: "ARS", fecha, notas, refId: entry.id });
+  };
+  const eliminarMovimientoEfectivo = (id: string) => {
+    setEfectivoMovs((prev) => {
+      const next = prev.filter((m) => m.id !== id);
+      saveEfectivo(next);
+      return next;
+    });
+    setEventos((prev) => {
+      const next = prev.filter((e) => e.refId !== id);
+      saveEventos(next);
+      return next;
+    });
+    notificarCambioPortfolio();
+    pendienteSnapshot.current = true;
   };
 
   /* ---------------- Config ---------------- */
@@ -240,11 +347,15 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
     saveFondosComunes(backup.fondosComunes);
     saveHistorial(backup.historial);
     saveConfig(backup.config);
+    saveEventos(backup.eventos || []);
+    saveEfectivo(backup.efectivo || []);
     setTransacciones(backup.transacciones);
     setPlazosFijos(backup.plazosFijos);
     setFondosComunes(backup.fondosComunes);
     setHistorial(backup.historial);
     setConfig(backup.config);
+    setEventos(backup.eventos || []);
+    setEfectivoMovs(backup.efectivo || []);
     notificarCambioPortfolio();
   };
 
@@ -253,10 +364,14 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
     savePlazosFijos([]);
     saveFondosComunes([]);
     saveHistorial([]);
+    saveEventos([]);
+    saveEfectivo([]);
     setTransacciones([]);
     setPlazosFijos([]);
     setFondosComunes([]);
     setHistorial([]);
+    setEventos([]);
+    setEfectivoMovs([]);
     notificarCambioPortfolio();
   };
 
@@ -267,6 +382,9 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
     fondosValuados,
     historial,
     config,
+    eventos,
+    efectivoMovs,
+    efectivoActual,
     posiciones,
     posicionesActivas,
     totales,
@@ -286,6 +404,9 @@ export function usePortfolio(instruments: Instrumento[], isLive: boolean) {
     editarFondoComun,
     eliminarFondoComun,
     rescatarFondoComun,
+    agregarEfectivo,
+    retirarEfectivo,
+    eliminarMovimientoEfectivo,
     cambiarDolarCasa,
     cambiarMonedaVista,
     importarBackup,

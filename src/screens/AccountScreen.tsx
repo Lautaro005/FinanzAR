@@ -1,18 +1,16 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDocumentMeta } from "../hooks/useDocumentMeta";
 import { useAuth } from "../hooks/useAuth";
 import { ApiError } from "../lib/auth";
-import { armarBackup, CASAS_DOLAR, cotizacionDolar, formatMoneda, loadConfig } from "../lib/portfolio";
-import { actualizarConfigPortfolio, EVENTO_CONFIG_CAMBIO, EVENTO_PORTFOLIO_REEMPLAZADO } from "../lib/sync";
-import { CasaDolar, Instrumento } from "../types";
+import { armarBackup } from "../lib/portfolio";
 import { BotonPrimario, BotonSecundario, Campo, inputClass } from "../components/portfolio/Modal";
 
 type Aviso = { tipo: "ok" | "error"; texto: string } | null;
 
 const mensajeDe = (e: unknown, fallback: string) => (e instanceof ApiError || e instanceof Error ? e.message : fallback);
 
-export default function AccountScreen({ instruments }: { instruments: Instrumento[] }) {
+export default function AccountScreen() {
   useDocumentMeta(
     "Mi cuenta",
     "Creá una cuenta en FinanzAR para sincronizar tu portfolio entre dispositivos.",
@@ -41,8 +39,6 @@ export default function AccountScreen({ instruments }: { instruments: Instrument
       ) : (
         <PanelAcceso />
       )}
-
-      <PanelConfiguracion instruments={instruments} />
     </main>
   );
 }
@@ -376,67 +372,6 @@ function PanelCuenta() {
         )}
       </section>
     </div>
-  );
-}
-
-/* ============================================================
-   Configuración (visible con o sin sesión): cotización del dólar
-   ============================================================ */
-function PanelConfiguracion({ instruments }: { instruments: Instrumento[] }) {
-  const [config, setConfig] = useState(() => loadConfig());
-  useEffect(() => {
-    const recargar = () => setConfig(loadConfig());
-    window.addEventListener(EVENTO_CONFIG_CAMBIO, recargar);
-    window.addEventListener(EVENTO_PORTFOLIO_REEMPLAZADO, recargar);
-    return () => {
-      window.removeEventListener(EVENTO_CONFIG_CAMBIO, recargar);
-      window.removeEventListener(EVENTO_PORTFOLIO_REEMPLAZADO, recargar);
-    };
-  }, []);
-
-  const elegir = (casa: CasaDolar) => setConfig(actualizarConfigPortfolio({ dolarCasa: casa }));
-
-  return (
-    <section className="mt-10 pt-8 border-t border-finanzar-borderSubtle">
-      <span className="text-xs uppercase tracking-wider font-semibold text-finanzar-accent">Configuración</span>
-      <h2 className="font-serif text-2xl font-bold text-finanzar-primary mt-1">Cotización del dólar</h2>
-      <p className="text-sm text-finanzar-textSecondary mt-1">
-        Con esta cotización el Portfolio convierte tus tenencias en dólares a pesos (y al revés, si elegís ver todo en US$).
-        Se guarda en este navegador y, si tenés la sincronización activa, también en tu cuenta.
-      </p>
-
-      <div role="radiogroup" aria-label="Casa de dólar" className="mt-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-        {CASAS_DOLAR.map((c) => {
-          const activo = config.dolarCasa === c.id;
-          const valor = cotizacionDolar(instruments, c.id);
-          return (
-            <button
-              key={c.id}
-              type="button"
-              role="radio"
-              aria-checked={activo}
-              onClick={() => elegir(c.id)}
-              className={`relative text-left rounded-md border p-3.5 transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-finanzar-accent ${
-                activo
-                  ? "border-finanzar-primary bg-finanzar-surface shadow-sm"
-                  : "border-finanzar-border bg-finanzar-bg hover:border-finanzar-accent hover:bg-finanzar-surface"
-              }`}
-            >
-              <span
-                className={`absolute top-3 right-3 w-3.5 h-3.5 rounded-full border-2 ${
-                  activo ? "border-finanzar-primary bg-finanzar-primary ring-2 ring-inset ring-finanzar-surface" : "border-finanzar-border bg-finanzar-surface"
-                }`}
-                aria-hidden="true"
-              />
-              <span className="block text-xs font-semibold text-finanzar-primary pr-5">{(() => { const l = c.label.replace("Dólar ", ""); return l.charAt(0).toUpperCase() + l.slice(1); })()}</span>
-              <span className="block font-mono text-sm tabular-nums mt-1.5 text-finanzar-textMain">
-                {valor !== null ? formatMoneda(valor) : <span className="text-finanzar-textMuted">sin cotización</span>}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-    </section>
   );
 }
 

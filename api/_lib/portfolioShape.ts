@@ -19,16 +19,18 @@ export interface PortfolioPayload {
   fondosComunes: unknown[];
   historial: unknown[];
   config: Record<string, unknown>;
+  eventos: unknown[];
+  efectivo: unknown[];
 }
 
 /** Devuelve el payload saneado o un mensaje de error legible. */
 export function validarPortfolio(data: any): { ok: true; payload: PortfolioPayload } | { ok: false; error: string } {
   if (!data || typeof data !== "object" || data.app !== "FinanzAR") return { ok: false, error: "Formato de portfolio no reconocido." };
-  const { transacciones, plazosFijos, fondosComunes = [], historial = [], config = {} } = data;
-  if (![transacciones, plazosFijos, fondosComunes, historial].every(Array.isArray)) {
+  const { transacciones, plazosFijos, fondosComunes = [], historial = [], config = {}, eventos = [], efectivo = [] } = data;
+  if (![transacciones, plazosFijos, fondosComunes, historial, eventos, efectivo].every(Array.isArray)) {
     return { ok: false, error: "Formato de portfolio no reconocido." };
   }
-  if ([transacciones, plazosFijos, fondosComunes, historial].some((a: unknown[]) => a.length > MAX_ITEMS)) {
+  if ([transacciones, plazosFijos, fondosComunes, historial, eventos, efectivo].some((a: unknown[]) => a.length > MAX_ITEMS)) {
     return { ok: false, error: "El portfolio supera el máximo de registros." };
   }
   const txOk = transacciones.every(
@@ -51,10 +53,19 @@ export function validarPortfolio(data: any): { ok: true; payload: PortfolioPaylo
       Array.isArray(f.rescates ?? []) && (f.notas === undefined || isStr(f.notas, 500))
   );
   const histOk = historial.every((h: any) => h && isDate(h.fecha) && isNum(h.valorTotal) && isNum(h.capitalInvertido));
+  const eventosOk = eventos.every(
+    (e: any) => e && isStr(e.id, 64) && isDate(e.fecha) && isStr(e.tipo, 30) && isStr(e.descripcion, 300) &&
+      isNum(e.monto) && isStr(e.moneda, 10) && (e.notas === undefined || isStr(e.notas, 500)) &&
+      (e.refId === undefined || isStr(e.refId, 64))
+  );
+  const efectivoOk = efectivo.every(
+    (e: any) => e && isStr(e.id, 64) && isDate(e.fecha) && (e.tipo === "ingreso" || e.tipo === "retiro") &&
+      isNum(e.monto) && (e.notas === undefined || isStr(e.notas, 500))
+  );
   const cfgOk =
     config && typeof config === "object" && (config.dolarCasa === undefined || isStr(config.dolarCasa, 30)) &&
     (config.monedaVista === undefined || config.monedaVista === "ARS" || config.monedaVista === "USD");
-  if (!txOk || !pfOk || !fcOk || !histOk || !cfgOk) return { ok: false, error: "El portfolio tiene registros con un formato que no se reconoce." };
+  if (!txOk || !pfOk || !fcOk || !histOk || !cfgOk || !eventosOk || !efectivoOk) return { ok: false, error: "El portfolio tiene registros con un formato que no se reconoce." };
 
   return {
     ok: true,
@@ -71,6 +82,8 @@ export function validarPortfolio(data: any): { ok: true; payload: PortfolioPaylo
         ...(config.monedaVista ? { monedaVista: config.monedaVista } : {}),
         ...(config.ultimoDolar ? { ultimoDolar: config.ultimoDolar } : {}),
       },
+      eventos,
+      efectivo,
     },
   };
 }

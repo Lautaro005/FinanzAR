@@ -42,14 +42,23 @@ export default function PortfolioChart({
   moneda = "ARS",
   dolar,
   fechaInicioTenencias,
+  calcularRetroactivo,
 }: {
   historial: PuntoPortfolio[];
   /** Moneda de visualización elegida en el toggle del portfolio. */
   moneda?: MonedaVista;
   /** Cotización USD→ARS usada para convertir la serie (guardada en ARS) cuando la vista es US$. */
   dolar?: number | null;
-  /** Fecha más antigua en que el usuario tenía algo cargado (arranque de la línea plana). */
+  /** Fecha más antigua en que el usuario tenía algo cargado (arranque de la reconstrucción retroactiva). */
   fechaInicioTenencias?: string | null;
+  /**
+   * Reconstruye el valor del portfolio en un día anterior al primer punto
+   * guardado (devengo real de PF/FCI + precio histórico de cada posición),
+   * para que ese tramo muestre la ganancia/pérdida real en vez de una línea
+   * plana. Si falta o devuelve null para un día puntual, ese día cae de
+   * vuelta a la línea plana con el primer valor real guardado.
+   */
+  calcularRetroactivo?: (fecha: string) => { valorTotal: number; capitalInvertido: number } | null;
 }) {
   const [rango, setRango] = useState<RangoTemporal>("30d");
   const [mostrarCapital, setMostrarCapital] = useState(true);
@@ -83,11 +92,20 @@ export default function PortfolioChart({
         if (ultimo) {
           valorTotal = ultimo.valorTotal;
           capital = ultimo.capitalInvertido;
-        } else if (historial.length > 0) {
-          // Antes del primer punto guardado: línea plana con el primer valor real.
-          valorTotal = historial[0].valorTotal;
-          capital = historial[0].capitalInvertido;
-          estimado = true;
+        } else {
+          // Antes del primer punto guardado: reconstruir el día con devengo real de
+          // PF/FCI y precio histórico de cada posición (ver calcularTotalesEnFecha).
+          const retro = calcularRetroactivo ? calcularRetroactivo(d) : null;
+          if (retro) {
+            valorTotal = retro.valorTotal;
+            capital = retro.capitalInvertido;
+            estimado = true;
+          } else if (historial.length > 0) {
+            // Sin forma de reconstruir ese día puntual: línea plana con el primer valor real.
+            valorTotal = historial[0].valorTotal;
+            capital = historial[0].capitalInvertido;
+            estimado = true;
+          }
         }
       }
       puntos.push({
@@ -101,9 +119,9 @@ export default function PortfolioChart({
     }
     return puntos;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [historial, rango, fechaInicioTenencias, enUsd, dolar]);
+  }, [historial, rango, fechaInicioTenencias, enUsd, dolar, calcularRetroactivo]);
 
-  const hayLinea = historial.length > 0;
+  const hayLinea = data.some((d) => d.valorTotal !== null);
 
   const xAxisInterval = Math.max(0, Math.ceil(data.length / 8) - 1);
   const simbolo = monedaMostrada === "USD" ? "US$" : "$";
@@ -122,7 +140,8 @@ export default function PortfolioChart({
         <div>
           <h2 className="font-serif text-lg font-bold text-finanzar-primary">Evolución del portfolio ({monedaMostrada === "USD" ? "US$" : "ARS"})</h2>
           <p className="text-xs text-finanzar-textSecondary mt-0.5">
-            Un punto por día desde que empezaste a usarlo; antes del primer punto se dibuja una línea plana.
+            Un punto por día desde que empezaste a usarlo; antes del primer punto se reconstruye con el devengo y los
+            precios de esos días.
             {historial.length > 0 && ` ${historial.length} ${historial.length === 1 ? "punto guardado" : "puntos guardados"}.`}
             {enUsd && " Convertido a US$ con la cotización de hoy."}
           </p>
@@ -181,7 +200,11 @@ export default function PortfolioChart({
                 axisLine={{ stroke: "#DBD3C2" }}
                 tick={{ fill: "#8B8478", fontSize: 11, fontFamily: "Plus Jakarta Sans" }}
                 tickFormatter={compacto}
-                domain={["auto", "auto"]}
+                domain={[
+                  (min: number) => (Number.isFinite(min) ? min - Math.max(Math.abs(min) * 0.06, 1) : 0),
+                  (max: number) => (Number.isFinite(max) ? max + Math.max(Math.abs(max) * 0.06, 1) : 1),
+                ]}
+                allowDecimals={false}
                 width={64}
               />
               <Tooltip
@@ -195,7 +218,7 @@ export default function PortfolioChart({
                     <div className="bg-finanzar-surface border border-finanzar-border p-3 rounded-md shadow-md text-xs min-w-[180px]">
                       <p className="text-finanzar-textSecondary font-medium mb-1.5">
                         {label}
-                        {p.estimado && <span className="ml-1 text-finanzar-accent">· previo al primer punto</span>}
+                        {p.estimado && <span className="ml-1 text-finanzar-accent">· estimado</span>}
                       </p>
                       <div className="flex justify-between gap-4">
                         <span className="text-finanzar-textSecondary">Valor total</span>
