@@ -17,6 +17,17 @@ export interface VersionChangelog {
 
 export const CHANGELOG: VersionChangelog[] = [
   {
+    version: "0.4.3",
+    fecha: "2026-09-07",
+    titulo: "Bloque colapsable de Razonamiento en Chat IA y escala prolija de a 5k en gráfico de Portfolio",
+    cambios: [
+      "Bloque colapsable 'Razonamiento' en Chat IA: detección automática de etiquetas <think>...</think> y del streaming de razonamiento (DeepSeek R1, Groq y OpenRouter) en un acordeón interactivo cerrado por defecto, con ícono de cerebro, estado en vivo ('Pensando…') y renderizado estructurado sobre fondo diferenciado.",
+      "Copia limpia de respuestas y optimización de contexto: al copiar un mensaje del asistente se omite el bloque interno de razonamiento para compartir la respuesta clara, y se depuran los bloques <think> del historial enviado al modelo para evitar desperdicio de tokens.",
+      "Escala limpia y pasos de $5k en gráfico de Portfolio: para montos iniciales o bajos en pesos (ARS), los valores del eje vertical avanzan exactamente de a $5k ($0, $5k, $10k), escalando armónicamente a 10k, 25k, 50k, 100k, etc., según el capital invertido, evitando divisiones asimétricas (como 11k, 6k, 3k).",
+      "Escala limpia en dólares (USD): pasos limpios de a 10, 25, 50, 100, 250, 500, 1k, etc., garantizando siempre etiquetas enteras y redondas sin comas ni decimales innecesarios.",
+    ],
+  },
+  {
     version: "0.4.2",
     fecha: "2026-09-07",
     titulo: "Optimización de pantalla Chat IA sin scroll vertical, ajuste de componentes y robustez en respuestas",

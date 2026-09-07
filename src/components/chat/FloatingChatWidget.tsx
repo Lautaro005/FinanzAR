@@ -145,7 +145,13 @@ export default function FloatingChatWidget({
       { role: "system" as const, content: systemPrompt },
       ...sesionActual.messages
         .filter((m) => typeof m.content === "string" && m.content.trim().length > 0)
-        .map((m) => ({ role: m.role, content: m.content.trim() })),
+        .map((m) => ({
+          role: m.role,
+          content:
+            m.role === "assistant"
+              ? m.content.replace(/<think>[\s\S]*?<\/think>\s*/gi, "").trim() || m.content.trim()
+              : m.content.trim(),
+        })),
       { role: "user" as const, content: text.trim() },
     ];
 

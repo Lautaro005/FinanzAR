@@ -390,6 +390,8 @@ export async function enviarMensajeChat(params: EnviarMensajeChatParams): Promis
   let fullText = "";
   let reasoningText = "";
   let rawAccumulated = "";
+  let hasStartedReasoning = false;
+  let hasClosedReasoning = false;
 
   const processLine = (line: string) => {
     const trimmed = line.trim();
@@ -417,15 +419,23 @@ export async function enviarMensajeChat(params: EnviarMensajeChatParams): Promis
         (typeof delta?.reasoning_content === "string" ? delta.reasoning_content : "") ||
         (typeof delta?.reasoning === "string" ? delta.reasoning : "");
 
-      if (contentChunk) {
+      if (reasoningChunk) {
+        reasoningText += reasoningChunk;
+        if (!hasStartedReasoning) {
+          hasStartedReasoning = true;
+          fullText += "<think>\n";
+          onChunk("<think>\n");
+        }
+        fullText += reasoningChunk;
+        onChunk(reasoningChunk);
+      } else if (contentChunk) {
+        if (hasStartedReasoning && !hasClosedReasoning) {
+          hasClosedReasoning = true;
+          fullText += "\n</think>\n\n";
+          onChunk("\n</think>\n\n");
+        }
         fullText += contentChunk;
         onChunk(contentChunk);
-      } else if (reasoningChunk) {
-        reasoningText += reasoningChunk;
-        // Si el modelo solo emite razonamiento (p. ej. DeepSeek R1 o modo compound), transmitirlo
-        if (!fullText) {
-          onChunk(reasoningChunk);
-        }
       }
     } catch {
       // Fragmento incompleto en chunk SSE, ignorar
@@ -455,21 +465,36 @@ export async function enviarMensajeChat(params: EnviarMensajeChatParams): Promis
     }
   }
 
+  // Cerrar tag de razonamiento si quedó abierto
+  if (hasStartedReasoning && !hasClosedReasoning) {
+    hasClosedReasoning = true;
+    fullText += "\n</think>\n\n";
+    onChunk("\n</think>\n\n");
+  }
+
   // Si no se extrajo texto vía SSE, intentar parsear respuesta completa
   if (!fullText.trim()) {
     if (reasoningText.trim()) {
-      fullText = reasoningText;
+      fullText = "<think>\n" + reasoningText.trim() + "\n</think>";
+      onChunk(fullText);
     } else if (rawAccumulated.trim()) {
       try {
         const parsed = JSON.parse(rawAccumulated);
         const fallback =
           parsed.choices?.[0]?.message?.content ||
           parsed.choices?.[0]?.delta?.content ||
-          parsed.choices?.[0]?.delta?.reasoning_content ||
           parsed.choices?.[0]?.text;
+        const fallbackReasoning =
+          parsed.choices?.[0]?.message?.reasoning_content ||
+          parsed.choices?.[0]?.delta?.reasoning_content ||
+          parsed.choices?.[0]?.delta?.reasoning;
+
         if (typeof fallback === "string" && fallback.trim()) {
           fullText = fallback;
           onChunk(fallback);
+        } else if (typeof fallbackReasoning === "string" && fallbackReasoning.trim()) {
+          fullText = "<think>\n" + fallbackReasoning.trim() + "\n</think>";
+          onChunk(fullText);
         }
       } catch {
         // No era JSON regular

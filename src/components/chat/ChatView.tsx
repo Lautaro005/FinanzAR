@@ -88,7 +88,8 @@ export default function ChatView({
   };
 
   const handleCopy = (id: string, text: string) => {
-    void navigator.clipboard.writeText(text);
+    const cleanText = text.replace(/<think>[\s\S]*?<\/think>\s*/gi, "").trim() || text;
+    void navigator.clipboard.writeText(cleanText);
     setCopiadoId(id);
     setTimeout(() => setCopiadoId(null), 2000);
   };

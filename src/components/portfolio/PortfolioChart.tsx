@@ -30,6 +30,103 @@ interface PuntoSerie {
 }
 
 /**
+ * Calcula los ticks y el dominio superior del eje Y con números redondos e intervalos limpios.
+ * - En ARS:
+ *   - Para montos bajos (hasta ~$25k) usa pasos limpios de a 5k (ej: $0, $5k, $10k).
+ *   - A medida que crece el capital escala progresivamente a 10k, 20k, 25k, 50k, 100k, 200k, 250k, 500k, 1M, etc.
+ * - En USD:
+ *   - Pasos limpios de a 10, 20, 25, 50, 100, 200, 250, 500, 1k, etc.
+ */
+function calcularEscalaEjeY(maxVal: number, moneda: MonedaVista): { ticks: number[]; domain: [number, number] } {
+  const stepsARS = [
+    5_000,
+    10_000,
+    20_000,
+    25_000,
+    50_000,
+    100_000,
+    200_000,
+    250_000,
+    500_000,
+    1_000_000,
+    2_000_000,
+    2_500_000,
+    5_000_000,
+    10_000_000,
+    20_000_000,
+    25_000_000,
+    50_000_000,
+    100_000_000,
+  ];
+
+  const stepsUSD = [
+    10,
+    20,
+    25,
+    50,
+    100,
+    200,
+    250,
+    500,
+    1_000,
+    2_000,
+    2_500,
+    5_000,
+    10_000,
+    20_000,
+    25_000,
+    50_000,
+    100_000,
+  ];
+
+  const steps = moneda === "USD" ? stepsUSD : stepsARS;
+  const baseMinStep = steps[0];
+
+  if (!Number.isFinite(maxVal) || maxVal <= 0) {
+    const defaultTop = baseMinStep * 2;
+    return {
+      ticks: [0, baseMinStep, defaultTop],
+      domain: [0, defaultTop],
+    };
+  }
+
+  // Buscamos un step que produzca entre 2 y 5 intervalos (3 a 6 ticks en pantalla)
+  let chosenStep = steps[steps.length - 1];
+  for (const s of steps) {
+    const intervals = Math.ceil(maxVal / s);
+    if (intervals <= 5) {
+      chosenStep = s;
+      break;
+    }
+  }
+
+  // Si maxVal supera el límite de los steps fijos, calcular potencia de 10
+  if (maxVal / chosenStep > 5) {
+    const magnitude = Math.pow(10, Math.floor(Math.log10(maxVal)));
+    const ratio = maxVal / magnitude;
+    if (ratio <= 2) chosenStep = magnitude * 0.5;
+    else if (ratio <= 5) chosenStep = magnitude;
+    else chosenStep = magnitude * 2;
+  }
+
+  let top = Math.ceil(maxVal / chosenStep) * chosenStep;
+  // Asegurar al menos 2 intervalos para que el gráfico respire si top === chosenStep
+  if (top === chosenStep) {
+    top = chosenStep * 2;
+  }
+
+  const ticks: number[] = [];
+  for (let v = 0; v <= top; v += chosenStep) {
+    ticks.push(v);
+  }
+
+  return {
+    ticks,
+    domain: [0, top],
+  };
+}
+
+/**
  * Gráfico de evolución del portfolio (forward-only): el eje X cubre todo el
  * rango elegido (últimos 7/30/90/365 días) aunque todavía no haya puntos, y
  * la serie se construye día a día. Cuando se añade un nuevo activo, la serie
@@ -139,13 +236,28 @@ export default function PortfolioChart({
   const xAxisInterval = Math.max(0, Math.ceil(data.length / 8) - 1);
   const simbolo = monedaMostrada === "USD" ? "US$" : "$";
 
+  const maxValorCalculado = useMemo(() => {
+    let max = 0;
+    for (const p of data) {
+      if (p.valorTotal !== null && p.valorTotal > max) max = p.valorTotal;
+      if (mostrarCapital && p.capitalInvertido !== null && p.capitalInvertido > max) {
+        max = p.capitalInvertido;
+      }
+    }
+    return max;
+  }, [data, mostrarCapital]);
+
+  const { ticks: yTicks, domain: yDomain } = useMemo(() => {
+    return calcularEscalaEjeY(maxValorCalculado, monedaMostrada);
+  }, [maxValorCalculado, monedaMostrada]);
+
   /**
    * Etiquetas del eje Y: números enteros redondos estrictos sin decimales ni comas
-   * (ejemplo: $11k, $10k, $1M, $500, $0).
+   * (ejemplo: $0, $5k, $10k, $25k, $1M, US$50, US$1k).
    */
   const compacto = (v: number) => {
     const abs = Math.abs(v);
-    if (abs >= 1_000_000) {
+    if (abs >= 1_000_000 && v % 1_000_000 === 0) {
       const m = Math.round(v / 1_000_000);
       return `${simbolo}${m.toLocaleString("es-AR")}M`;
     }
@@ -198,8 +310,7 @@ export default function PortfolioChart({
       </div>
 
       <div className="h-72 w-full">
-        {!hayLinea ? (
-          <div className="h-full w-full flex flex-col items-center justify-center text-center text-sm text-finanzar-textSecondary px-6">
+        {!hayLinea ? (          <div className="h-full w-full flex flex-col items-center justify-center text-center text-sm text-finanzar-textSecondary px-6">
             <p className="font-medium text-finanzar-textMain">Todavía no hay puntos guardados.</p>
             <p className="text-xs mt-1 max-w-md">
               El primer punto se guarda apenas el portfolio se pueda valuar con cotizaciones en vivo; desde ahí el gráfico
@@ -223,10 +334,8 @@ export default function PortfolioChart({
                 axisLine={{ stroke: "#DBD3C2" }}
                 tick={{ fill: "#8B8478", fontSize: 11, fontFamily: "Plus Jakarta Sans" }}
                 tickFormatter={compacto}
-                domain={[
-                  (min: number) => (Number.isFinite(min) ? Math.min(0, min) : 0),
-                  (max: number) => (Number.isFinite(max) ? max + Math.max(Math.abs(max) * 0.06, 1) : 1),
-                ]}
+                ticks={yTicks}
+                domain={yDomain}
                 allowDecimals={false}
                 width={64}
               />

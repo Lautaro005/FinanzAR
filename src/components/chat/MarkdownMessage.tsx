@@ -1,17 +1,154 @@
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 
 /**
  * Renderizador de Markdown liviano y seguro sin dependencias externas.
- * Soporta párrafos, negritas, cursivas, listas con viñetas, listas numeradas,
- * tablas Markdown con columnas alineadas, bloques de código monoespaciados,
- * código inline, títulos y citas editoriales.
+ * Soporta bloques colapsables de Razonamiento (<think>...</think>) con ícono
+ * de cerebro y fondo contrastado, párrafos, negritas, cursivas, listas con viñetas,
+ * listas numeradas, tablas Markdown con columnas alineadas, bloques de código
+ * monoespaciados, código inline, títulos y citas editoriales.
  */
 export default function MarkdownMessage({ content }: { content: string }) {
-  const parsed = useMemo(() => {
-    return parseMarkdown(content);
+  const blocks = useMemo(() => {
+    return parseMessageBlocks(content);
   }, [content]);
 
-  return <div className="space-y-1.5 text-xs sm:text-[13px] leading-relaxed text-finanzar-text break-words">{parsed}</div>;
+  return (
+    <div className="space-y-2 text-xs sm:text-[13px] leading-relaxed text-finanzar-text break-words">
+      {blocks.map((block, idx) => {
+        if (block.type === "think") {
+          return (
+            <ReasoningAccordion
+              key={`think-${idx}`}
+              content={block.content}
+              isStreaming={block.isStreaming}
+            />
+          );
+        }
+        return (
+          <div key={`content-${idx}`} className="space-y-1.5">
+            {parseMarkdown(block.content)}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+interface MessageBlock {
+  type: "think" | "content";
+  content: string;
+  isStreaming?: boolean;
+}
+
+/**
+ * Separa los bloques <think>...</think> del contenido normal de la respuesta.
+ * Soporta bloques cerrados y bloques incompletos en streaming (<think> sin </think> todavía).
+ */
+function parseMessageBlocks(raw: string): MessageBlock[] {
+  if (!raw) return [];
+
+  const blocks: MessageBlock[] = [];
+  const thinkRegex = /<think>([\s\S]*?)(?:<\/think>|$)/gi;
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = thinkRegex.exec(raw)) !== null) {
+    // Texto antes de <think>
+    const before = raw.slice(lastIndex, match.index);
+    if (before.trim()) {
+      blocks.push({ type: "content", content: before });
+    }
+
+    const thinkInner = match[1] || "";
+    const matchedStr = match[0];
+    const isClosed = /<\/think>$/i.test(matchedStr);
+
+    if (thinkInner.trim() || !isClosed) {
+      blocks.push({
+        type: "think",
+        content: thinkInner,
+        isStreaming: !isClosed,
+      });
+    }
+
+    lastIndex = match.index + matchedStr.length;
+  }
+
+  // Contenido restante después del último bloque de razonamiento
+  const remainder = raw.slice(lastIndex);
+  if (remainder.trim()) {
+    blocks.push({ type: "content", content: remainder });
+  }
+
+  if (blocks.length === 0 && raw.trim()) {
+    blocks.push({ type: "content", content: raw });
+  }
+
+  return blocks;
+}
+
+/**
+ * Componente colapsable de Razonamiento para bloques <think>
+ */
+function ReasoningAccordion({ content, isStreaming }: { content: string; isStreaming?: boolean }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="my-1.5 rounded-md border border-finanzar-borderSubtle bg-[#EFE9DC]/75 overflow-hidden shadow-2xs">
+      <button
+        type="button"
+        onClick={() => setIsOpen((prev) => !prev)}
+        className="w-full px-3 py-2 flex items-center justify-between text-left hover:bg-[#E5DDD0]/90 transition-colors select-none group"
+        aria-expanded={isOpen}
+      >
+        <div className="flex items-center gap-2">
+          {/* Ícono de cerebro */}
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="w-4 h-4 text-finanzar-accent flex-shrink-0"
+          >
+            <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" />
+            <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z" />
+            <path d="M12 5v14" />
+            <path d="M9 13h6" />
+          </svg>
+          <span className="text-xs font-semibold text-finanzar-primary">Razonamiento</span>
+          {isStreaming && (
+            <span className="inline-flex items-center gap-1 text-[10px] text-finanzar-textSecondary font-normal ml-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-finanzar-accent animate-pulse" />
+              Pensando…
+            </span>
+          )}
+        </div>
+
+        <div className="flex items-center gap-1 text-[11px] text-finanzar-textSecondary group-hover:text-finanzar-primary transition-colors">
+          <span>{isOpen ? "Ocultar" : "Mostrar"}</span>
+          <svg
+            viewBox="0 0 24 24"
+            className={`w-3.5 h-3.5 transform transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </div>
+      </button>
+
+      {isOpen && (
+        <div className="px-3.5 py-2.5 border-t border-finanzar-borderSubtle bg-[#E8E0D2]/50 text-[11px] sm:text-xs text-finanzar-textSecondary leading-relaxed space-y-1.5 font-sans">
+          {parseMarkdown(content.trim())}
+        </div>
+      )}
+    </div>
+  );
 }
 
 interface TableBuffer {
@@ -127,7 +264,7 @@ function parseMarkdown(text: string) {
                     );
                   })}
                 </tr>
-              ))};
+              ))}
             </tbody>
           </table>
         </div>
