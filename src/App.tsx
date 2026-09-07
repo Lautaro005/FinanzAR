@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, useNavigate, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate, Link, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import CategoryTabs, { CategoriaFiltro } from "./components/CategoryTabs";
@@ -693,58 +693,98 @@ function AppShell() {
 
   return (
     <Router>
-      <div className="min-h-screen flex flex-col bg-finanzar-bg text-finanzar-textMain font-sans">
-        <Header isLive={isLive} />
-        <div className="flex-1">
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <Home
-                  instruments={instruments}
-                  categoryCounts={categoryCounts}
-                  loading={loading}
-                  selectedCompareIds={selectedCompareIds}
-                  onToggleCompare={handleToggleCompare}
-                  onRemoveCompare={handleRemoveCompare}
-                  onClearCompare={handleClearCompare}
-                />
-              }
-            />
-            <Route
-              path="/instrumento/:id"
-              element={
-                <InstrumentDetailScreen
-                  instruments={instruments}
-                  selectedCompareIds={selectedCompareIds}
-                  onToggleCompare={handleToggleCompare}
-                />
-              }
-            />
-            <Route
-              path="/comparar"
-              element={
-                <CompareScreen
-                  instruments={instruments}
-                  selectedCompareIds={selectedCompareIds}
-                  onToggleCompare={handleToggleCompare}
-                  onClearCompare={handleClearCompare}
-                />
-              }
-            />
-            <Route path="/portfolio" element={<PortfolioScreen instruments={instruments} isLive={isLive} />} />
-            <Route path="/chat" element={<ChatScreen instruments={instruments} isLive={isLive} />} />
-            <Route path="/account" element={<AccountScreen />} />
-            <Route path="/acerca" element={<AboutScreen />} />
-            <Route path="/privacidad" element={<PrivacyPolicyScreen />} />
-            <Route path="/changelog" element={<ChangelogScreen />} />
-            <Route path="*" element={<NotFoundScreen />} />
-          </Routes>
-        </div>
-        <Footer />
-        <ConflictoSyncGlobal />
-        <FloatingChatWidget instruments={instruments} isLive={isLive} />
-      </div>
+      <AppShellContent
+        instruments={instruments}
+        categoryCounts={categoryCounts}
+        loading={loading}
+        isLive={isLive}
+        selectedCompareIds={selectedCompareIds}
+        onToggleCompare={handleToggleCompare}
+        onRemoveCompare={handleRemoveCompare}
+        onClearCompare={handleClearCompare}
+      />
     </Router>
+  );
+}
+
+function AppShellContent({
+  instruments,
+  categoryCounts,
+  loading,
+  isLive,
+  selectedCompareIds,
+  onToggleCompare,
+  onRemoveCompare,
+  onClearCompare,
+}: {
+  instruments: Instrumento[];
+  categoryCounts: Record<Categoria, number>;
+  loading: boolean;
+  isLive: boolean;
+  selectedCompareIds: string[];
+  onToggleCompare: (id: string) => void;
+  onRemoveCompare: (id: string) => void;
+  onClearCompare: () => void;
+}) {
+  const location = useLocation();
+  const isChat = location.pathname.startsWith("/chat");
+
+  return (
+    <div
+      className={`flex flex-col bg-finanzar-bg text-finanzar-textMain font-sans ${
+        isChat ? "h-[100dvh] max-h-[100dvh] overflow-hidden" : "min-h-screen"
+      }`}
+    >
+      <Header isLive={isLive} />
+      <div className={`flex-1 min-h-0 ${isChat ? "flex flex-col overflow-hidden" : ""}`}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Home
+                instruments={instruments}
+                categoryCounts={categoryCounts}
+                loading={loading}
+                selectedCompareIds={selectedCompareIds}
+                onToggleCompare={onToggleCompare}
+                onRemoveCompare={onRemoveCompare}
+                onClearCompare={onClearCompare}
+              />
+            }
+          />
+          <Route
+            path="/instrumento/:id"
+            element={
+              <InstrumentDetailScreen
+                instruments={instruments}
+                selectedCompareIds={selectedCompareIds}
+                onToggleCompare={onToggleCompare}
+              />
+            }
+          />
+          <Route
+            path="/comparar"
+            element={
+              <CompareScreen
+                instruments={instruments}
+                selectedCompareIds={selectedCompareIds}
+                onToggleCompare={onToggleCompare}
+                onClearCompare={onClearCompare}
+              />
+            }
+          />
+          <Route path="/portfolio" element={<PortfolioScreen instruments={instruments} isLive={isLive} />} />
+          <Route path="/chat" element={<ChatScreen instruments={instruments} isLive={isLive} />} />
+          <Route path="/account" element={<AccountScreen />} />
+          <Route path="/acerca" element={<AboutScreen />} />
+          <Route path="/privacidad" element={<PrivacyPolicyScreen />} />
+          <Route path="/changelog" element={<ChangelogScreen />} />
+          <Route path="*" element={<NotFoundScreen />} />
+        </Routes>
+      </div>
+      <Footer compact={isChat} />
+      <ConflictoSyncGlobal />
+      <FloatingChatWidget instruments={instruments} isLive={isLive} />
+    </div>
   );
 }

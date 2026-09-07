@@ -11,7 +11,7 @@ export default function MarkdownMessage({ content }: { content: string }) {
     return parseMarkdown(content);
   }, [content]);
 
-  return <div className="space-y-2 text-xs sm:text-sm leading-relaxed text-finanzar-text break-words">{parsed}</div>;
+  return <div className="space-y-1.5 text-xs sm:text-[13px] leading-relaxed text-finanzar-text break-words">{parsed}</div>;
 }
 
 interface TableBuffer {
@@ -40,13 +40,13 @@ function parseMarkdown(text: string) {
       }
 
       return (
-        <div key={partIdx} className="my-2 rounded-xs bg-finanzar-bg border border-finanzar-border overflow-hidden">
+        <div key={partIdx} className="my-1.5 rounded-xs bg-finanzar-bg border border-finanzar-border overflow-hidden">
           {lang && (
-            <div className="px-3 py-1 bg-finanzar-surface border-b border-finanzar-borderSubtle text-[10px] font-mono uppercase tracking-wider text-finanzar-textSecondary">
+            <div className="px-2.5 py-0.5 bg-finanzar-surface border-b border-finanzar-borderSubtle text-[9px] font-mono uppercase tracking-wider text-finanzar-textSecondary">
               {lang}
             </div>
           )}
-          <pre className="p-3 font-mono text-xs overflow-x-auto text-finanzar-text whitespace-pre">
+          <pre className="p-2.5 font-mono text-[11px] overflow-x-auto text-finanzar-text whitespace-pre">
             <code>{code}</code>
           </pre>
         </div>
@@ -63,7 +63,7 @@ function parseMarkdown(text: string) {
       if (!listBuffer) return;
       if (listBuffer.type === "ul") {
         elements.push(
-          <ul key={key} className="list-disc list-inside space-y-1 my-1.5 pl-1">
+          <ul key={key} className="list-disc list-inside space-y-0.5 my-1 pl-1">
             {listBuffer.items.map((it, idx) => (
               <li key={idx} className="text-finanzar-text">
                 {renderInline(it)}
@@ -73,7 +73,7 @@ function parseMarkdown(text: string) {
         );
       } else {
         elements.push(
-          <ol key={key} className="list-decimal list-inside space-y-1 my-1.5 pl-1">
+          <ol key={key} className="list-decimal list-inside space-y-0.5 my-1 pl-1">
             {listBuffer.items.map((it, idx) => (
               <li key={idx} className="text-finanzar-text">
                 {renderInline(it)}
@@ -92,17 +92,17 @@ function parseMarkdown(text: string) {
       elements.push(
         <div
           key={key}
-          className="my-3 overflow-x-auto rounded-md border border-finanzar-border bg-finanzar-surface shadow-xs"
+          className="my-2 overflow-x-auto rounded-md border border-finanzar-border bg-finanzar-surface shadow-xs"
         >
-          <table className="w-full text-left border-collapse text-xs">
-            <thead className="bg-finanzar-bg border-b border-finanzar-border text-[11px] font-semibold uppercase tracking-wider text-finanzar-textSecondary">
+          <table className="w-full text-left border-collapse text-[11px]">
+            <thead className="bg-finanzar-bg border-b border-finanzar-border text-[10px] font-semibold uppercase tracking-wider text-finanzar-textSecondary">
               <tr>
                 {headers.map((h, hIdx) => {
                   const align = alignments[hIdx] || "left";
                   const alignCls =
                     align === "center" ? "text-center" : align === "right" ? "text-right" : "text-left";
                   return (
-                    <th key={hIdx} className={`px-3 py-2 text-finanzar-primary ${alignCls}`}>
+                    <th key={hIdx} className={`px-2.5 py-1.5 text-finanzar-primary ${alignCls}`}>
                       {renderInline(h)}
                     </th>
                   );
@@ -120,14 +120,14 @@ function parseMarkdown(text: string) {
                     return (
                       <td
                         key={cIdx}
-                        className={`px-3 py-2 text-finanzar-text leading-relaxed whitespace-nowrap sm:whitespace-normal ${alignCls}`}
+                        className={`px-2.5 py-1.5 text-finanzar-text leading-relaxed whitespace-nowrap sm:whitespace-normal ${alignCls}`}
                       >
                         {renderInline(cell)}
                       </td>
                     );
                   })}
                 </tr>
-              ))}
+              ))};
             </tbody>
           </table>
         </div>
@@ -180,7 +180,7 @@ function parseMarkdown(text: string) {
       // Separador horizontal
       if (/^---+$/.test(trimmed)) {
         flushList(`flush-hr-${partIdx}-${lineIdx}`);
-        elements.push(<hr key={`hr-${partIdx}-${lineIdx}`} className="my-3 border-finanzar-borderSubtle" />);
+        elements.push(<hr key={`hr-${partIdx}-${lineIdx}`} className="my-2 border-finanzar-borderSubtle" />);
         continue;
       }
 
@@ -188,7 +188,7 @@ function parseMarkdown(text: string) {
       if (trimmed.startsWith("### ")) {
         flushList(`flush-h3-${partIdx}-${lineIdx}`);
         elements.push(
-          <h4 key={`h3-${partIdx}-${lineIdx}`} className="font-serif font-bold text-finanzar-primary text-sm mt-3 mb-1">
+          <h4 key={`h3-${partIdx}-${lineIdx}`} className="font-serif font-bold text-finanzar-primary text-xs sm:text-sm mt-2.5 mb-1">
             {renderInline(trimmed.slice(4))}
           </h4>
         );
@@ -197,7 +197,7 @@ function parseMarkdown(text: string) {
       if (trimmed.startsWith("## ")) {
         flushList(`flush-h2-${partIdx}-${lineIdx}`);
         elements.push(
-          <h3 key={`h2-${partIdx}-${lineIdx}`} className="font-serif font-bold text-finanzar-primary text-base mt-3.5 mb-1.5">
+          <h3 key={`h2-${partIdx}-${lineIdx}`} className="font-serif font-bold text-finanzar-primary text-sm sm:text-base mt-3 mb-1">
             {renderInline(trimmed.slice(3))}
           </h3>
         );
@@ -206,7 +206,7 @@ function parseMarkdown(text: string) {
       if (trimmed.startsWith("# ")) {
         flushList(`flush-h1-${partIdx}-${lineIdx}`);
         elements.push(
-          <h2 key={`h1-${partIdx}-${lineIdx}`} className="font-serif font-bold text-finanzar-primary text-lg mt-4 mb-2">
+          <h2 key={`h1-${partIdx}-${lineIdx}`} className="font-serif font-bold text-finanzar-primary text-base sm:text-lg mt-3.5 mb-1.5">
             {renderInline(trimmed.slice(2))}
           </h2>
         );
@@ -219,7 +219,7 @@ function parseMarkdown(text: string) {
         elements.push(
           <blockquote
             key={`quote-${partIdx}-${lineIdx}`}
-            className="border-l-2 border-finanzar-accent pl-3 my-1.5 italic text-finanzar-textSecondary"
+            className="border-l-2 border-finanzar-accent pl-2.5 my-1 italic text-finanzar-textSecondary text-xs"
           >
             {renderInline(trimmed.slice(2))}
           </blockquote>
@@ -300,7 +300,7 @@ function renderInline(raw: string): (string | JSX.Element)[] {
       return (
         <code
           key={sIdx}
-          className="px-1.5 py-0.5 rounded-xs bg-finanzar-bg border border-finanzar-borderSubtle font-mono text-[11px] text-finanzar-primary"
+          className="px-1.5 py-0.5 rounded-xs bg-finanzar-bg border border-finanzar-borderSubtle font-mono text-[10px] text-finanzar-primary"
         >
           {seg.slice(1, -1)}
         </code>

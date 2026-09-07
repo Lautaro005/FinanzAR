@@ -143,8 +143,10 @@ export default function FloatingChatWidget({
 
     const conversationHistory = [
       { role: "system" as const, content: systemPrompt },
-      ...sesionActual.messages.map((m) => ({ role: m.role, content: m.content })),
-      { role: "user" as const, content: text },
+      ...sesionActual.messages
+        .filter((m) => typeof m.content === "string" && m.content.trim().length > 0)
+        .map((m) => ({ role: m.role, content: m.content.trim() })),
+      { role: "user" as const, content: text.trim() },
     ];
 
     setIsGenerating(true);

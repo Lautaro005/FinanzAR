@@ -107,6 +107,9 @@ export function actualizarTituloSesion(id: string, nuevoTitulo: string): void {
 }
 
 export function agregarMensajeASesion(sesionId: string, mensaje: ChatMessage): void {
+  // Evitar agregar mensajes de texto vacíos o de solo espacios
+  if (!mensaje.content || !mensaje.content.trim()) return;
+
   const prev = loadChatSessions();
   const next = prev.map((s) => {
     if (s.id !== sesionId) return s;
@@ -326,6 +329,18 @@ export async function enviarMensajeChat(params: EnviarMensajeChatParams): Promis
     );
   }
 
+  // Filtrar y sanear mensajes para no enviar mensajes vacíos que provoquen fallos o respuestas nulas
+  const sanitizedMessages = messages
+    .filter((m) => typeof m.content === "string" && m.content.trim().length > 0)
+    .map((m) => ({
+      role: m.role,
+      content: m.content.trim(),
+    }));
+
+  if (sanitizedMessages.length === 0) {
+    throw new Error("El mensaje enviado no contiene texto válido.");
+  }
+
   const response = await fetch(endpoint, {
     method: "POST",
     headers: {
@@ -335,7 +350,7 @@ export async function enviarMensajeChat(params: EnviarMensajeChatParams): Promis
     },
     body: JSON.stringify({
       model,
-      messages,
+      messages: sanitizedMessages,
       temperature: 0.6,
       stream: true,
     }),
@@ -373,34 +388,99 @@ export async function enviarMensajeChat(params: EnviarMensajeChatParams): Promis
   const decoder = new TextDecoder("utf-8");
   let buffer = "";
   let fullText = "";
+  let reasoningText = "";
+  let rawAccumulated = "";
+
+  const processLine = (line: string) => {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith(":")) return;
+
+    // Detectar tanto "data: {...}" como "data:{...}"
+    const match = trimmed.match(/^data:\s*(.*)$/);
+    if (!match) return;
+
+    const jsonStr = match[1];
+    if (jsonStr === "[DONE]") return;
+
+    try {
+      const parsed = JSON.parse(jsonStr);
+      const choice = parsed.choices?.[0];
+      const delta = choice?.delta;
+
+      const contentChunk =
+        (typeof delta?.content === "string" ? delta.content : "") ||
+        (typeof delta?.text === "string" ? delta.text : "") ||
+        (typeof choice?.text === "string" ? choice.text : "") ||
+        (typeof choice?.message?.content === "string" ? choice.message.content : "");
+
+      const reasoningChunk =
+        (typeof delta?.reasoning_content === "string" ? delta.reasoning_content : "") ||
+        (typeof delta?.reasoning === "string" ? delta.reasoning : "");
+
+      if (contentChunk) {
+        fullText += contentChunk;
+        onChunk(contentChunk);
+      } else if (reasoningChunk) {
+        reasoningText += reasoningChunk;
+        // Si el modelo solo emite razonamiento (p. ej. DeepSeek R1 o modo compound), transmitirlo
+        if (!fullText) {
+          onChunk(reasoningChunk);
+        }
+      }
+    } catch {
+      // Fragmento incompleto en chunk SSE, ignorar
+    }
+  };
 
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
 
-    buffer += decoder.decode(value, { stream: true });
+    const decoded = decoder.decode(value, { stream: true });
+    rawAccumulated += decoded;
+    buffer += decoded;
     const lines = buffer.split("\n");
     buffer = lines.pop() || "";
 
     for (const line of lines) {
-      const trimmed = line.trim();
-      if (!trimmed || trimmed.startsWith(":")) continue;
-      if (trimmed === "data: [DONE]") continue;
+      processLine(line);
+    }
+  }
 
-      if (trimmed.startsWith("data: ")) {
-        const jsonStr = trimmed.slice(6);
-        try {
-          const parsed = JSON.parse(jsonStr);
-          const delta = parsed.choices?.[0]?.delta?.content;
-          if (delta) {
-            fullText += delta;
-            onChunk(delta);
-          }
-        } catch {
-          // Fragmento incompleto en chunk, ignorar
+  // Procesar cualquier remanente que haya quedado en el buffer
+  if (buffer.trim()) {
+    const remainingLines = buffer.split("\n");
+    for (const line of remainingLines) {
+      processLine(line);
+    }
+  }
+
+  // Si no se extrajo texto vía SSE, intentar parsear respuesta completa
+  if (!fullText.trim()) {
+    if (reasoningText.trim()) {
+      fullText = reasoningText;
+    } else if (rawAccumulated.trim()) {
+      try {
+        const parsed = JSON.parse(rawAccumulated);
+        const fallback =
+          parsed.choices?.[0]?.message?.content ||
+          parsed.choices?.[0]?.delta?.content ||
+          parsed.choices?.[0]?.delta?.reasoning_content ||
+          parsed.choices?.[0]?.text;
+        if (typeof fallback === "string" && fallback.trim()) {
+          fullText = fallback;
+          onChunk(fallback);
         }
+      } catch {
+        // No era JSON regular
       }
     }
+  }
+
+  if (!fullText.trim()) {
+    throw new Error(
+      `El modelo "${model}" no devolvió texto en su respuesta. Te recomendamos cambiar a Llama 3.3 70B Versatile en Mi cuenta → Configuración de IA.`
+    );
   }
 
   return fullText;

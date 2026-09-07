@@ -18,7 +18,7 @@ import {
 import ChatView from "../components/chat/ChatView";
 
 const accionClass =
-  "inline-block px-3 py-1 rounded-sm text-xs font-medium transition-colors text-finanzar-textSecondary hover:text-finanzar-primary hover:bg-finanzar-surfaceHover disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-finanzar-accent";
+  "inline-block px-2.5 py-0.5 rounded-sm text-xs font-medium transition-colors text-finanzar-textSecondary hover:text-finanzar-primary hover:bg-finanzar-surfaceHover disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-finanzar-accent";
 
 export default function ChatScreen({
   instruments,
@@ -131,8 +131,10 @@ export default function ChatScreen({
 
     const conversationHistory = [
       { role: "system" as const, content: systemPrompt },
-      ...sesionActual.messages.map((m) => ({ role: m.role, content: m.content })),
-      { role: "user" as const, content: text },
+      ...sesionActual.messages
+        .filter((m) => typeof m.content === "string" && m.content.trim().length > 0)
+        .map((m) => ({ role: m.role, content: m.content.trim() })),
+      { role: "user" as const, content: text.trim() },
     ];
 
     setIsGenerating(true);
@@ -233,10 +235,10 @@ export default function ChatScreen({
   }
 
   return (
-    <main className="w-full flex-1 flex flex-col bg-finanzar-bg min-h-[calc(100vh-4rem)]">
-      {/* Barra de acciones de Chat IA, pegada debajo del header (mismo formato que Portfolio) */}
-      <div className="w-full border-b border-finanzar-borderSubtle bg-finanzar-bg sticky top-16 z-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex justify-center">
+    <main className="w-full flex-1 min-h-0 flex flex-col bg-finanzar-bg overflow-hidden">
+      {/* Barra de acciones de Chat IA, compacta y pegada debajo del header */}
+      <div className="w-full border-b border-finanzar-borderSubtle bg-finanzar-bg flex-shrink-0 z-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-1.5 flex justify-center">
           <ul className="flex flex-wrap items-center justify-center gap-x-1 sm:gap-x-2 gap-y-1 text-xs font-medium">
             <li>
               <button
@@ -364,8 +366,8 @@ export default function ChatScreen({
         </div>
       </div>
 
-      {/* Contenedor del Chat que ocupa la pantalla completa de inicio a fin con un solo fondo */}
-      <div className="flex-1 flex flex-col w-full max-w-7xl mx-auto h-[calc(100vh-7.5rem)] min-h-[500px]">
+      {/* Contenedor del Chat que llena la pantalla entre subheader y footer sin scroll exterior */}
+      <div className="flex-1 min-h-0 flex flex-col w-full max-w-7xl mx-auto overflow-hidden">
         <ChatView
           session={activeSession}
           onSendMessage={handleSendMessage}

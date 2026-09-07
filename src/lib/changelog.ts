@@ -17,6 +17,17 @@ export interface VersionChangelog {
 
 export const CHANGELOG: VersionChangelog[] = [
   {
+    version: "0.4.2",
+    fecha: "2026-09-07",
+    titulo: "Optimización de pantalla Chat IA sin scroll vertical, ajuste de componentes y robustez en respuestas",
+    cambios: [
+      "Pantalla /chat sin scroll vertical en la página: Header, barra de acciones y Footer compacto permanecen siempre a la vista ajustados al 100% del alto de pantalla (100dvh), confinando el desplazamiento exclusivamente al historial de mensajes.",
+      "Ajuste proporcional y compacto de componentes en Chat IA: reducción armoniosa de tamaños en burbujas de diálogo, tipografía, sugerencias, estado vacío e input flotante sin reducir el ancho disponible.",
+      "Corrección del popover de privacidad y modelo: apertura orientada hacia la izquierda en la ventana flotante y panel lateral, evitando recortes en los bordes de la pantalla.",
+      "Procesamiento robusto de respuestas en streaming (SSE): decodificación tolerante de chunks de texto y razonamiento (reasoning_content) para modelos DeepSeek y Groq, depuración de mensajes vacíos y prevención de respuestas en blanco.",
+    ],
+  },
+  {
     version: "0.4.1",
     fecha: "2026-09-07",
     titulo: "Soporte de tablas en respuestas de IA, diseño minimalista de chat e input flotante",

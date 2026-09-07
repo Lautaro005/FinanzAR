@@ -14,6 +14,7 @@ export default {
           accentHover: '#B2872F',
           accentSubtle: '#F6EEDC',
           bg: '#F7F4EC',
+          text: '#26262B',
           textMain: '#26262B',
           textSecondary: '#8B8478',
           textMuted: '#A39D92',
@@ -61,4 +62,3 @@ export default {
   },
   plugins: [],
 }
-
