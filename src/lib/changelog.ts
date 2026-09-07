@@ -17,6 +17,18 @@ export interface VersionChangelog {
 
 export const CHANGELOG: VersionChangelog[] = [
   {
+    version: "0.4.1",
+    fecha: "2026-09-07",
+    titulo: "Soporte de tablas en respuestas de IA, diseño minimalista de chat e input flotante",
+    cambios: [
+      "Soporte completo de tablas Markdown en las respuestas del asistente: visualización prolija de cotizaciones y resúmenes de inversiones con alineación de columnas, tipografía tabular y contenedor con desplazamiento horizontal.",
+      "Reorganización de información: se trasladaron los textos de privacidad y cambio de modelo/proveedor del pie del chat a un ícono de información (ⓘ) junto a 'Portfolio & Mercados conectados'.",
+      "Rediseño minimalista de la pantalla /chat: remoción del título beta y eliminación de la barra lateral, unificando toda la pantalla con un único fondo continuo entre el header y el footer.",
+      "Barra de acciones integrada bajo el header (estilo Portfolio): botones de 'Ver mi portfolio', 'Configurar IA', '+ Nuevo chat' y dropdown propio de historial de conversaciones sin dependencias externas.",
+      "Input de chat flotante: campo de escritura y botón de envío suspendidos sobre el área inferior del chat con efecto translúcido y bordes redondeados.",
+    ],
+  },
+  {
     version: "0.4.0",
     fecha: "2026-09-06",
     titulo: "Chat IA patrimonial con datos de mercado en vivo, widget flotante y optimizaciones en Portfolio",

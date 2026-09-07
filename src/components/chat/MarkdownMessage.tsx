@@ -3,7 +3,8 @@ import { useMemo } from "react";
 /**
  * Renderizador de Markdown liviano y seguro sin dependencias externas.
  * Soporta párrafos, negritas, cursivas, listas con viñetas, listas numeradas,
- * bloques de código monoespaciados, código inline, títulos y citas editoriales.
+ * tablas Markdown con columnas alineadas, bloques de código monoespaciados,
+ * código inline, títulos y citas editoriales.
  */
 export default function MarkdownMessage({ content }: { content: string }) {
   const parsed = useMemo(() => {
@@ -11,6 +12,12 @@ export default function MarkdownMessage({ content }: { content: string }) {
   }, [content]);
 
   return <div className="space-y-2 text-xs sm:text-sm leading-relaxed text-finanzar-text break-words">{parsed}</div>;
+}
+
+interface TableBuffer {
+  headers: string[];
+  alignments: ("left" | "center" | "right")[];
+  rows: string[][];
 }
 
 function parseMarkdown(text: string) {
@@ -50,6 +57,7 @@ function parseMarkdown(text: string) {
     const lines = part.split("\n");
     const elements: JSX.Element[] = [];
     let listBuffer: { type: "ul" | "ol"; items: string[] } | null = null;
+    let tableBuffer: TableBuffer | null = null;
 
     const flushList = (key: string) => {
       if (!listBuffer) return;
@@ -77,20 +85,103 @@ function parseMarkdown(text: string) {
       listBuffer = null;
     };
 
-    lines.forEach((line, lineIdx) => {
+    const flushTable = (key: string) => {
+      if (!tableBuffer) return;
+      const { headers, alignments, rows } = tableBuffer;
+
+      elements.push(
+        <div
+          key={key}
+          className="my-3 overflow-x-auto rounded-md border border-finanzar-border bg-finanzar-surface shadow-xs"
+        >
+          <table className="w-full text-left border-collapse text-xs">
+            <thead className="bg-finanzar-bg border-b border-finanzar-border text-[11px] font-semibold uppercase tracking-wider text-finanzar-textSecondary">
+              <tr>
+                {headers.map((h, hIdx) => {
+                  const align = alignments[hIdx] || "left";
+                  const alignCls =
+                    align === "center" ? "text-center" : align === "right" ? "text-right" : "text-left";
+                  return (
+                    <th key={hIdx} className={`px-3 py-2 text-finanzar-primary ${alignCls}`}>
+                      {renderInline(h)}
+                    </th>
+                  );
+                })}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-finanzar-borderSubtle">
+              {rows.map((row, rIdx) => (
+                <tr key={rIdx} className="hover:bg-finanzar-surfaceHover/50 transition-colors">
+                  {headers.map((_, cIdx) => {
+                    const cell = row[cIdx] ?? "";
+                    const align = alignments[cIdx] || "left";
+                    const alignCls =
+                      align === "center" ? "text-center" : align === "right" ? "text-right" : "text-left";
+                    return (
+                      <td
+                        key={cIdx}
+                        className={`px-3 py-2 text-finanzar-text leading-relaxed whitespace-nowrap sm:whitespace-normal ${alignCls}`}
+                      >
+                        {renderInline(cell)}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+      tableBuffer = null;
+    };
+
+    for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
+      const line = lines[lineIdx];
       const trimmed = line.trim();
 
       // Línea vacía
       if (!trimmed) {
-        flushList(`flush-${partIdx}-${lineIdx}`);
-        return;
+        flushList(`flush-list-${partIdx}-${lineIdx}`);
+        flushTable(`flush-table-${partIdx}-${lineIdx}`);
+        continue;
+      }
+
+      // Soporte a Tablas Markdown:
+      // Comprobar si la línea actual y la siguiente forman un encabezado + delimitador (|---|---|)
+      if (
+        !tableBuffer &&
+        trimmed.includes("|") &&
+        lineIdx + 1 < lines.length &&
+        isTableDelimiter(lines[lineIdx + 1])
+      ) {
+        flushList(`flush-pre-table-${partIdx}-${lineIdx}`);
+        const headers = parseTableRow(trimmed);
+        const alignments = parseAlignments(lines[lineIdx + 1]);
+        tableBuffer = {
+          headers,
+          alignments,
+          rows: [],
+        };
+        lineIdx++; // Saltar la línea del delimitador
+        continue;
+      }
+
+      // Si estamos dentro de una tabla
+      if (tableBuffer) {
+        if (trimmed.includes("|")) {
+          tableBuffer.rows.push(parseTableRow(trimmed));
+          continue;
+        } else {
+          // Si la línea no contiene |, termina la tabla
+          flushTable(`table-${partIdx}-${lineIdx}`);
+        }
       }
 
       // Separador horizontal
       if (/^---+$/.test(trimmed)) {
         flushList(`flush-hr-${partIdx}-${lineIdx}`);
         elements.push(<hr key={`hr-${partIdx}-${lineIdx}`} className="my-3 border-finanzar-borderSubtle" />);
-        return;
+        continue;
       }
 
       // Encabezados
@@ -101,7 +192,7 @@ function parseMarkdown(text: string) {
             {renderInline(trimmed.slice(4))}
           </h4>
         );
-        return;
+        continue;
       }
       if (trimmed.startsWith("## ")) {
         flushList(`flush-h2-${partIdx}-${lineIdx}`);
@@ -110,7 +201,7 @@ function parseMarkdown(text: string) {
             {renderInline(trimmed.slice(3))}
           </h3>
         );
-        return;
+        continue;
       }
       if (trimmed.startsWith("# ")) {
         flushList(`flush-h1-${partIdx}-${lineIdx}`);
@@ -119,7 +210,7 @@ function parseMarkdown(text: string) {
             {renderInline(trimmed.slice(2))}
           </h2>
         );
-        return;
+        continue;
       }
 
       // Cita en bloque
@@ -133,7 +224,7 @@ function parseMarkdown(text: string) {
             {renderInline(trimmed.slice(2))}
           </blockquote>
         );
-        return;
+        continue;
       }
 
       // Lista con viñeta (- o *)
@@ -144,7 +235,7 @@ function parseMarkdown(text: string) {
           listBuffer = { type: "ul", items: [] };
         }
         listBuffer.items.push(bulletMatch[1]);
-        return;
+        continue;
       }
 
       // Lista numerada (1. 2.)
@@ -155,7 +246,7 @@ function parseMarkdown(text: string) {
           listBuffer = { type: "ol", items: [] };
         }
         listBuffer.items.push(numMatch[2]);
-        return;
+        continue;
       }
 
       // Párrafo normal
@@ -165,10 +256,38 @@ function parseMarkdown(text: string) {
           {renderInline(trimmed)}
         </p>
       );
-    });
+    }
 
     flushList(`flush-final-${partIdx}`);
+    flushTable(`flush-final-table-${partIdx}`);
     return <div key={partIdx}>{elements}</div>;
+  });
+}
+
+/** Comprueba si una línea cumple con la sintaxis de delimitador de tabla Markdown (|---|---|) */
+function isTableDelimiter(line: string): boolean {
+  const trimmed = line.trim();
+  if (!trimmed.includes("|")) return false;
+  const cells = trimmed.replace(/^\|/, "").replace(/\|$/, "").split("|").map((c) => c.trim());
+  return cells.length >= 1 && cells.every((c) => /^:?-+:?$/.test(c));
+}
+
+/** Extrae las celdas de una fila de tabla Markdown */
+function parseTableRow(line: string): string[] {
+  const trimmed = line.trim();
+  const content = trimmed.replace(/^\|/, "").replace(/\|$/, "");
+  return content.split("|").map((c) => c.trim());
+}
+
+/** Extrae la alineación de cada columna según los dos puntos en el delimitador (:---, :---:, ---:) */
+function parseAlignments(delimiterLine: string): ("left" | "center" | "right")[] {
+  const cells = delimiterLine.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map((c) => c.trim());
+  return cells.map((cell) => {
+    const start = cell.startsWith(":");
+    const end = cell.endsWith(":");
+    if (start && end) return "center";
+    if (end) return "right";
+    return "left";
   });
 }
 
