@@ -3,11 +3,19 @@
     {
       "fecha": "2026-09-05",
       "valor": 23
+    },
+    {
+      "fecha": "2026-09-08",
+      "valor": 23
     }
   ],
   "pf-banco-cmf": [
     {
       "fecha": "2026-09-05",
+      "valor": 23.5
+    },
+    {
+      "fecha": "2026-09-08",
       "valor": 23.5
     }
   ],
@@ -15,11 +23,19 @@
     {
       "fecha": "2026-09-05",
       "valor": 19
+    },
+    {
+      "fecha": "2026-09-08",
+      "valor": 19
     }
   ],
   "pf-banco-credicoop": [
     {
       "fecha": "2026-09-05",
+      "valor": 18.5
+    },
+    {
+      "fecha": "2026-09-08",
       "valor": 18.5
     }
   ],
@@ -27,11 +43,19 @@
     {
       "fecha": "2026-09-05",
       "valor": 21.5
+    },
+    {
+      "fecha": "2026-09-08",
+      "valor": 21.5
     }
   ],
   "pf-banco-de-formosa": [
     {
       "fecha": "2026-09-05",
+      "valor": 18.5
+    },
+    {
+      "fecha": "2026-09-08",
       "valor": 18.5
     }
   ],
@@ -39,11 +63,19 @@
     {
       "fecha": "2026-09-05",
       "valor": 18
+    },
+    {
+      "fecha": "2026-09-08",
+      "valor": 18
     }
   ],
   "pf-banco-de-la-provincia-de-cordoba": [
     {
       "fecha": "2026-09-05",
+      "valor": 20.75
+    },
+    {
+      "fecha": "2026-09-08",
       "valor": 20.75
     }
   ],
@@ -51,11 +83,19 @@
     {
       "fecha": "2026-09-05",
       "valor": 19.5
+    },
+    {
+      "fecha": "2026-09-08",
+      "valor": 19.5
     }
   ],
   "pf-banco-del-sol": [
     {
       "fecha": "2026-09-05",
+      "valor": 23
+    },
+    {
+      "fecha": "2026-09-08",
       "valor": 23
     }
   ],
@@ -63,17 +103,29 @@
     {
       "fecha": "2026-09-05",
       "valor": 20
+    },
+    {
+      "fecha": "2026-09-08",
+      "valor": 20
     }
   ],
   "pf-banco-galicia": [
     {
       "fecha": "2026-09-05",
       "valor": 18.5
+    },
+    {
+      "fecha": "2026-09-08",
+      "valor": 17.75
     }
   ],
   "pf-banco-hipotecario": [
     {
       "fecha": "2026-09-05",
+      "valor": 18.5
+    },
+    {
+      "fecha": "2026-09-08",
       "valor": 18.5
     }
   ],
@@ -81,11 +133,19 @@
     {
       "fecha": "2026-09-05",
       "valor": 19
+    },
+    {
+      "fecha": "2026-09-08",
+      "valor": 19
     }
   ],
   "pf-banco-macro": [
     {
       "fecha": "2026-09-05",
+      "valor": 19.5
+    },
+    {
+      "fecha": "2026-09-08",
       "valor": 19.5
     }
   ],
@@ -93,11 +153,19 @@
     {
       "fecha": "2026-09-05",
       "valor": 23
+    },
+    {
+      "fecha": "2026-09-08",
+      "valor": 23
     }
   ],
   "pf-banco-masventas": [
     {
       "fecha": "2026-09-05",
+      "valor": 21
+    },
+    {
+      "fecha": "2026-09-08",
       "valor": 21
     }
   ],
@@ -105,11 +173,19 @@
     {
       "fecha": "2026-09-05",
       "valor": 22.5
+    },
+    {
+      "fecha": "2026-09-08",
+      "valor": 22.5
     }
   ],
   "pf-banco-nacion": [
     {
       "fecha": "2026-09-05",
+      "valor": 19.5
+    },
+    {
+      "fecha": "2026-09-08",
       "valor": 19.5
     }
   ],
@@ -117,11 +193,25 @@
     {
       "fecha": "2026-09-05",
       "valor": 16
+    },
+    {
+      "fecha": "2026-09-08",
+      "valor": 16
+    }
+  ],
+  "pf-banco-piano": [
+    {
+      "fecha": "2026-09-08",
+      "valor": 17.5
     }
   ],
   "pf-banco-provincia": [
     {
       "fecha": "2026-09-05",
+      "valor": 21
+    },
+    {
+      "fecha": "2026-09-08",
       "valor": 21
     }
   ],
@@ -129,11 +219,19 @@
     {
       "fecha": "2026-09-05",
       "valor": 19
+    },
+    {
+      "fecha": "2026-09-08",
+      "valor": 19
     }
   ],
   "pf-banco-santander": [
     {
       "fecha": "2026-09-05",
+      "valor": 17
+    },
+    {
+      "fecha": "2026-09-08",
       "valor": 17
     }
   ],
@@ -141,11 +239,19 @@
     {
       "fecha": "2026-09-05",
       "valor": 22.75
+    },
+    {
+      "fecha": "2026-09-08",
+      "valor": 22.75
     }
   ],
   "pf-bbva-frances": [
     {
       "fecha": "2026-09-05",
+      "valor": 19.5
+    },
+    {
+      "fecha": "2026-09-08",
       "valor": 19.5
     }
   ],
@@ -153,11 +259,25 @@
     {
       "fecha": "2026-09-05",
       "valor": 21.5
+    },
+    {
+      "fecha": "2026-09-08",
+      "valor": 21.5
+    }
+  ],
+  "pf-brubank": [
+    {
+      "fecha": "2026-09-08",
+      "valor": 17
     }
   ],
   "pf-credito-regional-compania-financiera": [
     {
       "fecha": "2026-09-05",
+      "valor": 23.5
+    },
+    {
+      "fecha": "2026-09-08",
       "valor": 23.5
     }
   ],
@@ -165,17 +285,29 @@
     {
       "fecha": "2026-09-05",
       "valor": 18.1
+    },
+    {
+      "fecha": "2026-09-08",
+      "valor": 18.1
     }
   ],
   "pf-reba-compania-financiera": [
     {
       "fecha": "2026-09-05",
       "valor": 24
+    },
+    {
+      "fecha": "2026-09-08",
+      "valor": 24
     }
   ],
   "pf-uala": [
     {
       "fecha": "2026-09-05",
+      "valor": 21
+    },
+    {
+      "fecha": "2026-09-08",
       "valor": 21
     }
   ]
