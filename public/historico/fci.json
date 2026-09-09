@@ -7,6 +7,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.68
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.73
     }
   ],
   "fci-1810-ahorros-activos": [
@@ -17,6 +21,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 17.96
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.24
     }
   ],
   "fci-1810-mas-ahorro": [
@@ -27,6 +35,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 22.91
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 21.75
     }
   ],
   "fci-1822-raices-abierto-pymes": [
@@ -43,6 +55,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 20.27
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.32
     }
   ],
   "fci-1822-raices-valores-fiduciarios": [
@@ -53,6 +69,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 25.42
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 24.39
     }
   ],
   "fci-abierto-momentum-pymes-clase-a": [
@@ -87,6 +107,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 20.95
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.99
     }
   ],
   "fci-adcap-ahorro-pesos-fondo-de-dinero-clase-b": [
@@ -97,6 +121,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 20.54
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.59
     }
   ],
   "fci-adcap-ahorro-pesos-fondo-de-dinero-clase-c": [
@@ -107,6 +135,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 20.93
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.98
     }
   ],
   "fci-adcap-ahorro-pesos-fondo-de-dinero-clase-g": [
@@ -117,6 +149,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 22.51
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 22.56
     }
   ],
   "fci-adcap-balanceado-vi-clase-b": [
@@ -127,12 +163,20 @@
     {
       "fecha": "2026-09-08",
       "valor": 10.41
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 11.33
     }
   ],
   "fci-adcap-financiamiento-1-clase-b": [
     {
       "fecha": "2026-09-08",
       "valor": 29.76
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 29.66
     }
   ],
   "fci-adcap-financiamiento-abierto-pymes-clase-b": [
@@ -191,6 +235,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.94
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19
     }
   ],
   "fci-allaria-ahorro-clase-c": [
@@ -201,6 +249,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 19.71
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.77
     }
   ],
   "fci-allaria-ahorro-clase-e": [
@@ -211,6 +263,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 19.61
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.67
     }
   ],
   "fci-allaria-ahorro-plus-clase-b": [
@@ -221,6 +277,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 23.98
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 22.96
     }
   ],
   "fci-allaria-calificado-ii-clase-c": [
@@ -231,6 +291,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 23.56
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 22.91
     }
   ],
   "fci-allaria-dinamico-iv-clase-b": [
@@ -241,6 +305,22 @@
     {
       "fecha": "2026-09-08",
       "valor": 14.04
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.75
+    }
+  ],
+  "fci-allaria-diversificado-clase-a": [
+    {
+      "fecha": "2026-09-09",
+      "valor": 27.28
+    }
+  ],
+  "fci-allaria-diversificado-clase-c": [
+    {
+      "fecha": "2026-09-09",
+      "valor": 28.06
     }
   ],
   "fci-allaria-estructurado-clase-b": [
@@ -251,6 +331,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 24.49
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 24.1
     }
   ],
   "fci-allaria-estructurado-clase-c": [
@@ -261,6 +345,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 24.49
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 24.1
     }
   ],
   "fci-allaria-gestion-clase-b": [
@@ -271,6 +359,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.5
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.66
     }
   ],
   "fci-allaria-gestion-dinamica-clase-b": [
@@ -281,6 +373,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 21.75
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 17.95
     }
   ],
   "fci-allaria-gestion-ii-clase-c": [
@@ -291,6 +387,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.84
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.58
     }
   ],
   "fci-allaria-patrimonio-ii-clase-c": [
@@ -301,6 +401,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 25.04
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.27
     }
   ],
   "fci-allaria-patrimonio-iv-clase-b": [
@@ -311,6 +415,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 22.27
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 21.38
     }
   ],
   "fci-allaria-patrimonio-v-clase-b": [
@@ -321,6 +429,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 22.01
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 21.46
     }
   ],
   "fci-allaria-pyme-selection-clase-c": [
@@ -343,6 +455,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 22.48
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 21.69
     }
   ],
   "fci-alpha-ahorro-clase-c": [
@@ -353,6 +469,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 21.71
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.92
     }
   ],
   "fci-alpha-pesos-clase-a": [
@@ -363,6 +483,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.78
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.8
     }
   ],
   "fci-alpha-pesos-clase-b": [
@@ -373,6 +497,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 17.51
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 17.52
     }
   ],
   "fci-alpha-pesos-plus-clase-a": [
@@ -383,6 +511,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.28
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.21
     }
   ],
   "fci-alycbur-fci-abierto-pymes-clase-a": [
@@ -423,6 +555,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.7
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.79
     }
   ],
   "fci-argenfunds-renta-dinamica-clase-b": [
@@ -433,6 +569,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 5.58
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 9.01
     }
   ],
   "fci-argenfunds-renta-fija-ii-clase-b": [
@@ -443,6 +583,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 13.23
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 13.51
     }
   ],
   "fci-axis-estrategia-22-clase-b": [
@@ -453,6 +597,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 21.07
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.85
     }
   ],
   "fci-axis-estrategia-31-clase-b": [
@@ -463,6 +611,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 25.16
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 24.83
     }
   ],
   "fci-axis-imsa-fci-abierto-pymes-federal-argentina-clase-b": [
@@ -503,6 +655,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 23.22
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 22.31
     }
   ],
   "fci-balanz-capital-ahorro-clase-b": [
@@ -513,6 +669,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 23.65
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 22.72
     }
   ],
   "fci-balanz-capital-ahorro-clase-d": [
@@ -523,6 +683,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 24.19
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 23.24
     }
   ],
   "fci-balanz-capital-money-market-clase-a": [
@@ -533,6 +697,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 17.41
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 17.54
     }
   ],
   "fci-balanz-capital-money-market-clase-b": [
@@ -543,6 +711,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 17.93
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.05
     }
   ],
   "fci-balanz-capital-money-market-clase-c": [
@@ -553,6 +725,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.23
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.36
     }
   ],
   "fci-balanz-capital-money-market-clase-d": [
@@ -563,6 +739,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.34
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.46
     }
   ],
   "fci-balanz-credito-privado-clase-a": [
@@ -573,6 +753,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 24.74
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 24.5
     }
   ],
   "fci-balanz-institucional-clase-a": [
@@ -583,6 +767,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 15.74
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 15.55
     }
   ],
   "fci-balanz-performance-xi-clase-d": [
@@ -593,6 +781,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 12.47
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 12.43
     }
   ],
   "fci-balanz-renta-fija-estrategica-clase-d": [
@@ -603,6 +795,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 11.58
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 12.4
     }
   ],
   "fci-bavsa-ahorro-clase-b": [
@@ -613,6 +809,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 20.35
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.45
     }
   ],
   "fci-bavsa-renta-balanceado-iii-clase-b": [
@@ -623,6 +823,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 35.59
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 35.36
     }
   ],
   "fci-bm-smart-money-market-clase-b": [
@@ -633,6 +837,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 19.71
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.57
     }
   ],
   "fci-bull-market-abierto-pymes-clase-b": [
@@ -649,6 +857,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.76
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.19
     }
   ],
   "fci-bull-market-estrategia-clase-b": [
@@ -659,6 +871,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 16.23
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 15.9
     }
   ],
   "fci-bull-market-renta-fija-plus-clase-b": [
@@ -669,6 +885,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 16.17
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 15.89
     }
   ],
   "fci-chaco-fci-money-market-clase-b": [
@@ -678,6 +898,10 @@
     },
     {
       "fecha": "2026-09-08",
+      "valor": 20.55
+    },
+    {
+      "fecha": "2026-09-09",
       "valor": 20.55
     }
   ],
@@ -701,6 +925,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.67
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.71
     }
   ],
   "fci-champaqui-fondo-inmediato-clase-b": [
@@ -711,6 +939,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 19.84
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.88
     }
   ],
   "fci-champaqui-fondo-inmediato-clase-c": [
@@ -721,6 +953,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 20.12
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.16
     }
   ],
   "fci-champaqui-fondo-inmediato-plus-clase-b": [
@@ -731,6 +967,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 20.34
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.4
     }
   ],
   "fci-ciclo-nova-multiestrategia-ii-clase-b": [
@@ -741,6 +981,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 17.89
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19
     }
   ],
   "fci-ciclo-nova-pyme-clase-b": [
@@ -757,42 +1001,70 @@
     {
       "fecha": "2026-09-08",
       "valor": 32.17
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 32.25
     }
   ],
   "fci-ciclo-nova-retorno-total-iii-clase-a": [
     {
       "fecha": "2026-09-08",
       "valor": 30.46
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 30.51
     }
   ],
   "fci-ciclo-nova-retorno-total-iii-clase-b": [
     {
       "fecha": "2026-09-08",
       "valor": 30.46
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 30.51
     }
   ],
   "fci-cocos-medalla-clase-a": [
     {
       "fecha": "2026-09-08",
       "valor": 39.06
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 33.48
     }
   ],
   "fci-cocos-medalla-clase-b": [
     {
       "fecha": "2026-09-08",
       "valor": 39.05
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 33.48
     }
   ],
   "fci-cocos-pesos-plus-clase-a": [
     {
       "fecha": "2026-09-08",
       "valor": 20.57
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.54
     }
   ],
   "fci-cocos-pesos-plus-clase-b": [
     {
       "fecha": "2026-09-08",
       "valor": 20.57
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.54
     }
   ],
   "fci-cocos-rendimiento-clase-a": [
@@ -803,6 +1075,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 20.35
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.39
     }
   ],
   "fci-cocos-rendimiento-clase-b": [
@@ -813,6 +1089,16 @@
     {
       "fecha": "2026-09-08",
       "valor": 20.35
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.39
+    }
+  ],
+  "fci-compass-ahorro-en-dolares-clase-d": [
+    {
+      "fecha": "2026-09-09",
+      "valor": -18.06
     }
   ],
   "fci-compass-argentina-abierto-pymes-clase-b": [
@@ -835,6 +1121,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 5.97
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 5.21
     }
   ],
   "fci-compass-renta-mixta-clase-b": [
@@ -845,6 +1135,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 16.8
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 16.96
     }
   ],
   "fci-compass-renta-mixta-v-clase-b": [
@@ -855,6 +1149,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 23.55
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 22.87
     }
   ],
   "fci-compass-renta-mixta-vi-clase-a": [
@@ -865,6 +1163,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 10.14
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 11.62
     }
   ],
   "fci-compass-renta-mixta-vi-clase-c": [
@@ -875,6 +1177,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 12.05
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 13.48
     }
   ],
   "fci-compass-renta-plus-ii-clase-b": [
@@ -885,6 +1191,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 17.68
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 17.91
     }
   ],
   "fci-consultatio-abierto-pymes-clase-b": [
@@ -897,12 +1207,20 @@
     {
       "fecha": "2026-09-08",
       "valor": 14.7
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 14.36
     }
   ],
   "fci-consultatio-balance-fund-clase-b": [
     {
       "fecha": "2026-09-08",
       "valor": 15.63
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 15.28
     }
   ],
   "fci-consultatio-deuda-argentina-clase-b": [
@@ -913,6 +1231,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 20.67
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.64
     }
   ],
   "fci-consultatio-gestion-i-clase-b": [
@@ -923,6 +1245,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 10.87
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 11.82
     }
   ],
   "fci-consultatio-renta-mixta-clase-c": [
@@ -933,6 +1259,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 17.17
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 17.28
     }
   ],
   "fci-consultatio-renta-plus": [
@@ -943,6 +1273,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 6.01
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 7.15
     }
   ],
   "fci-crecer-ahorro-clase-b": [
@@ -953,6 +1287,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 21.01
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 21.31
     }
   ],
   "fci-crecer-liquidez-clase-b": [
@@ -963,6 +1301,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 19.27
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.32
     }
   ],
   "fci-cyc-renta-mixta-clase-b": [
@@ -973,6 +1315,10 @@
     {
       "fecha": "2026-09-08",
       "valor": -9.66
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": -2.84
     }
   ],
   "fci-delta-ahorro-clase-b": [
@@ -983,6 +1329,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 21.14
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 21.32
     }
   ],
   "fci-delta-empresas-argentinas-pymes-clase-b": [
@@ -1005,6 +1355,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 7.19
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 6.97
     }
   ],
   "fci-delta-gestion-v-clase-b": [
@@ -1015,6 +1369,10 @@
     {
       "fecha": "2026-09-08",
       "valor": -1.16
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 0.61
     }
   ],
   "fci-delta-gestion-vii-clase-b": [
@@ -1025,6 +1383,10 @@
     {
       "fecha": "2026-09-08",
       "valor": -18.15
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": -12.44
     }
   ],
   "fci-delta-pesos-clase-a": [
@@ -1035,6 +1397,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 16.94
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 16.99
     }
   ],
   "fci-delta-pesos-clase-b": [
@@ -1045,6 +1411,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.47
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.53
     }
   ],
   "fci-delta-pesos-clase-d": [
@@ -1055,6 +1425,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 19.39
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.45
     }
   ],
   "fci-delta-pesos-clase-x": [
@@ -1065,18 +1439,30 @@
     {
       "fecha": "2026-09-08",
       "valor": 19.02
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.08
     }
   ],
   "fci-dxa-multicobertura-clase-a": [
     {
       "fecha": "2026-09-08",
       "valor": -15.13
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": -12.77
     }
   ],
   "fci-dxa-multicobertura-clase-b": [
     {
       "fecha": "2026-09-08",
       "valor": -15.49
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": -13.12
     }
   ],
   "fci-fba-money-market-pesos-clase-a": [
@@ -1087,6 +1473,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 17.06
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 17.12
     }
   ],
   "fci-fba-money-market-pesos-clase-b": [
@@ -1097,6 +1487,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.49
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.55
     }
   ],
   "fci-fba-renta-fija-pesos-i-clase-a": [
@@ -1107,6 +1501,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 21.54
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.83
     }
   ],
   "fci-fba-renta-fija-pesos-i-clase-b": [
@@ -1117,6 +1515,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 22.16
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 21.45
     }
   ],
   "fci-fba-renta-fija-pesos-ii-clase-b3": [
@@ -1127,6 +1529,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 23.41
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 22.35
     }
   ],
   "fci-fima-ahorro-pesos-clase-a": [
@@ -1137,6 +1543,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 21.12
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.27
     }
   ],
   "fci-fima-ahorro-pesos-clase-b": [
@@ -1147,6 +1557,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 21.69
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.85
     }
   ],
   "fci-fima-ahorro-pesos-clase-c": [
@@ -1157,6 +1571,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 22.11
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 21.26
     }
   ],
   "fci-fima-ahorro-plus-clase-a": [
@@ -1167,6 +1585,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 21.25
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.4
     }
   ],
   "fci-fima-ahorro-plus-clase-b": [
@@ -1177,6 +1599,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 21.82
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.97
     }
   ],
   "fci-fima-ahorro-plus-clase-c": [
@@ -1187,6 +1613,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 22.24
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 21.39
     }
   ],
   "fci-fima-fci-abierto-pymes-clase-c": [
@@ -1203,6 +1633,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 17.84
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.26
     }
   ],
   "fci-fima-renta-pesos-clase-c": [
@@ -1213,6 +1647,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.62
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.04
     }
   ],
   "fci-first-abierto-pymes-clase-c": [
@@ -1235,6 +1673,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.96
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.98
     }
   ],
   "fci-fundcorp-liquidez-clase-c": [
@@ -1251,6 +1693,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 16.23
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 16.84
     }
   ],
   "fci-gainvest-capital-iii-clase-b": [
@@ -1261,6 +1707,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 21.8
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 22.02
     }
   ],
   "fci-gainvest-ff-clase-b": [
@@ -1271,6 +1721,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 24.73
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 24.7
     }
   ],
   "fci-gainvest-global-v-clase-b": [
@@ -1281,6 +1735,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 9.72
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 10.65
     }
   ],
   "fci-gainvest-global-vi-clase-b": [
@@ -1291,6 +1749,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 16.57
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 16.2
     }
   ],
   "fci-gainvest-pesos-clase-b": [
@@ -1301,6 +1763,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 17.95
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.06
     }
   ],
   "fci-gainvest-pymes-clase-b": [
@@ -1319,24 +1785,40 @@
     {
       "fecha": "2026-09-08",
       "valor": 6.82
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 6.18
     }
   ],
   "fci-galileo-argentina-clase-b": [
     {
       "fecha": "2026-09-08",
       "valor": 7.32
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 6.68
     }
   ],
   "fci-galileo-event-driven-clase-a": [
     {
       "fecha": "2026-09-08",
       "valor": -0.16
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": -0.09
     }
   ],
   "fci-galileo-event-driven-clase-b": [
     {
       "fecha": "2026-09-08",
       "valor": 0.5
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 0.57
     }
   ],
   "fci-galileo-fci-abierto-pymes-clase-b": [
@@ -1353,30 +1835,50 @@
     {
       "fecha": "2026-09-08",
       "valor": 21.74
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 21.66
     }
   ],
   "fci-galileo-renta-fija-clase-a": [
     {
       "fecha": "2026-09-08",
       "valor": 11.53
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 11.81
     }
   ],
   "fci-galileo-renta-fija-clase-b": [
     {
       "fecha": "2026-09-08",
       "valor": 11.77
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 12.05
     }
   ],
   "fci-gss-retorno-total-clase-a": [
     {
       "fecha": "2026-09-08",
       "valor": 18.84
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.37
     }
   ],
   "fci-gss-retorno-total-clase-b": [
     {
       "fecha": "2026-09-08",
       "valor": 18.07
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.59
     }
   ],
   "fci-iam-ahorro-pesos-clase-b": [
@@ -1387,6 +1889,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 19.86
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.96
     }
   ],
   "fci-iam-dinamico-fci-abierto-pymes-clase-b": [
@@ -1409,18 +1915,30 @@
     {
       "fecha": "2026-09-08",
       "valor": 21.24
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 21.31
     }
   ],
   "fci-insider-retorno-estrategico-clase-a": [
     {
       "fecha": "2026-09-08",
       "valor": -1.07
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": -0.33
     }
   ],
   "fci-insider-retorno-estrategico-clase-b": [
     {
       "fecha": "2026-09-08",
       "valor": -0.43
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 0.26
     }
   ],
   "fci-iol-cash-management-clase-a": [
@@ -1431,6 +1949,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 22.58
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 21.42
     }
   ],
   "fci-lombard-abierto-plus": [
@@ -1441,6 +1963,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.96
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.08
     }
   ],
   "fci-lombard-abierto-pymes": [
@@ -1457,6 +1983,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 22.08
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 21.6
     }
   ],
   "fci-lombard-renta-en-pesos": [
@@ -1467,6 +1997,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 20.47
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.5
     }
   ],
   "fci-maf-empresas-pymes": [
@@ -1493,6 +2027,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 19.75
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.84
     }
   ],
   "fci-max-gestion-abierto-pyme-i-clase-e": [
@@ -1509,42 +2047,70 @@
     {
       "fecha": "2026-09-08",
       "valor": 19.44
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.46
     }
   ],
   "fci-max-retorno-total-pesos-clase-d": [
     {
       "fecha": "2026-09-08",
       "valor": 23.6
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 22.79
     }
   ],
   "fci-max-retorno-total-pesos-ii-clase-d": [
     {
       "fecha": "2026-09-08",
       "valor": 22.66
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 22.7
     }
   ],
   "fci-max-retorno-total-pesos-iii-clase-d": [
     {
       "fecha": "2026-09-08",
       "valor": 12.45
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 12.63
     }
   ],
   "fci-max-retorno-total-pesos-iv-clase-d": [
     {
       "fecha": "2026-09-08",
       "valor": 25.22
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 24.3
     }
   ],
   "fci-megaqm-balanceado-clase-a": [
     {
       "fecha": "2026-09-08",
       "valor": 21.78
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.93
     }
   ],
   "fci-megaqm-balanceado-clase-b": [
     {
       "fecha": "2026-09-08",
       "valor": 23.1
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 22.25
     }
   ],
   "fci-megaqm-cobertura-fcia-pymes-clase-b": [
@@ -1567,6 +2133,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 9.71
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 11.11
     }
   ],
   "fci-megaqm-pesos-clase-b": [
@@ -1577,6 +2147,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 19.9
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20
     }
   ],
   "fci-mercado-fondo-clase-a": [
@@ -1587,6 +2161,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.75
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.79
     }
   ],
   "fci-mp-ahorro-clase-a": [
@@ -1597,6 +2175,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 22.99
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 22.31
     }
   ],
   "fci-novus-gestion-clase-f": [
@@ -1607,6 +2189,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 24.16
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 23.53
     }
   ],
   "fci-novus-performance-clase-b": [
@@ -1617,6 +2203,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 14.24
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 14.99
     }
   ],
   "fci-numancia-pesos-ii-clase-b": [
@@ -1627,6 +2217,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 24.37
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 24.11
     }
   ],
   "fci-optimum-global-investment-grade": [
@@ -1637,6 +2231,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 10.84
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 9.96
     }
   ],
   "fci-pellegrini-crecimiento-clase-b": [
@@ -1647,6 +2245,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 17.52
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 17.2
     }
   ],
   "fci-pellegrini-empresas-argentinas-pymes": [
@@ -1663,6 +2265,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 19.74
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.83
     }
   ],
   "fci-pellegrini-renta-fija-clase-b": [
@@ -1673,6 +2279,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 20.93
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.07
     }
   ],
   "fci-pellegrini-renta-pesos-clase-a": [
@@ -1683,6 +2293,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 20.52
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.55
     }
   ],
   "fci-pellegrini-renta-pesos-clase-b": [
@@ -1693,6 +2307,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 21.03
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 21.06
     }
   ],
   "fci-pionero-argentina-bicentenario-clase-b": [
@@ -1703,6 +2321,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 14.21
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 14.04
     }
   ],
   "fci-pionero-desarrollo-clase-b": [
@@ -1713,6 +2335,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 25.02
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 23.63
     }
   ],
   "fci-pionero-empresas-fci-abierto-pymes-clase-a": [
@@ -1735,6 +2361,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 1.9
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 2.91
     }
   ],
   "fci-pionero-horizonte-clase-b": [
@@ -1745,6 +2375,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 24.21
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 23.83
     }
   ],
   "fci-pionero-multiestrategia-mix-clase-b": [
@@ -1755,6 +2389,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 25.71
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 24.15
     }
   ],
   "fci-pionero-patrimonio-i-clase-a": [
@@ -1765,6 +2403,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 21.78
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 21.17
     }
   ],
   "fci-pionero-patrimonio-i-clase-b": [
@@ -1775,6 +2417,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 22.34
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 21.73
     }
   ],
   "fci-pionero-pesos-clase-a": [
@@ -1785,6 +2431,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 17.13
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 17.14
     }
   ],
   "fci-pionero-pesos-clase-b": [
@@ -1795,6 +2445,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.44
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.46
     }
   ],
   "fci-pionero-renta-ahorro-clase-b": [
@@ -1805,6 +2459,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 22.73
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 22.08
     }
   ],
   "fci-pionero-renta-balanceado-clase-b": [
@@ -1815,18 +2473,30 @@
     {
       "fecha": "2026-09-08",
       "valor": 23.49
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 22.4
     }
   ],
   "fci-pionero-renta-estrategico-clase-b": [
     {
       "fecha": "2026-09-08",
       "valor": 3.33
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 4.16
     }
   ],
   "fci-pionero-retorno-total-clase-a": [
     {
       "fecha": "2026-09-08",
       "valor": -3.57
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": -1.47
     }
   ],
   "fci-premier-abierto-pymes-clase-a": [
@@ -1843,6 +2513,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 19.35
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.41
     }
   ],
   "fci-premier-renta-cp-en-pesos-clase-c": [
@@ -1853,6 +2527,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 20.12
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.18
     }
   ],
   "fci-puente-liquidez-pesos-clase-b": [
@@ -1863,6 +2541,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.58
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.63
     }
   ],
   "fci-sbs-abierto-pymes-clase-b": [
@@ -1879,6 +2561,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 19.4
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.48
     }
   ],
   "fci-sbs-ahorro-pesos-clase-d": [
@@ -1889,6 +2575,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 20.17
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.25
     }
   ],
   "fci-sbs-balanceado-clase-b": [
@@ -1899,6 +2589,10 @@
     {
       "fecha": "2026-09-08",
       "valor": -2.22
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 3.27
     }
   ],
   "fci-sbs-patrimonio-iii-clase-b": [
@@ -1909,6 +2603,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 20.26
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.39
     }
   ],
   "fci-sbs-patrimonio-ix-clase-b": [
@@ -1919,6 +2617,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 20.37
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.22
     }
   ],
   "fci-sbs-patrimonio-v-clase-b": [
@@ -1939,6 +2641,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 25.6
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 25.64
     }
   ],
   "fci-sbs-patrimonio-viii-clase-b": [
@@ -1949,6 +2655,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 15.61
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 15.9
     }
   ],
   "fci-sbs-renta-fija-total-clase-fpn": [
@@ -1959,18 +2669,30 @@
     {
       "fecha": "2026-09-08",
       "valor": 16.61
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 17.51
     }
   ],
   "fci-sbs-retorno-total-clase-a": [
     {
       "fecha": "2026-09-08",
       "valor": -7.25
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": -4.52
     }
   ],
   "fci-sbs-retorno-total-clase-b": [
     {
       "fecha": "2026-09-08",
       "valor": -6.26
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": -3.53
     }
   ],
   "fci-sbs-tavelli-abierto-pymes-clase-p": [
@@ -1987,6 +2709,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 5.13
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 7.48
     }
   ],
   "fci-schroder-balanceado-clase-b": [
@@ -1997,6 +2723,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 16.94
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 16.4
     }
   ],
   "fci-schroder-capital-renta-fija-clase-b": [
@@ -2007,18 +2737,30 @@
     {
       "fecha": "2026-09-08",
       "valor": 7.61
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 8.34
     }
   ],
   "fci-schroder-crecimiento-tres-clase-a": [
     {
       "fecha": "2026-09-08",
       "valor": 19.78
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.95
     }
   ],
   "fci-schroder-crecimiento-tres-clase-b": [
     {
       "fecha": "2026-09-08",
       "valor": 20.6
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.77
     }
   ],
   "fci-schroder-desarrollo-y-crecimiento-pymes-clase-b": [
@@ -2047,12 +2789,20 @@
     {
       "fecha": "2026-09-08",
       "valor": 20.2
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.28
     }
   ],
   "fci-schroder-patrimonio-dos-clase-c": [
     {
       "fecha": "2026-09-08",
       "valor": 16.77
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 16.04
     }
   ],
   "fci-schroder-renta-global-clase-b": [
@@ -2063,6 +2813,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 11.54
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 11.41
     }
   ],
   "fci-schroder-renta-global-dos-clase-b": [
@@ -2073,6 +2827,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 16.25
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 16.18
     }
   ],
   "fci-schroder-renta-plus-clase-b": [
@@ -2083,6 +2841,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 20.22
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.52
     }
   ],
   "fci-schroder-retorno-absoluto-clase-b": [
@@ -2093,6 +2855,22 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.64
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 17.61
+    }
+  ],
+  "fci-sf-value-clase-a": [
+    {
+      "fecha": "2026-09-09",
+      "valor": -10.97
+    }
+  ],
+  "fci-st-zero-clase-b": [
+    {
+      "fecha": "2026-09-09",
+      "valor": 17.45
     }
   ],
   "fci-st-zero-clase-c": [
@@ -2103,6 +2881,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.18
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.28
     }
   ],
   "fci-super-ahorro-clase-a": [
@@ -2113,6 +2895,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 17.4
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 17.43
     }
   ],
   "fci-super-ahorro-clase-b": [
@@ -2123,6 +2909,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.74
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.77
     }
   ],
   "fci-super-ahorro-clase-h": [
@@ -2133,6 +2923,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.74
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.77
     }
   ],
   "fci-super-ahorro-plus-clase-a": [
@@ -2142,6 +2936,10 @@
     },
     {
       "fecha": "2026-09-08",
+      "valor": 19.16
+    },
+    {
+      "fecha": "2026-09-09",
       "valor": 19.16
     }
   ],
@@ -2153,6 +2951,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 20.13
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.14
     }
   ],
   "fci-super-ahorro-plus-clase-h": [
@@ -2163,6 +2965,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 20.13
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.14
     }
   ],
   "fci-super-bonos-clase-b": [
@@ -2173,6 +2979,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 14.63
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 14.11
     }
   ],
   "fci-superfondo-combinado-clase-a": [
@@ -2183,6 +2993,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 10.21
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 10.01
     }
   ],
   "fci-superfondo-multirenta-clase-b": [
@@ -2193,6 +3007,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 21.42
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.99
     }
   ],
   "fci-superfondo-renta-balance-clase-b": [
@@ -2203,6 +3021,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 14.16
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 13.98
     }
   ],
   "fci-superfondo-renta-balance-ii-clase-b": [
@@ -2223,6 +3045,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 15.07
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 14.59
     }
   ],
   "fci-superfondo-renta-fija-clase-a": [
@@ -2233,6 +3059,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 19.91
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.32
     }
   ],
   "fci-superfondo-renta-mixta-clase-b": [
@@ -2243,6 +3073,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.21
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 17.33
     }
   ],
   "fci-supergestion-balanceado-clase-c": [
@@ -2253,6 +3087,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 10.65
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 9.29
     }
   ],
   "fci-supergestion-clase-a": [
@@ -2263,6 +3101,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 11.68
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 12.79
     }
   ],
   "fci-supergestion-mix-vi-clase-a": [
@@ -2273,6 +3115,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 22.03
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 21.04
     }
   ],
   "fci-supergestion-mix-vi-clase-b": [
@@ -2283,6 +3129,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 22.81
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 21.81
     }
   ],
   "fci-supergestion-mix-vi-clase-i": [
@@ -2293,6 +3143,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 22.81
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 21.81
     }
   ],
   "fci-toronto-trust-abierto-pymes-clase-b": [
@@ -2309,6 +3163,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 19.96
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.97
     }
   ],
   "fci-toronto-trust-balanceado-clase-b": [
@@ -2319,6 +3177,16 @@
     {
       "fecha": "2026-09-08",
       "valor": 24.52
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 23.64
+    }
+  ],
+  "fci-toronto-trust-gestion-clase-b": [
+    {
+      "fecha": "2026-09-09",
+      "valor": 22.7
     }
   ],
   "fci-toronto-trust-renta-fija-plus-clase-d": [
@@ -2329,6 +3197,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 15.11
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 13.9
     }
   ],
   "fci-ualintec-ahorro-pesos-clase-a": [
@@ -2339,12 +3211,20 @@
     {
       "fecha": "2026-09-08",
       "valor": 19.77
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 19.78
     }
   ],
   "fci-ualintec-retorno-total-clase-a": [
     {
       "fecha": "2026-09-08",
       "valor": 7.87
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 5.78
     }
   ],
   "fci-valiant-abierto-pymes-clase-a": [
@@ -2357,6 +3237,16 @@
     {
       "fecha": "2026-09-08",
       "valor": 28.26
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 28.98
+    }
+  ],
+  "fci-vinci-compass-liquidez-clase-f": [
+    {
+      "fecha": "2026-09-09",
+      "valor": 20.35
     }
   ],
   "fci-zofingen-factoring-abierto-pyme-clase-a": [
@@ -2379,6 +3269,10 @@
     {
       "fecha": "2026-09-08",
       "valor": 18.24
+    },
+    {
+      "fecha": "2026-09-09",
+      "valor": 18.3
     }
   ]
 }
