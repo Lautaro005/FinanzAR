@@ -20,7 +20,7 @@ import { AuthProvider, useAuth } from "./hooks/useAuth";
 import { useDocumentMeta } from "./hooks/useDocumentMeta";
 import { Categoria, Instrumento, PuntoHistorico } from "./types";
 import { useInstruments } from "./hooks/useInstruments";
-import { fetchInstrumentHistory } from "./lib/history";
+import { fetchInstrumentHistory, HistoryResult } from "./lib/history";
 import { sliceByRange } from "./lib/dateRange";
 import {
   LineChart,
@@ -61,10 +61,7 @@ function Home({
   );
   const [tab, setTab] = useState<CategoriaFiltro>("todos");
   const [detailInstrument, setDetailInstrument] = useState<Instrumento | null>(null);
-  const [quickHistory, setQuickHistory] = useState<{
-    data: PuntoHistorico[];
-    isEstimate: boolean;
-  } | null>(null);
+  const [quickHistory, setQuickHistory] = useState<HistoryResult | null>(null);
 
   useEffect(() => {
     if (!detailInstrument) {
@@ -243,7 +240,9 @@ function Home({
             subtitulo={
               !quickHistory
                 ? "Cargando histórico…"
-                : quickHistory.isEstimate
+                : quickHistory.fuente === "propio"
+                ? "Histórico propio — relevamiento diario"
+                : quickHistory.fuente === "estimacion"
                 ? "Estimación — sin histórico oficial gratuito disponible"
                 : `Histórico oficial — ${detailInstrument.entidadOFuente}`
             }

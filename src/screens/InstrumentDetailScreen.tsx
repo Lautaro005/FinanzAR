@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Instrumento, RangoTemporal, PuntoHistorico } from "../types";
 import InstrumentChart from "../components/InstrumentChart";
-import { fetchInstrumentHistory } from "../lib/history";
+import { fetchInstrumentHistory, HistorySource } from "../lib/history";
 import { useDocumentMeta } from "../hooks/useDocumentMeta";
 
 interface InstrumentDetailScreenProps {
@@ -22,8 +22,9 @@ export default function InstrumentDetailScreen({
   const [historyState, setHistoryState] = useState<{
     data: PuntoHistorico[];
     isEstimate: boolean;
+    fuente: HistorySource;
     loading: boolean;
-  }>({ data: [], isEstimate: true, loading: true });
+  }>({ data: [], isEstimate: true, fuente: "estimacion", loading: true });
 
   const decodedId = decodeURIComponent(id || "");
   const instrument = useMemo(() => {
@@ -45,7 +46,12 @@ export default function InstrumentDetailScreen({
 
     fetchInstrumentHistory(instrument).then((result) => {
       if (cancelled) return;
-      setHistoryState({ data: result.data, isEstimate: result.isEstimate, loading: false });
+      setHistoryState({
+        data: result.data,
+        isEstimate: result.isEstimate,
+        fuente: result.fuente,
+        loading: false,
+      });
     });
 
     return () => {
@@ -219,8 +225,10 @@ export default function InstrumentDetailScreen({
           subtitulo={
             historyState.loading
               ? "Cargando histórico…"
-              : historyState.isEstimate
-              ? "Estimación — sin histórico oficial gratuito disponible para este instrumento"
+              : historyState.fuente === "propio"
+              ? "Histórico propio — relevamiento diario"
+              : historyState.fuente === "estimacion"
+              ? "Estimación — sin histórico oficial gratuito disponible"
               : `Histórico oficial — ${instrument.entidadOFuente}`
           }
           valorActual={instrument.tasaORendimientoActual}

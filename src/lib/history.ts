@@ -18,9 +18,12 @@ import { getSnapshotHistory } from "./historicoSnapshot";
 //      las categorías sin fuente gratuita confiable.
 //   3. Estimación sintética ya calculada en normalize.ts (isEstimate: true).
 
+export type HistorySource = "oficial" | "propio" | "estimacion";
+
 export interface HistoryResult {
   data: PuntoHistorico[];
   isEstimate: boolean;
+  fuente: HistorySource;
 }
 
 const memoryCache = new Map<string, HistoryResult>();
@@ -144,7 +147,7 @@ export async function fetchInstrumentHistory(instrument: Instrumento): Promise<H
   try {
     const live = await fetchLiveHistory(instrument);
     if (live && live.length >= 2) {
-      const result: HistoryResult = { data: live, isEstimate: false };
+      const result: HistoryResult = { data: live, isEstimate: false, fuente: "oficial" };
       memoryCache.set(cacheKey, result);
       return result;
     }
@@ -155,7 +158,7 @@ export async function fetchInstrumentHistory(instrument: Instrumento): Promise<H
   try {
     const snapshot = await getSnapshotHistory(instrument.categoria, instrument.id);
     if (snapshot && snapshot.length >= 2) {
-      const result: HistoryResult = { data: snapshot, isEstimate: false };
+      const result: HistoryResult = { data: snapshot, isEstimate: false, fuente: "propio" };
       memoryCache.set(cacheKey, result);
       return result;
     }
@@ -163,7 +166,7 @@ export async function fetchInstrumentHistory(instrument: Instrumento): Promise<H
     console.warn(`[history] Sin snapshot propio para ${instrument.id}, se usa estimación:`, e);
   }
 
-  const fallback: HistoryResult = { data: instrument.historico, isEstimate: true };
+  const fallback: HistoryResult = { data: instrument.historico, isEstimate: true, fuente: "estimacion" };
   memoryCache.set(cacheKey, fallback);
   return fallback;
 }
