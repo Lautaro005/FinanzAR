@@ -12,20 +12,20 @@ export default function Footer({ compact = false }: { compact?: boolean }) {
         {/* Enlaces y Copyright */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 text-xs text-finanzar-textSecondary">
           <div className="flex items-center gap-4">
-            <Link to="/acerca" className="text-finanzar-textSecondary hover:text-finanzar-primary underline">
+            <Link to="/app/acerca" className="text-finanzar-textSecondary hover:text-finanzar-primary underline">
               Acerca de
             </Link>
-            <Link to="/privacidad" className="text-finanzar-textSecondary hover:text-finanzar-primary underline">
+            <Link to="/app/privacidad" className="text-finanzar-textSecondary hover:text-finanzar-primary underline">
               Privacidad
             </Link>
-            <Link to="/changelog" className="text-finanzar-textSecondary hover:text-finanzar-primary underline">
+            <Link to="/app/changelog" className="text-finanzar-textSecondary hover:text-finanzar-primary underline">
               Changelog
             </Link>
           </div>
 
           <p className="text-finanzar-textMuted text-right text-[11px] sm:text-xs">
             © {new Date().getFullYear()} FinanzAR ·{" "}
-            <Link to="/changelog" className="font-mono hover:text-finanzar-primary" title="Ver novedades de esta versión">
+            <Link to="/app/changelog" className="font-mono hover:text-finanzar-primary" title="Ver novedades de esta versión">
               v{APP_VERSION}
             </Link>
           </p>

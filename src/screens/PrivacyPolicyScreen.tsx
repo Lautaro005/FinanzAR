@@ -4,7 +4,7 @@ export default function PrivacyPolicyScreen() {
   useDocumentMeta(
     "Política de Privacidad",
     "Cómo FinanzAR maneja los datos de navegación: qué se guarda en tu dispositivo, qué se comparte con terceros y cómo contactarnos.",
-    "/privacidad"
+    "/app/privacidad"
   );
 
   return (
@@ -73,7 +73,7 @@ export default function PrivacyPolicyScreen() {
           </h2>
           <p>
             Las cotizaciones, tasas y rendimientos que se muestran provienen de APIs públicas de terceros (ArgentinaDatos, CoinGecko, data912.com, entre otras detalladas en la sección{" "}
-            <a href="/acerca" className="text-finanzar-primary hover:text-finanzar-accent underline font-medium">
+            <a href="/app/acerca" className="text-finanzar-primary hover:text-finanzar-accent underline font-medium">
               Acerca de
             </a>
             ). FinanzAR no controla ni se responsabiliza por la disponibilidad, exactitud o políticas de privacidad de esos servicios externos.

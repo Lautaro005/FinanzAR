@@ -62,4 +62,16 @@ Toda la información exhibida proviene de fuentes públicas y abiertas de refere
 
 ## 🚀 Novedades y Versiones
 
-FinanzAR se actualiza constantemente con nuevas funciones y mejoras sugeridas por la comunidad. Podés consultar el historial completo de cambios y nuevas versiones en nuestro [Changelog oficial](https://finanzar-delta.vercel.app/changelog).
+FinanzAR se actualiza constantemente con nuevas funciones y mejoras sugeridas por la comunidad. Podés consultar el historial completo de cambios y nuevas versiones en nuestro [Changelog oficial](https://finanzar-delta.vercel.app/app/changelog).
+
+---
+
+## 🔐 Seguridad
+
+Si encontrás una vulnerabilidad, no abras un issue público: seguí los pasos de nuestra [Política de Seguridad](SECURITY.md).
+
+---
+
+## 📄 Licencia
+
+FinanzAR se distribuye bajo la licencia **MIT con [Commons Clause](https://commonsclause.com/)**: podés usar, estudiar, modificar y compartir el código libremente, pero **no está permitido venderlo** ni ofrecer como servicio pago un producto cuyo valor provenga principalmente de FinanzAR. Ver el archivo [LICENSE](LICENSE) para el texto completo.

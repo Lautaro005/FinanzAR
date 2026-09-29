@@ -29,7 +29,7 @@ export default function FloatingChatWidget({
   const portfolio = usePortfolio(instruments, isLive);
 
   // No renderizar el botón flotante si estamos en la ruta dedicada /chat
-  const enRutaChat = location.pathname.startsWith("/chat");
+  const enRutaChat = location.pathname.startsWith("/app/chat");
 
   const [isOpen, setIsOpen] = useState(false);
   // layout: "floating" (default) | "sidebar" (desktop) | "fullscreen" (tablet / mobile)
@@ -367,7 +367,7 @@ export default function FloatingChatWidget({
                   <button
                     onClick={() => {
                       setIsOpen(false);
-                      navigate("/account");
+                      navigate("/app/account");
                     }}
                     className="w-full py-2.5 px-4 bg-finanzar-primary hover:bg-finanzar-primaryHover text-finanzar-surface text-xs font-semibold rounded-xs shadow-xs transition-colors"
                   >

@@ -17,6 +17,20 @@ export interface VersionChangelog {
 
 export const CHANGELOG: VersionChangelog[] = [
   {
+    version: "0.4.4",
+    fecha: "2026-09-29",
+    titulo: "Nueva landing page, app movida a /app, licencia y política de seguridad",
+    cambios: [
+      "Nueva landing page en la raíz del sitio (/), con el estilo editorial de la app: pizarra de referencia en vivo (mejor plazo fijo, dólar Blue y MEP, Bitcoin y CEDEAR S&P 500), resumen de funciones, privacidad y fuentes de datos.",
+      "Header propio de la landing: botones de 'Iniciar sesión' y 'Crear cuenta' sin sesión iniciada; con sesión, acceso directo a la app y el ícono de perfil con la inicial del nombre y el estado de sincronización.",
+      "Toda la aplicación pasa a vivir bajo /app: Mercados (/app), Comparador (/app/comparar), Portfolio (/app/portfolio), Chat IA (/app/chat), Mi cuenta (/app/account), fichas de instrumentos, Acerca de, Privacidad y este Changelog.",
+      "Los enlaces viejos (/portfolio, /comparar, /instrumento/…, etc.) redirigen automáticamente a su nueva dirección bajo /app, conservando parámetros, para no romper links compartidos ni favoritos.",
+      "El botón 'Crear cuenta' abre Mi cuenta directamente en la pestaña de registro.",
+      "Licencia del proyecto: MIT con Commons Clause, que permite usar, modificar y compartir el código pero no venderlo ni ofrecerlo como servicio pago.",
+      "Política de seguridad (SECURITY.md) con el canal privado para reportar vulnerabilidades, plazos de respuesta y alcance.",
+    ],
+  },
+  {
     version: "0.4.3",
     fecha: "2026-09-07",
     titulo: "Bloque colapsable de Razonamiento en Chat IA y escala prolija de a 5k en gráfico de Portfolio",

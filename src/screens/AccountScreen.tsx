@@ -1,5 +1,5 @@
 import { FormEvent, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useDocumentMeta } from "../hooks/useDocumentMeta";
 import { useAuth } from "../hooks/useAuth";
 import { ApiError } from "../lib/auth";
@@ -15,7 +15,7 @@ export default function AccountScreen() {
   useDocumentMeta(
     "Mi cuenta",
     "Creá una cuenta en FinanzAR para sincronizar tu portfolio entre dispositivos.",
-    "/account"
+    "/app/account"
   );
   const auth = useAuth();
 
@@ -49,7 +49,11 @@ export default function AccountScreen() {
    ============================================================ */
 function PanelAcceso() {
   const auth = useAuth();
-  const [modo, setModo] = useState<"login" | "registro">("login");
+  // La landing enlaza a /app/account?modo=registro para abrir directo "Crear cuenta".
+  const [searchParams] = useSearchParams();
+  const [modo, setModo] = useState<"login" | "registro">(() =>
+    searchParams.get("modo") === "registro" ? "registro" : "login"
+  );
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -154,7 +158,7 @@ function PanelAcceso() {
           </div>
         ))}
         <p className="sm:col-span-3">
-          <Link to="/privacidad" className="underline hover:text-finanzar-primary">Política de privacidad</Link>
+          <Link to="/app/privacidad" className="underline hover:text-finanzar-primary">Política de privacidad</Link>
         </p>
       </div>
     </div>
@@ -266,7 +270,7 @@ function PanelCuenta() {
             <h2 className="font-serif text-lg font-bold text-finanzar-primary">Sincronización del portfolio</h2>
             <p className="text-xs text-finanzar-textSecondary mt-1">
               Con la sincronización activa, los activos que cargues en{" "}
-              <Link to="/portfolio" className="underline hover:text-finanzar-primary">Portfolio</Link> se guardan en tu cuenta y
+              <Link to="/app/portfolio" className="underline hover:text-finanzar-primary">Portfolio</Link> se guardan en tu cuenta y
               aparecen en cualquier dispositivo donde inicies sesión. Al desactivarla se borra la copia de la cuenta y el
               portfolio vuelve a vivir solo en este navegador.
             </p>

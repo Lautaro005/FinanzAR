@@ -30,7 +30,7 @@ export default function ChatScreen({
   useDocumentMeta(
     "Chat IA · Asistente Patrimonial",
     "Asistente con Inteligencia Artificial conectado a tu portfolio y al mercado financiero argentino y global en tiempo real.",
-    "/chat"
+    "/app/chat"
   );
 
   const navigate = useNavigate();
@@ -219,13 +219,13 @@ export default function ChatScreen({
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
-              onClick={() => navigate("/account")}
+              onClick={() => navigate("/app/account")}
               className="w-full sm:w-auto px-6 py-2.5 bg-finanzar-primary hover:bg-finanzar-primaryHover text-finanzar-surface text-sm font-semibold rounded-xs shadow-sm transition-colors"
             >
               Iniciar sesión o Crear cuenta
             </button>
             <Link
-              to="/portfolio"
+              to="/app/portfolio"
               className="w-full sm:w-auto px-5 py-2.5 bg-finanzar-bg hover:bg-finanzar-surfaceHover border border-finanzar-border text-finanzar-primary text-sm font-medium rounded-xs transition-colors"
             >
               Ir a mi Portfolio
@@ -256,12 +256,12 @@ export default function ChatScreen({
               </button>
             </li>
             <li>
-              <Link to="/portfolio" className={accionClass}>
+              <Link to="/app/portfolio" className={accionClass}>
                 Ver mi portfolio
               </Link>
             </li>
             <li>
-              <Link to="/account" className={accionClass}>
+              <Link to="/app/account" className={accionClass}>
                 ⚙ Configurar IA
               </Link>
             </li>

@@ -152,7 +152,7 @@ export default function ChatView({
                     {provider === "groq" ? "Groq" : "OpenRouter"} · {activeModel.split("/").pop()}
                   </span>
                   <Link
-                    to="/account"
+                    to="/app/account"
                     onClick={() => setShowInfo(false)}
                     className="text-[11px] font-medium text-finanzar-primary hover:text-finanzar-accent hover:underline transition-colors"
                   >
@@ -184,7 +184,7 @@ export default function ChatView({
             </div>
           </div>
           <Link
-            to="/account"
+            to="/app/account"
             className="px-2.5 py-1 rounded-xs bg-finanzar-primary text-finanzar-surface font-semibold text-[11px] hover:bg-finanzar-primaryHover flex-shrink-0"
           >
             Configurar →

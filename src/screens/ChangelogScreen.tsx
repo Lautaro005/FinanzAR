@@ -6,7 +6,7 @@ export default function ChangelogScreen() {
   useDocumentMeta(
     "Changelog",
     "Novedades de cada versión de FinanzAR: qué se agregó, qué se corrigió y cuándo.",
-    "/changelog"
+    "/app/changelog"
   );
 
   return (
