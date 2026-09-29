@@ -4,7 +4,7 @@ export default function AboutScreen() {
   useDocumentMeta(
     "Acerca de",
     "Metodología, fuentes de datos públicas y frecuencia de actualización utilizadas por FinanzAR.",
-    "/acerca"
+    "/app/acerca"
   );
   const sources = [
     {

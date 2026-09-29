@@ -260,7 +260,7 @@ export default function InstrumentTable({
                     <td className="px-4 py-3.5">
                       <div className="flex flex-col items-start gap-1">
                         <Link
-                          to={`/instrumento/${encodeURIComponent(item.id)}`}
+                          to={`/app/instrumento/${encodeURIComponent(item.id)}`}
                           className="text-left font-medium text-finanzar-textMain hover:text-finanzar-primary hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-finanzar-accent rounded-xs"
                         >
                           {item.nombre}
@@ -326,7 +326,7 @@ export default function InstrumentTable({
                           </button>
                         )}
                         <Link
-                          to={`/instrumento/${encodeURIComponent(item.id)}`}
+                          to={`/app/instrumento/${encodeURIComponent(item.id)}`}
                           className="px-2 py-1 text-xs rounded text-finanzar-primary hover:bg-finanzar-bg border border-transparent hover:border-finanzar-border transition-colors font-medium"
                           title="Abrir ficha completa"
                         >

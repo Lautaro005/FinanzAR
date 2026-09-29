@@ -98,7 +98,7 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
   useDocumentMeta(
     "Portfolio",
     "Seguimiento de tu portfolio personal de inversiones: posiciones, plazos fijos, resultado y evolución en el tiempo. Todo se guarda en tu navegador.",
-    "/portfolio"
+    "/app/portfolio"
   );
 
   const p = usePortfolio(instruments, isLive);
@@ -292,7 +292,7 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
               /* Con sincronización activa, exportar/importar viven en la cuenta; acá solo se muestra el estado. */
               <li>
                 <Link
-                  to="/account"
+                  to="/app/account"
                   className={`${accionClass} inline-flex items-center gap-1.5`}
                   title={auth.errorSync || "Ver sincronización en Mi cuenta"}
                 >
@@ -362,7 +362,7 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
                   {syncActiva
                     ? "Tu portfolio está sincronizado con tu cuenta. Podés exportar o importar un backup desde Mi cuenta."
                     : "Tu portfolio se guarda solo en este navegador (sin cuenta ni servidor). Exportá un backup cada tanto: es la única copia."}{" "}
-                  <Link to="/privacidad" className="underline text-finanzar-primary hover:text-finanzar-accent">
+                  <Link to="/app/privacidad" className="underline text-finanzar-primary hover:text-finanzar-accent">
                     Más sobre privacidad
                   </Link>
                   .
@@ -471,7 +471,7 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
               <>
                 Los datos viven solo en el almacenamiento local de este navegador. Si borrás los datos del sitio o cambiás de
                 dispositivo, los perdés — exportá un backup cada tanto o{" "}
-                <Link to="/account" className="underline hover:text-finanzar-primary">activá la sincronización con una cuenta</Link>.
+                <Link to="/app/account" className="underline hover:text-finanzar-primary">activá la sincronización con una cuenta</Link>.
               </>
             )}
           </p>
@@ -612,7 +612,7 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
                                 Vender
                               </button>
                               {pos.instrumento ? (
-                                <Link to={`/instrumento/${encodeURIComponent(pos.instrumentId)}`} className="text-finanzar-primary hover:text-finanzar-accent underline">
+                                <Link to={`/app/instrumento/${encodeURIComponent(pos.instrumentId)}`} className="text-finanzar-primary hover:text-finanzar-accent underline">
                                   Detalle
                                 </Link>
                               ) : (
@@ -776,7 +776,7 @@ export default function PortfolioScreen({ instruments, isLive }: { instruments: 
                               <div className="flex items-center gap-1.5 mt-0.5">
                                 <span className={`px-1.5 py-0.5 rounded-xs text-[10px] uppercase tracking-wider font-semibold ${badgeClass("fci")}`}>FCI</span>
                                 {fc.instrumento && (
-                                  <Link to={`/instrumento/${encodeURIComponent(fc.instrumento.id)}`} className="text-[10px] text-finanzar-primary hover:text-finanzar-accent underline">Detalle</Link>
+                                  <Link to={`/app/instrumento/${encodeURIComponent(fc.instrumento.id)}`} className="text-[10px] text-finanzar-primary hover:text-finanzar-accent underline">Detalle</Link>
                                 )}
                                 {fc.notas && <span className="text-[10px] text-finanzar-textMuted truncate max-w-[160px]">{fc.notas}</span>}
                               </div>

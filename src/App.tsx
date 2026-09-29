@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, useNavigate, Link, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate, Link, useLocation, Navigate, Outlet } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import CategoryTabs, { CategoriaFiltro } from "./components/CategoryTabs";
@@ -14,6 +14,7 @@ import PortfolioScreen from "./screens/PortfolioScreen";
 import AccountScreen from "./screens/AccountScreen";
 import ChangelogScreen from "./screens/ChangelogScreen";
 import ChatScreen from "./screens/ChatScreen";
+import LandingScreen from "./screens/LandingScreen";
 import FloatingChatWidget from "./components/chat/FloatingChatWidget";
 import SyncConflictModal from "./components/SyncConflictModal";
 import { AuthProvider, useAuth } from "./hooks/useAuth";
@@ -57,7 +58,7 @@ function Home({
   useDocumentMeta(
     "Mercados y Rendimientos",
     "Tabla comparativa en vivo de plazos fijos, FCI, dólar, criptomonedas, CEDEARs, acciones, bonos y ETFs de EE.UU. disponibles en Argentina.",
-    "/"
+    "/app"
   );
   const [tab, setTab] = useState<CategoriaFiltro>("todos");
   const [detailInstrument, setDetailInstrument] = useState<Instrumento | null>(null);
@@ -120,7 +121,7 @@ function Home({
 
         <div className="flex items-center space-x-2 text-xs">
           <Link
-            to="/comparar"
+            to="/app/comparar"
             className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-finanzar-surface border border-finanzar-border text-finanzar-primary hover:border-finanzar-accent font-medium shadow-xs transition-colors"
           >
             <span>❖ Ir al Comparador</span>
@@ -222,7 +223,7 @@ function Home({
             </span>
             <div className="flex items-center space-x-3">
               <Link
-                to={`/instrumento/${encodeURIComponent(detailInstrument.id)}`}
+                to={`/app/instrumento/${encodeURIComponent(detailInstrument.id)}`}
                 className="text-xs text-finanzar-primary hover:text-finanzar-accent font-semibold underline"
               >
                 Abrir ficha completa →
@@ -268,7 +269,7 @@ function Home({
         selectedInstruments={selectedInstruments}
         onRemove={onRemoveCompare}
         onClear={onClearCompare}
-        onCompare={() => navigate("/comparar")}
+        onCompare={() => navigate("/app/comparar")}
       />
     </main>
   );
@@ -292,7 +293,7 @@ function CompareScreen({
   useDocumentMeta(
     "Comparar Instrumentos",
     "Comparación lado a lado de instrumentos de inversión seleccionados, con gráfico normalizado a 30 días.",
-    "/comparar"
+    "/app/comparar"
   );
 
   // Instrumentos activos para comparar: únicamente los que el usuario eligió
@@ -381,7 +382,7 @@ function CompareScreen({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-finanzar-borderSubtle pb-6 mb-8">
         <div>
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/app")}
             className="text-xs text-finanzar-textSecondary hover:text-finanzar-primary font-medium mb-2 flex items-center space-x-1"
           >
             <span>← Volver a Mercados</span>
@@ -605,7 +606,7 @@ function CompareScreen({
                     </span>
                   </div>
                   <Link
-                    to={`/instrumento/${encodeURIComponent(inst.id)}`}
+                    to={`/app/instrumento/${encodeURIComponent(inst.id)}`}
                     className="text-[11px] text-finanzar-primary hover:text-finanzar-accent underline font-medium"
                   >
                     Ver ficha ↗
@@ -706,6 +707,14 @@ function AppShell() {
   );
 }
 
+/** Rutas previas a v0.4.4 (sin el prefijo /app): se redirigen conservando query y hash para no romper enlaces compartidos. */
+const RUTAS_LEGACY = ["/comparar", "/portfolio", "/chat", "/account", "/acerca", "/privacidad", "/changelog", "/instrumento/:id"];
+
+function RedireccionLegacy() {
+  const location = useLocation();
+  return <Navigate to={`/app${location.pathname}${location.search}${location.hash}`} replace />;
+}
+
 function AppShellContent({
   instruments,
   categoryCounts,
@@ -725,20 +734,30 @@ function AppShellContent({
   onRemoveCompare: (id: string) => void;
   onClearCompare: () => void;
 }) {
-  const location = useLocation();
-  const isChat = location.pathname.startsWith("/chat");
-
   return (
-    <div
-      className={`flex flex-col bg-finanzar-bg text-finanzar-textMain font-sans ${
-        isChat ? "h-[100dvh] max-h-[100dvh] overflow-hidden" : "min-h-screen"
-      }`}
-    >
-      <Header isLive={isLive} />
-      <div className={`flex-1 min-h-0 ${isChat ? "flex flex-col overflow-hidden" : ""}`}>
-        <Routes>
+    <>
+      <Routes>
+        {/* Landing pública con su propio header (login/registro o perfil) */}
+        <Route
+          path="/"
+          element={
+            <LandingScreen
+              instruments={instruments}
+              categoryCounts={categoryCounts}
+              loading={loading}
+              isLive={isLive}
+            />
+          }
+        />
+
+        {RUTAS_LEGACY.map((path) => (
+          <Route key={path} path={path} element={<RedireccionLegacy />} />
+        ))}
+
+        {/* La app: todo bajo /app con el layout de siempre (header, footer, chat flotante) */}
+        <Route element={<AppLayout instruments={instruments} isLive={isLive} />}>
           <Route
-            path="/"
+            path="/app"
             element={
               <Home
                 instruments={instruments}
@@ -752,7 +771,7 @@ function AppShellContent({
             }
           />
           <Route
-            path="/instrumento/:id"
+            path="/app/instrumento/:id"
             element={
               <InstrumentDetailScreen
                 instruments={instruments}
@@ -762,7 +781,7 @@ function AppShellContent({
             }
           />
           <Route
-            path="/comparar"
+            path="/app/comparar"
             element={
               <CompareScreen
                 instruments={instruments}
@@ -772,17 +791,35 @@ function AppShellContent({
               />
             }
           />
-          <Route path="/portfolio" element={<PortfolioScreen instruments={instruments} isLive={isLive} />} />
-          <Route path="/chat" element={<ChatScreen instruments={instruments} isLive={isLive} />} />
-          <Route path="/account" element={<AccountScreen />} />
-          <Route path="/acerca" element={<AboutScreen />} />
-          <Route path="/privacidad" element={<PrivacyPolicyScreen />} />
-          <Route path="/changelog" element={<ChangelogScreen />} />
+          <Route path="/app/portfolio" element={<PortfolioScreen instruments={instruments} isLive={isLive} />} />
+          <Route path="/app/chat" element={<ChatScreen instruments={instruments} isLive={isLive} />} />
+          <Route path="/app/account" element={<AccountScreen />} />
+          <Route path="/app/acerca" element={<AboutScreen />} />
+          <Route path="/app/privacidad" element={<PrivacyPolicyScreen />} />
+          <Route path="/app/changelog" element={<ChangelogScreen />} />
           <Route path="*" element={<NotFoundScreen />} />
-        </Routes>
+        </Route>
+      </Routes>
+      <ConflictoSyncGlobal />
+    </>
+  );
+}
+
+function AppLayout({ instruments, isLive }: { instruments: Instrumento[]; isLive: boolean }) {
+  const location = useLocation();
+  const isChat = location.pathname.startsWith("/app/chat");
+
+  return (
+    <div
+      className={`flex flex-col bg-finanzar-bg text-finanzar-textMain font-sans ${
+        isChat ? "h-[100dvh] max-h-[100dvh] overflow-hidden" : "min-h-screen"
+      }`}
+    >
+      <Header isLive={isLive} />
+      <div className={`flex-1 min-h-0 ${isChat ? "flex flex-col overflow-hidden" : ""}`}>
+        <Outlet />
       </div>
       <Footer compact={isChat} />
-      <ConflictoSyncGlobal />
       <FloatingChatWidget instruments={instruments} isLive={isLive} />
     </div>
   );

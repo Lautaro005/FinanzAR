@@ -36,7 +36,7 @@ export default function InstrumentDetailScreen({
     instrument
       ? `Ficha completa de ${instrument.nombre}: tasa/rendimiento actual, variación y gráfico histórico. Fuente: ${instrument.entidadOFuente}.`
       : "El instrumento solicitado no está disponible.",
-    `/instrumento/${encodeURIComponent(decodedId)}`
+    `/app/instrumento/${encodeURIComponent(decodedId)}`
   );
 
   useEffect(() => {
@@ -77,7 +77,7 @@ export default function InstrumentDetailScreen({
           No pudimos localizar el activo "{decodedId}". Puede haber sido reclasificado o no estar disponible.
         </p>
         <Link
-          to="/"
+          to="/app"
           className="inline-flex items-center px-4 py-2 bg-finanzar-primary text-finanzar-surface rounded-md text-sm font-medium hover:bg-finanzar-primaryHover transition-colors"
         >
           ← Volver al panel de Mercados
@@ -110,7 +110,7 @@ export default function InstrumentDetailScreen({
       {/* Navegación y Breadcrumb */}
       <div className="flex items-center justify-between mb-6">
         <Link
-          to="/"
+          to="/app"
           className="inline-flex items-center space-x-1.5 text-xs text-finanzar-textSecondary hover:text-finanzar-primary font-medium transition-colors"
         >
           <span>← Volver a Mercados</span>
@@ -130,7 +130,7 @@ export default function InstrumentDetailScreen({
 
           {selectedCompareIds.length >= 2 && (
             <button
-              onClick={() => navigate("/comparar")}
+              onClick={() => navigate("/app/comparar")}
               className="inline-flex items-center space-x-1 px-3 py-1.5 rounded text-xs font-semibold bg-finanzar-primary text-finanzar-surface hover:bg-finanzar-primaryHover transition-colors"
             >
               <span>Ver Comparativa ({selectedCompareIds.length}) →</span>
@@ -290,7 +290,7 @@ export default function InstrumentDetailScreen({
             {relatedInstruments.map((rel) => (
               <Link
                 key={rel.id}
-                to={`/instrumento/${encodeURIComponent(rel.id)}`}
+                to={`/app/instrumento/${encodeURIComponent(rel.id)}`}
                 className="block p-3 rounded bg-finanzar-bg hover:bg-finanzar-surfaceHover border border-finanzar-borderSubtle hover:border-finanzar-border transition-colors"
               >
                 <p className="text-xs font-semibold text-finanzar-textMain truncate">
