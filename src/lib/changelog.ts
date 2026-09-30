@@ -17,6 +17,18 @@ export interface VersionChangelog {
 
 export const CHANGELOG: VersionChangelog[] = [
   {
+    version: "0.4.5",
+    fecha: "2026-09-30",
+    titulo: "Snapshot histórico automático con GitHub Actions y corrección de fechas",
+    cambios: [
+      "El histórico propio (plazos fijos, FCI, CEDEARs, acciones, bonos y EE.UU.) se genera solo con GitHub Actions de lunes a viernes a las 21:00 de Buenos Aires, sin depender de una computadora encendida. También se puede correr a mano desde GitHub, con fecha opcional para recuperar un día.",
+      "Corrección de fechas: cada punto del histórico se guarda con la fecha de Buenos Aires. Antes se usaba la fecha UTC y, como la rutina corre de noche, los puntos quedaban con la fecha del día siguiente.",
+      "Validación del snapshot: reintentos automáticos ante fallas de red y, si una fuente no responde o trae datos incompletos, no se guarda nada y la corrida queda marcada como fallida en vez de registrar un día parcial.",
+      "Corrección del envío a GitHub: la rutina ahora trabaja siempre sobre la rama principal actualizada, reintenta si cambió mientras corría y muestra el resultado en pantalla; antes el push podía fallar en silencio y el snapshot quedaba sin publicar.",
+      "Deploy opcional en Vercel mediante Deploy Hook para publicar los datos nuevos aunque el commit lo haga el bot de GitHub.",
+    ],
+  },
+  {
     version: "0.4.4",
     fecha: "2026-09-29",
     titulo: "Nueva landing page, app movida a /app, licencia y política de seguridad",

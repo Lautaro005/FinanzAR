@@ -1,0 +1,73 @@
+# Snapshot histórico diario de FinanzAR (ver scripts/snapshot-historico.mjs).
+# Reemplaza la corrida manual/local: genera los JSON de public/historico,
+# los commitea en main y Vercel publica el deploy con los datos nuevos.
+name: Snapshot histórico
+
+on:
+  schedule:
+    # Lunes a viernes 21:07 de Buenos Aires (UTC-3, sin horario de verano)
+    # = 00:07 UTC de martes a sábado. El minuto 7 evita la congestión de las
+    # horas en punto; GitHub igual puede demorar la corrida en horas pico.
+    - cron: "7 0 * * 2-6"
+  workflow_dispatch:
+    inputs:
+      fecha:
+        description: "Fecha del snapshot (YYYY-MM-DD). Vacío = hoy en Buenos Aires. Para recuperar un día, correrlo antes de la apertura del mercado del día siguiente."
+        required: false
+        type: string
+      permitir_parcial:
+        description: "Guardar aunque alguna fuente falle"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: snapshot-historico
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Configurar autor de git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Snapshot, commit y push
+        env:
+          FECHA: ${{ inputs.fecha }}
+          PERMITIR_PARCIAL: ${{ inputs.permitir_parcial }}
+        run: |
+          args=()
+          if [ -n "${FECHA:-}" ]; then args+=(--fecha "$FECHA"); fi
+          if [ "${PERMITIR_PARCIAL:-false}" = "true" ]; then args+=(--permitir-parcial); fi
+          ./scripts/run-snapshot-and-push.sh "${args[@]}"
+
+      # Opcional: si Vercel no despliega los commits del bot (proyectos Hobby
+      # solo despliegan commits de autores con acceso), crear un Deploy Hook en
+      # Vercel (Settings → Git → Deploy Hooks) y guardarlo como secret
+      # VERCEL_DEPLOY_HOOK_URL en el repo. Sin el secret, este paso no hace nada.
+      - name: Disparar deploy en Vercel
+        env:
+          VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "${VERCEL_DEPLOY_HOOK_URL:-}" ]; then
+            echo "Sin VERCEL_DEPLOY_HOOK_URL: se confía en el deploy automático de Vercel por el push."
+            exit 0
+          fi
+          curl -fsS -X POST "$VERCEL_DEPLOY_HOOK_URL" > /dev/null
+          echo "Deploy de Vercel disparado."

@@ -18,16 +18,19 @@
 // /historico/{categoria}.json, servido como archivo estático por Vercel)
 // para alimentar los gráficos cuando no hay una fuente externa vigente.
 //
-// Cómo se programa: ver la sección "Rutina de snapshot histórico" en
-// references/finanzar-REFERENCE.md — corre como scheduled task de Claude
-// (Cowork), NO como cron local de este repo, porque necesita hacer
-// git commit + push con las credenciales del usuario y este script por sí
-// solo no las tiene.
+// Cómo se programa: GitHub Actions (.github/workflows/snapshot-historico.yml)
+// lo corre de lunes a viernes a las 21:00 de Buenos Aires vía
+// scripts/run-snapshot-and-push.sh, que commitea y pushea a main. También se
+// puede disparar a mano desde la pestaña Actions (con fecha opcional).
 //
-// Uso manual (para probar antes de confiar en la rutina automática):
-//   cd FinanzAR && node scripts/snapshot-historico.mjs
-// Después revisar el diff de public/historico/*.json y, si se ve bien,
-// commitear y pushear a mano.
+// Uso manual:
+//   node scripts/snapshot-historico.mjs                     # fecha = hoy en Buenos Aires
+//   node scripts/snapshot-historico.mjs --fecha 2026-09-29  # recuperar un día (antes de la apertura del día siguiente)
+//   node scripts/snapshot-historico.mjs --permitir-parcial  # guardar aunque alguna fuente falle
+//
+// Validación: si alguna fuente falla (tras reintentos) o trae menos
+// instrumentos de los esperables, el script sale con código 1 y NO escribe
+// ningún archivo, para no guardar un snapshot parcial como si fuera bueno.
 
 import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
@@ -93,15 +96,58 @@ const USA_DIRECT_ALLOWED = new Set([
 
 // ---- Fetch helpers ------------------------------------------------------
 
-async function fetchJson(url) {
-  const res = await fetch(url, { headers: { Accept: "application/json" } });
+const FETCH_TIMEOUT_MS = 30_000;
+
+async function fetchJsonOnce(url) {
+  const res = await fetch(url, {
+    headers: { Accept: "application/json" },
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+  });
   if (!res.ok) throw new Error(`${url} -> HTTP ${res.status}`);
   return res.json();
 }
 
-function today() {
-  return new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+// Con reintentos y backoff (2s, 4s, 8s) para errores de red o 5xx pasajeros.
+// Los 4xx (ej. 404 de una foto FCI que no existe ese día) no se reintentan.
+async function fetchJson(url, { reintentos = 3 } = {}) {
+  for (let intento = 0; ; intento++) {
+    try {
+      return await fetchJsonOnce(url);
+    } catch (e) {
+      const status = Number(/HTTP (\d{3})/.exec(e.message)?.[1]);
+      const reintentable = !status || status >= 500 || status === 429;
+      if (!reintentable || intento >= reintentos) throw e;
+      await new Promise((r) => setTimeout(r, 2000 * 2 ** intento));
+    }
+  }
 }
+
+// "Hoy" en hora de Buenos Aires. Antes se usaba la fecha UTC, y como la
+// rutina corre de noche (21 h o más tarde = 00 h UTC o más), cada punto
+// quedaba guardado con la fecha del día siguiente.
+function today() {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Argentina/Buenos_Aires" }).format(new Date());
+}
+
+function parseArgs(argv) {
+  const args = { fecha: null, permitirParcial: false };
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a === "--permitir-parcial") args.permitirParcial = true;
+    else if (a === "--fecha") args.fecha = argv[++i];
+    else if (a.startsWith("--fecha=")) args.fecha = a.slice("--fecha=".length);
+    else throw new Error(`Argumento desconocido: ${a}`);
+  }
+  if (args.fecha !== null && !/^\d{4}-\d{2}-\d{2}$/.test(args.fecha)) {
+    throw new Error(`--fecha debe tener formato YYYY-MM-DD (recibido: ${args.fecha})`);
+  }
+  return args;
+}
+
+// Mínimo de instrumentos por archivo para considerar el snapshot completo.
+// Holgados a propósito (un día normal trae bastante más): sirven para
+// detectar una fuente caída o una respuesta vacía, no para vigilar el mercado.
+const MINIMOS = { pesos: 5, fci: 10, cedears: 50, acciones: 10, bonos: 10, eeuu: 10 };
 
 // ---- Snapshot store (lee/mergea/escribe cada JSON de public/historico) --
 
@@ -145,6 +191,7 @@ function appendPoint(store, id, fecha, valor) {
 
 async function snapshotPlazoFijo(fecha) {
   const store = await readSnapshotFile("pesos");
+  const errores = [];
   let ok = 0;
   try {
     const items = await fetchJson("https://api.argentinadatos.com/v1/finanzas/tasas/plazoFijo");
@@ -156,10 +203,10 @@ async function snapshotPlazoFijo(fecha) {
       ok++;
     }
   } catch (e) {
-    console.warn("[snapshot] plazoFijo falló:", e.message);
+    errores.push(`plazoFijo: ${e.message}`);
   }
-  await writeSnapshotFile("pesos", store);
   console.log(`[snapshot] pesos (plazo fijo): ${ok} entidades`);
+  return [{ file: "pesos", store, ok, errores }];
 }
 
 // Misma lógica que src/lib/fciRendimiento.ts (mantener sincronizado):
@@ -184,7 +231,7 @@ async function buscarSnapshotsCompletosFci() {
     dias.map(async (d) => {
       const f = fechaApi(new Date(hoy.getTime() - d * 86400000));
       try {
-        const items = await fetchJson(`${FCI_API}/rentaFija/${f}`);
+        const items = await fetchJson(`${FCI_API}/rentaFija/${f}`, { reintentos: 1 }); // 54 sondeos: pocos reintentos
         return Array.isArray(items) && items.length >= 500 ? { fechaApi: f, diasAtras: d } : null;
       } catch {
         return null;
@@ -199,6 +246,7 @@ async function buscarSnapshotsCompletosFci() {
 
 async function snapshotFCI(fecha) {
   const store = await readSnapshotFile("fci");
+  const errores = [];
   let ok = 0;
   const candidatas = await buscarSnapshotsCompletosFci().catch(() => []);
   for (const categoria of FCI_CATEGORIAS) {
@@ -246,11 +294,11 @@ async function snapshotFCI(fecha) {
         ok++;
       }
     } catch (e) {
-      console.warn(`[snapshot] FCI ${categoria} falló:`, e.message);
+      errores.push(`FCI ${categoria}: ${e.message}`);
     }
   }
-  await writeSnapshotFile("fci", store);
   console.log(`[snapshot] fci: ${ok} fondos`);
+  return [{ file: "fci", store, ok, errores }];
 }
 
 async function snapshotData912(fecha) {
@@ -261,8 +309,10 @@ async function snapshotData912(fecha) {
     { file: "eeuu", url: "https://data912.com/live/usa_stocks", prefix: "eeuu", onlyAllowed: true },
   ];
 
+  const out = [];
   for (const job of jobs) {
     const store = await readSnapshotFile(job.file);
+    const errores = [];
     let ok = 0;
     try {
       const quotes = await fetchJson(job.url);
@@ -274,23 +324,48 @@ async function snapshotData912(fecha) {
         ok++;
       }
     } catch (e) {
-      console.warn(`[snapshot] ${job.file} falló:`, e.message);
+      errores.push(`${job.file}: ${e.message}`);
     }
-    await writeSnapshotFile(job.file, store);
     console.log(`[snapshot] ${job.file}: ${ok} instrumentos`);
+    out.push({ file: job.file, store, ok, errores });
   }
+  return out;
 }
 
 async function main() {
-  const fecha = today();
-  console.log(`[snapshot] Corriendo snapshot histórico para ${fecha}...`);
-  await snapshotPlazoFijo(fecha);
-  await snapshotFCI(fecha);
-  await snapshotData912(fecha);
-  console.log("[snapshot] Listo. Revisá el diff de public/historico/*.json y commiteá + pusheá si está bien.");
+  const args = parseArgs(process.argv.slice(2));
+  const fecha = args.fecha || today();
+  console.log(`[snapshot] Corriendo snapshot histórico para ${fecha} (hora de Buenos Aires)...`);
+
+  const resultados = [
+    ...(await snapshotPlazoFijo(fecha)),
+    ...(await snapshotFCI(fecha)),
+    ...(await snapshotData912(fecha)),
+  ];
+
+  // Validación: una fuente caída o una respuesta casi vacía invalida el snapshot.
+  const problemas = [];
+  for (const r of resultados) {
+    r.errores.forEach((e) => problemas.push(e));
+    const minimo = MINIMOS[r.file] ?? 1;
+    if (r.ok < minimo) problemas.push(`${r.file}: ${r.ok} instrumentos (mínimo esperado ${minimo})`);
+  }
+
+  if (problemas.length > 0) {
+    console.error("[snapshot] Snapshot incompleto:");
+    problemas.forEach((p) => console.error(`  - ${p}`));
+    if (!args.permitirParcial) {
+      console.error("[snapshot] No se escribió ningún archivo. Reintentá más tarde o usá --permitir-parcial.");
+      process.exit(1);
+    }
+    console.warn("[snapshot] --permitir-parcial: se guarda igual lo que se pudo obtener.");
+  }
+
+  for (const r of resultados) await writeSnapshotFile(r.file, r.store);
+  console.log(`[snapshot] Listo: ${resultados.map((r) => `${r.file}=${r.ok}`).join(", ")}.`);
 }
 
 main().catch((e) => {
-  console.error("[snapshot] Error inesperado:", e);
+  console.error("[snapshot] Error:", e instanceof Error ? e.message : e);
   process.exit(1);
 });
