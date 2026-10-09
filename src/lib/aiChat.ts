@@ -304,9 +304,7 @@ ${fciTxt}`;
   const actualidad =
     modoBusqueda === "tavily"
       ? `Tenés la herramienta ${NOMBRE_HERRAMIENTA_BUSQUEDA}. Usala ante noticias, hechos recientes o cifras que no estén en el contexto de arriba (decisiones de la Fed, regulación, resultados de una empresa, etc.). Empezá con tema "noticias" y usá "general" para definiciones o contexto. Con cada dato que salga de una búsqueda, indicá la fuente y la fecha de publicación. Si la búsqueda no devuelve nada útil, decilo y respondé con el contexto disponible. ${REGLA_FECHA_BUSQUEDA}`
-      : modoBusqueda === "nativa"
-      ? `Tenés búsqueda en internet integrada en el modelo: podés consultar sitios cuando hace falta. Usala ante noticias, hechos recientes o cifras que no estén en el contexto de arriba. Con cada dato que salga de una búsqueda, indicá la fuente y la fecha de publicación. Si la búsqueda no devuelve nada útil, decilo y respondé con el contexto disponible. ${REGLA_FECHA_BUSQUEDA}`
-      : `En esta sesión no tenés búsqueda en internet: no podés leer noticias ni comunicados de hoy. Ante una pregunta de actualidad ("qué pasó con…", "por qué subió…"), respondé con el contexto de mercado y portfolio indicando su fecha, y señalá qué fuente verificar. Para que el usuario tenga búsqueda, puede cargar una clave de Tavily o usar un modelo gpt-oss de Groq, en Mi cuenta → API Keys.`;
+      : `En esta sesión no tenés búsqueda en internet: no podés leer noticias ni comunicados de hoy. Ante una pregunta de actualidad ("qué pasó con…", "por qué subió…"), respondé con el contexto de mercado y portfolio indicando su fecha, y señalá qué fuente verificar. Para que el usuario tenga búsqueda, puede cargar una clave de Tavily en Mi cuenta → API Keys.`;
 
   return `Sos FinanzAR IA, un analista patrimonial y asistente financiero de primer nivel para la aplicación FinanzAR (Argentina).
 Estás conversando con ${usuarioNombre}.
@@ -380,8 +378,6 @@ export interface EnviarMensajeChatParams {
 /** Tope de rondas con herramientas: evita un bucle si el modelo sigue pidiendo búsquedas. */
 const MAX_RONDAS_HERRAMIENTAS = 3;
 const BLOQUE_RAZONAMIENTO_RE = /<think>[\s\S]*?<\/think>\s*/gi;
-// Búsqueda integrada de Groq (solo modelos gpt-oss): el proveedor la ejecuta del lado del servidor.
-const HERRAMIENTA_BUSQUEDA_NATIVA_GROQ = { type: "browser_search" as const };
 
 export async function enviarMensajeChat(params: EnviarMensajeChatParams): Promise<string> {
   const { messages, onChunk, signal } = params;
@@ -392,7 +388,6 @@ export async function enviarMensajeChat(params: EnviarMensajeChatParams): Promis
   // Herramientas que se envían en cada ronda según el modo de búsqueda
   const herramientasDe = (ronda: number): unknown[] => {
     if (modo === "tavily") return ronda < MAX_RONDAS_HERRAMIENTAS ? [DEFINICION_HERRAMIENTA_BUSQUEDA] : [];
-    if (modo === "nativa") return [HERRAMIENTA_BUSQUEDA_NATIVA_GROQ];
     return [];
   };
 
@@ -515,16 +510,24 @@ async function llamarModeloEnStream(p: {
     body.tool_choice = "auto";
   }
 
-  const response = await fetch(endpoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-      ...extraHeaders,
-    },
-    body: JSON.stringify(body),
-    signal,
-  });
+  // Proveedores sin CORS desde el navegador pasan por el proxy del propio sitio (api/ia.ts).
+  const response = proveedor.viaProxy
+    ? await fetch("/api/ia", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ proveedor: config.activeProvider, apiKey, payload: body }),
+        signal,
+      })
+    : await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+          ...extraHeaders,
+        },
+        body: JSON.stringify(body),
+        signal,
+      });
 
   if (!response.ok) {
     // Si el proveedor o el modelo no aceptan herramientas, se reintenta sin ellas.
@@ -536,7 +539,7 @@ async function llamarModeloEnStream(p: {
     let errorDetail = "";
     try {
       const errJson = await response.json();
-      errorDetail = errJson.error?.message || JSON.stringify(errJson);
+      errorDetail = (typeof errJson.error === "string" ? errJson.error : errJson.error?.message) || JSON.stringify(errJson);
     } catch {
       errorDetail = await response.text().catch(() => "");
     }
