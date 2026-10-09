@@ -20,6 +20,8 @@ export interface AiConfig {
   openRouterApiKey: string;
   openRouterModel: string;
   openRouterOnlyFree: boolean;
+  /** Opcional: habilita la búsqueda en internet de la IA (Tavily). Sin clave, la IA no tiene herramientas. */
+  tavilyApiKey: string;
 }
 
 const STORAGE_KEY = "finanzar_ai_config_v1";
@@ -67,7 +69,25 @@ export const DEFAULT_AI_CONFIG: AiConfig = {
   openRouterApiKey: "",
   openRouterModel: "meta-llama/llama-3.3-70b-instruct:free",
   openRouterOnlyFree: false,
+  tavilyApiKey: "",
 };
+
+/** Modelos de Groq con búsqueda web integrada (browser_search). */
+export const MODELOS_GROQ_BUSQUEDA_NATIVA = ["openai/gpt-oss-120b", "openai/gpt-oss-20b"];
+
+/**
+ * Cómo busca la IA en internet:
+ * - "tavily": clave de Tavily cargada → herramienta buscar_en_internet (prioriza fuentes de referencia).
+ * - "nativa": modelo gpt-oss de Groq → búsqueda integrada del proveedor, sin clave extra.
+ * - null: sin búsqueda; la IA responde solo con los datos de la app.
+ */
+export type ModoBusqueda = "tavily" | "nativa" | null;
+
+export function modoBusquedaActivo(config: AiConfig): ModoBusqueda {
+  if (config.tavilyApiKey.trim()) return "tavily";
+  if (config.activeProvider === "groq" && MODELOS_GROQ_BUSQUEDA_NATIVA.includes(config.groqModel)) return "nativa";
+  return null;
+}
 
 export function getAiConfig(): AiConfig {
   try {

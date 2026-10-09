@@ -1,8 +1,9 @@
 // Servicio de Chat IA para FinanzAR (Groq y OpenRouter).
 // Gestiona el historial de conversaciones en localStorage, la inyección del contexto
 // financiero en vivo (portfolio + mercado) y la comunicación por streaming con los LLMs.
+// Si el usuario cargó una clave de Tavily, el modelo puede usar la herramienta de búsqueda en internet.
 
-import { AiConfig, getAiConfig } from "./aiConfig";
+import { AiConfig, ModoBusqueda, getAiConfig, modoBusquedaActivo } from "./aiConfig";
 import { Instrumento, MonedaVista, PlazoFijo } from "../types";
 import {
   FondoComunValuado,
@@ -13,6 +14,11 @@ import {
   nuevoId,
 } from "./portfolio";
 import { construirBloqueFuentes, construirMapaCategorias } from "./fuentesNoticias";
+import {
+  DEFINICION_HERRAMIENTA_BUSQUEDA,
+  NOMBRE_HERRAMIENTA_BUSQUEDA,
+  buscarEnInternet,
+} from "./busquedaWeb";
 
 export interface ChatMessage {
   id: string;
@@ -153,6 +159,22 @@ export interface ContextoFinancieroParams {
   monedaVista?: MonedaVista;
   instruments?: Instrumento[];
   isLive?: boolean;
+  /** Cómo puede buscar en internet la IA en esta sesión (ver modoBusquedaActivo). */
+  modoBusqueda?: ModoBusqueda;
+}
+
+/** Monto en pesos con rótulo explícito (AR$) para que el modelo no lo confunda con dólares. */
+function montoTxt(monto: number, moneda: "ARS" | "USD" = "ARS"): string {
+  if (moneda === "USD") return formatMoneda(monto, "USD");
+  const signo = monto < 0 ? "-" : "";
+  return `${signo}AR$ ${Math.abs(monto).toLocaleString("es-AR", { maximumFractionDigits: 2 })}`;
+}
+
+/** Precio o tasa de un instrumento según su unidad real en la app (ARS, USD o TNA). */
+function precioTxt(i: Instrumento): string {
+  if (i.unidad === "TNA") return `${i.tasaORendimientoActual.toFixed(2)}% TNA`;
+  if (i.unidad === "precio_usd") return montoTxt(i.tasaORendimientoActual, "USD");
+  return montoTxt(i.tasaORendimientoActual, "ARS");
 }
 
 export function construirPromptSistema(params: ContextoFinancieroParams): string {
@@ -167,6 +189,7 @@ export function construirPromptSistema(params: ContextoFinancieroParams): string
     monedaVista = "ARS",
     instruments = [],
     isLive = true,
+    modoBusqueda = null,
   } = params;
 
   const hoy = hoyISO();
@@ -174,7 +197,7 @@ export function construirPromptSistema(params: ContextoFinancieroParams): string
   // 1. Resumen de Mercado (Divisas, Tasas, Cripto, CEDEARs)
   const divisas = instruments.filter((i) => i.categoria === "divisas");
   const divisasTxt = divisas.length
-    ? divisas.map((d) => `  - ${d.nombre}: $${d.tasaORendimientoActual.toLocaleString("es-AR")}`).join("\n")
+    ? divisas.map((d) => `  - ${d.nombre}: ${precioTxt(d)}`).join("\n")
     : "  - Cotizaciones no disponibles en este momento.";
 
   const plazosFijosMdo = instruments.filter((i) => i.categoria === "pesos" && i.unidad === "TNA");
@@ -186,7 +209,7 @@ export function construirPromptSistema(params: ContextoFinancieroParams): string
   const criptosTxt = criptos.length
     ? criptos
         .slice(0, 5)
-        .map((c) => `  - ${c.nombre} (${c.ticker ?? "CRYPTO"}): US$ ${c.tasaORendimientoActual.toLocaleString("es-AR")}`)
+        .map((c) => `  - ${c.nombre} (${c.ticker ?? "CRYPTO"}): ${precioTxt(c)}`)
         .join("\n")
     : "  - Criptomonedas no disponibles.";
 
@@ -194,7 +217,7 @@ export function construirPromptSistema(params: ContextoFinancieroParams): string
   const cedearsTxt = cedears.length
     ? cedears
         .slice(0, 6)
-        .map((cd) => `  - ${cd.nombre} (${cd.ticker ?? ""}): $${cd.tasaORendimientoActual.toLocaleString("es-AR")}`)
+        .map((cd) => `  - ${cd.nombre} (${cd.ticker ?? ""}): ${precioTxt(cd)}`)
         .join("\n")
     : "  - CEDEARs no disponibles.";
 
@@ -207,12 +230,12 @@ export function construirPromptSistema(params: ContextoFinancieroParams): string
           .map((p) => {
             const res = p.valorActual !== null ? p.valorActual - p.costoTotal : 0;
             const resPct = p.costoTotal > 0 ? (res / p.costoTotal) * 100 : 0;
-            return `  - ${p.nombre} (${p.ticker ?? ""}): ${p.cantidad} unidades | Costo: ${formatMoneda(
+            return `  - ${p.nombre} (${p.ticker ?? ""}): ${p.cantidad} unidades | Costo: ${montoTxt(
               p.costoTotal,
               p.moneda
             )} | Valor actual: ${
-              p.valorActual !== null ? formatMoneda(p.valorActual, p.moneda) : "Sin cotización"
-            } | Resultado: ${res >= 0 ? "+" : ""}${formatMoneda(res, p.moneda)} (${resPct.toFixed(2)}%)`;
+              p.valorActual !== null ? montoTxt(p.valorActual, p.moneda) : "Sin cotización"
+            } | Resultado: ${res >= 0 ? "+" : ""}${montoTxt(res, p.moneda)} (${resPct.toFixed(2)}%)`;
           })
           .join("\n")
       : "  - Sin posiciones de mercado activas.";
@@ -222,7 +245,7 @@ export function construirPromptSistema(params: ContextoFinancieroParams): string
       ? pfActivos
           .map(
             (pf) =>
-              `  - ${pf.entidad}: Capital $${pf.capital.toLocaleString("es-AR")} al ${pf.tna.toFixed(2)}% TNA (Vence: ${pf.fechaVencimiento})`
+              `  - ${pf.entidad}: Capital ${montoTxt(pf.capital)} al ${pf.tna.toFixed(2)}% TNA (Vence: ${pf.fechaVencimiento})`
           )
           .join("\n")
       : "  - Sin plazos fijos vigentes.";
@@ -230,23 +253,23 @@ export function construirPromptSistema(params: ContextoFinancieroParams): string
     const fciActivos = fondosComunes.filter((fc) => fc.estado === "activo");
     const fciTxt = fciActivos.length
       ? fciActivos
-          .map(
-            (fc) =>
-              `  - ${fc.fondo}: Capital $${fc.capital.toLocaleString("es-AR")} | Valor actual: $${fc.valorActual.toLocaleString("es-AR")} | Ganancia devengada: +$${(
-                fc.valorActual - fc.capital
-              ).toLocaleString("es-AR")}`
-          )
+          .map((fc) => {
+            const ganancia = fc.valorActual - fc.capital;
+            return `  - ${fc.fondo}: Capital ${montoTxt(fc.capital)} | Valor actual: ${montoTxt(fc.valorActual)} | Ganancia devengada: ${
+              ganancia >= 0 ? "+" : ""
+            }${montoTxt(ganancia)}`;
+          })
           .join("\n")
       : "  - Sin fondos comunes vigentes.";
 
     portfolioTxt = `
-• TOTAL PATRIMONIO VALUADO: ${formatMoneda(totales.valorTotal, "ARS")} ${
+• TOTAL PATRIMONIO VALUADO: ${montoTxt(totales.valorTotal)} ${
       dolar ? `(~ US$ ${(totales.valorTotal / dolar).toFixed(2)})` : ""
     }
-• CAPITAL TOTAL INVERTIDO: ${formatMoneda(totales.capitalInvertido, "ARS")}
-• RESULTADO NO REALIZADO: ${totales.resultado >= 0 ? "+" : ""}${formatMoneda(totales.resultado, "ARS")} (${totales.resultadoPct.toFixed(2)}%)
-• GANANCIA REALIZADA HISTÓRICA: ${formatMoneda(totales.realizada, "ARS")}
-• EFECTIVO DISPONIBLE LÍQUIDO: $${efectivoActual.toLocaleString("es-AR")}
+• CAPITAL TOTAL INVERTIDO: ${montoTxt(totales.capitalInvertido)}
+• RESULTADO NO REALIZADO: ${totales.resultado >= 0 ? "+" : ""}${montoTxt(totales.resultado)} (${totales.resultadoPct.toFixed(2)}%)
+• GANANCIA REALIZADA HISTÓRICA: ${montoTxt(totales.realizada)}
+• EFECTIVO DISPONIBLE LÍQUIDO: ${montoTxt(efectivoActual)}
 • MONEDA DE VISTA PREFERIDA: ${monedaVista}
 
 POSICIONES EN CARTERA:
@@ -259,10 +282,21 @@ FONDOS COMUNES DE INVERSIÓN (FCI):
 ${fciTxt}`;
   }
 
-  return `Sos FinanzAR IA, un analista patrimonial y asistente financiero inteligente de primer nivel para la aplicación FinanzAR (Argentina).
-Estás interactuando con ${usuarioNombre}.
+  const actualidad =
+    modoBusqueda === "tavily"
+      ? `Tenés la herramienta ${NOMBRE_HERRAMIENTA_BUSQUEDA}. Usala ante noticias, hechos recientes o cifras que no estén en el contexto de arriba (decisiones de la Fed, regulación, resultados de una empresa, etc.). Empezá con tema "noticias" y usá "general" para definiciones o contexto. Con cada dato que salga de una búsqueda, indicá la fuente y la fecha de publicación. Si la búsqueda no devuelve nada útil, decilo y respondé con el contexto disponible.`
+      : modoBusqueda === "nativa"
+      ? `Tenés búsqueda en internet integrada en el modelo: podés consultar sitios cuando hace falta. Usala ante noticias, hechos recientes o cifras que no estén en el contexto de arriba. Con cada dato que salga de una búsqueda, indicá la fuente y la fecha de publicación. Si la búsqueda no devuelve nada útil, decilo y respondé con el contexto disponible.`
+      : `En esta sesión no tenés búsqueda en internet: no podés leer noticias ni comunicados de hoy. Ante una pregunta de actualidad ("qué pasó con…", "por qué subió…"), respondé con el contexto de mercado y portfolio indicando su fecha, y señalá qué fuente verificar. Para que el usuario tenga búsqueda, puede cargar una clave de Tavily o usar un modelo gpt-oss de Groq, en Mi cuenta → API Keys.`;
+
+  return `Sos FinanzAR IA, un analista patrimonial y asistente financiero de primer nivel para la aplicación FinanzAR (Argentina).
+Estás conversando con ${usuarioNombre}.
 Fecha actual: ${hoy}. Estado de datos en vivo: ${isLive ? "Conectado en tiempo real" : "Datos en caché"}.
-Dólar de referencia para conversión del portfolio: ${dolar ? `$${dolar.toLocaleString("es-AR")}` : "No informado"}.
+Dólar de referencia (venta, para convertir pesos a dólares): ${dolar ? `AR$ ${dolar.toLocaleString("es-AR")}` : "No informado"}.
+
+MONEDAS
+- Todos los valores de la app están en pesos argentinos (AR$), salvo los que dicen US$ o % TNA. Rotulá siempre la moneda al citar una cifra.
+- El usuario piensa sus inversiones en dólares. Cuando hables de montos, precios o rendimientos en pesos, convertilos a US$ con el dólar de referencia e indicá la cotización usada. Si no hay dólar de referencia, decilo y no conviertas.
 
 ---
 ESTADO DEL PORTFOLIO PERSONAL DEL USUARIO:
@@ -270,33 +304,30 @@ ${portfolioTxt}
 
 ---
 PANORAMA DE MERCADOS ACTUAL (ARGENTINA & GLOBAL):
-Cotizaciones de Dólares:
+Cotizaciones de dólares (AR$ por dólar):
 ${divisasTxt}
 
-Tasa líder en Plazos Fijos:
+Tasa líder en plazos fijos:
 ${liderPf ? `  - ${liderPf.entidadOFuente}: ${liderPf.tasaORendimientoActual.toFixed(2)}% TNA` : "  - No disponible"}
 
 Criptomonedas principales:
 ${criptosTxt}
 
-CEDEARs y Renta Variable de Referencia:
+CEDEARs y renta variable de referencia:
 ${cedearsTxt}
 
 ---
 CÓMO RESPONDER
 - Estilo: sobrio, preciso y analítico, en español argentino natural, con tono de prensa económica de referencia. Usá Markdown cuando ayude (viñetas, tablas breves).
-- Cifras: usá las cifras exactas del portfolio y del panorama de mercado. Si un dato no está en ese contexto, no lo completes con memoria: decí que no tenés una cifra verificada y dónde verificarla.
+- Cifras: usá las cifras exactas del portfolio y del mercado. Si un dato no está en el contexto ni en una búsqueda, no lo completes con memoria: decí que no tenés una cifra verificada y dónde verificarla.
 - Conceptos: diferenciá TNA de TEA, rendimiento real frente a inflación, y devaluación frente a brecha cambiaria (oficial, MEP, CCL, blue).
 - Análisis: podés evaluar diversificación, liquidez, costo de oportunidad y alternativas del mercado argentino (plazo fijo, FCI money market, LECAPs y bonos, CEDEARs, ONs, cripto).
 - Aclaración: solo cuando el usuario pida una decisión concreta (qué comprar o vender, cuánto invertir), cerrá con una línea que diga que tu análisis es informativo y educativo y no constituye asesoramiento financiero formal.
 
 ACTUALIDAD Y FUENTES
-No tenés acceso en vivo a sitios ni buscadores: no podés leer notas ni comunicados de hoy. Ante una pregunta de actualidad ("qué pasó con…", "por qué subió…"):
-1. Respondé primero con lo que hay en el contexto de mercado y portfolio, indicando su fecha.
-2. Indicá qué fuente de nivel 1 corresponde verificar, según el mapa por categoría de abajo.
-3. Si el usuario pega un titular o un texto, analizalo y aclarás que la cifra viene de ese texto y no está verificada.
+${actualidad}
 
-Al citar, respetá la jerarquía: oficial (nivel 1) > research (nivel 2, "según el research de X") > prensa (nivel 3, con medio y fecha, nunca como dato primario). Si dos fuentes difieren, mostrá ambos valores con su fecha y procedencia; no elijas uno en silencio. Nunca inventes titulares, cifras, fechas ni URLs: solo mencioná dominios de la lista.
+Al citar, respetá la jerarquía: oficial (nivel 1) > research (nivel 2, "según el research de X") > prensa (nivel 3, con medio y fecha, nunca como dato primario). Si dos fuentes difieren, mostrá ambos valores con su fecha y procedencia; no elijas uno en silencio. Nunca inventes titulares, cifras, fechas ni URLs: solo mencioná dominios de la lista de referencia o URLs que haya devuelto una búsqueda.
 
 FUENTES DE REFERENCIA (por orden de autoridad)
 ${construirBloqueFuentes()}
@@ -309,15 +340,114 @@ ${construirMapaCategorias()}`;
    LLAMADAS A LA API DE GROQ Y OPENROUTER CON STREAMING
    ============================================================ */
 
+export interface LlamadaHerramienta {
+  id: string;
+  type: "function";
+  function: { name: string; arguments: string };
+}
+
+/** Mensaje en el formato de chat/completions (incluye las llamadas y resultados de herramientas). */
+export type ChatApiMessage =
+  | { role: "system" | "user"; content: string }
+  | { role: "assistant"; content: string | null; tool_calls?: LlamadaHerramienta[] }
+  | { role: "tool"; tool_call_id: string; content: string };
+
 export interface EnviarMensajeChatParams {
-  messages: { role: "system" | "user" | "assistant"; content: string }[];
+  messages: ChatApiMessage[];
   onChunk: (chunk: string) => void;
   signal?: AbortSignal;
 }
 
+/** Tope de rondas con herramientas: evita un bucle si el modelo sigue pidiendo búsquedas. */
+const MAX_RONDAS_HERRAMIENTAS = 3;
+const BLOQUE_RAZONAMIENTO_RE = /<think>[\s\S]*?<\/think>\s*/gi;
+// Búsqueda integrada de Groq (solo modelos gpt-oss): el proveedor la ejecuta del lado del servidor.
+const HERRAMIENTA_BUSQUEDA_NATIVA_GROQ = { type: "browser_search" as const };
+
 export async function enviarMensajeChat(params: EnviarMensajeChatParams): Promise<string> {
   const { messages, onChunk, signal } = params;
   const config: AiConfig = getAiConfig();
+  const modo = modoBusquedaActivo(config);
+  const claveBusqueda = config.tavilyApiKey.trim();
+
+  // Herramientas que se envían en cada ronda según el modo de búsqueda
+  const herramientasDe = (ronda: number): unknown[] => {
+    if (modo === "tavily") return ronda < MAX_RONDAS_HERRAMIENTAS ? [DEFINICION_HERRAMIENTA_BUSQUEDA] : [];
+    if (modo === "nativa") return [HERRAMIENTA_BUSQUEDA_NATIVA_GROQ];
+    return [];
+  };
+
+  const historial: ChatApiMessage[] = [...messages];
+  let textoTotal = "";
+
+  for (let ronda = 0; ; ronda++) {
+    const salida = await llamarModeloEnStream({
+      config,
+      messages: historial,
+      herramientas: herramientasDe(ronda),
+      onChunk,
+      signal,
+    });
+    textoTotal += salida.texto;
+
+    if (salida.llamadas.length === 0 || ronda >= MAX_RONDAS_HERRAMIENTAS) break;
+
+    historial.push({
+      role: "assistant",
+      content: salida.texto.replace(BLOQUE_RAZONAMIENTO_RE, "").trim() || null,
+      tool_calls: salida.llamadas,
+    });
+    for (const llamada of salida.llamadas) {
+      const resultado = await ejecutarHerramienta(llamada, claveBusqueda, signal);
+      historial.push({ role: "tool", tool_call_id: llamada.id, content: resultado });
+    }
+  }
+
+  if (!textoTotal.trim()) {
+    throw new Error(
+      `El modelo "${config.activeProvider === "groq" ? config.groqModel : config.openRouterModel}" no devolvió texto en su respuesta. Te recomendamos cambiar a Llama 3.3 70B Versatile en Mi cuenta → Configuración de IA.`
+    );
+  }
+  return textoTotal;
+}
+
+async function ejecutarHerramienta(
+  llamada: LlamadaHerramienta,
+  claveBusqueda: string,
+  signal?: AbortSignal
+): Promise<string> {
+  if (llamada.function.name !== NOMBRE_HERRAMIENTA_BUSQUEDA) return "Herramienta no disponible.";
+  if (!claveBusqueda) return "La búsqueda en internet no está configurada.";
+
+  let args: { consulta?: string; tema?: string } = {};
+  try {
+    args = JSON.parse(llamada.function.arguments || "{}");
+  } catch {
+    /* argumentos mal formados: se informa abajo */
+  }
+  if (!args.consulta?.trim()) return "Falta la consulta de búsqueda.";
+
+  try {
+    return await buscarEnInternet({ consulta: args.consulta, tema: args.tema }, claveBusqueda, signal);
+  } catch (err: any) {
+    if (err?.name === "AbortError") throw err;
+    return `Error al buscar en internet: ${err?.message || "error desconocido"}.`;
+  }
+}
+
+interface SalidaModelo {
+  texto: string;
+  llamadas: LlamadaHerramienta[];
+}
+
+async function llamarModeloEnStream(p: {
+  config: AiConfig;
+  messages: ChatApiMessage[];
+  herramientas: unknown[];
+  onChunk: (chunk: string) => void;
+  signal?: AbortSignal;
+}): Promise<SalidaModelo> {
+  const { config, messages, herramientas, onChunk, signal } = p;
 
   const provider = config.activeProvider;
   let apiKey = "";
@@ -343,16 +473,35 @@ export async function enviarMensajeChat(params: EnviarMensajeChatParams): Promis
     );
   }
 
-  // Filtrar y sanear mensajes para no enviar mensajes vacíos que provoquen fallos o respuestas nulas
+  // Filtrar y sanear mensajes: sin texto vacío, pero conservando las llamadas y resultados de herramientas
   const sanitizedMessages = messages
-    .filter((m) => typeof m.content === "string" && m.content.trim().length > 0)
-    .map((m) => ({
-      role: m.role,
-      content: m.content.trim(),
-    }));
+    .filter(
+      (m) =>
+        m.role === "tool" ||
+        (m.role === "assistant" && (m.tool_calls?.length ?? 0) > 0) ||
+        (typeof m.content === "string" && m.content.trim().length > 0)
+    )
+    .map((m) => {
+      if (m.role === "tool") return { role: "tool", tool_call_id: m.tool_call_id, content: m.content };
+      if (m.role === "assistant" && m.tool_calls?.length) {
+        return { role: "assistant", content: m.content, tool_calls: m.tool_calls };
+      }
+      return { role: m.role, content: (m.content ?? "").trim() };
+    });
 
   if (sanitizedMessages.length === 0) {
     throw new Error("El mensaje enviado no contiene texto válido.");
+  }
+
+  const body: Record<string, unknown> = {
+    model,
+    messages: sanitizedMessages,
+    temperature: 0.6,
+    stream: true,
+  };
+  if (herramientas.length > 0) {
+    body.tools = herramientas;
+    body.tool_choice = "auto";
   }
 
   const response = await fetch(endpoint, {
@@ -362,16 +511,17 @@ export async function enviarMensajeChat(params: EnviarMensajeChatParams): Promis
       Authorization: `Bearer ${apiKey}`,
       ...extraHeaders,
     },
-    body: JSON.stringify({
-      model,
-      messages: sanitizedMessages,
-      temperature: 0.6,
-      stream: true,
-    }),
+    body: JSON.stringify(body),
     signal,
   });
 
   if (!response.ok) {
+    // Si el proveedor o el modelo no aceptan herramientas, se reintenta sin ellas.
+    if (response.status === 400 && herramientas.length > 0) {
+      console.warn("El proveedor rechazó las herramientas del modelo; se reintenta sin búsqueda.");
+      return llamarModeloEnStream({ ...p, herramientas: [] });
+    }
+
     let errorDetail = "";
     try {
       const errJson = await response.json();
@@ -407,6 +557,19 @@ export async function enviarMensajeChat(params: EnviarMensajeChatParams): Promis
   let hasStartedReasoning = false;
   let hasClosedReasoning = false;
 
+  // Las llamadas a herramientas llegan en fragmentos, indexados por `index`
+  const llamadasAcumuladas: { id: string; name: string; args: string }[] = [];
+  const acumularLlamadas = (deltas: any[]) => {
+    for (const d of deltas) {
+      const idx = typeof d?.index === "number" ? d.index : llamadasAcumuladas.length;
+      if (!llamadasAcumuladas[idx]) llamadasAcumuladas[idx] = { id: "", name: "", args: "" };
+      const acc = llamadasAcumuladas[idx];
+      if (typeof d?.id === "string" && d.id) acc.id = d.id;
+      if (typeof d?.function?.name === "string") acc.name += d.function.name;
+      if (typeof d?.function?.arguments === "string") acc.args += d.function.arguments;
+    }
+  };
+
   const processLine = (line: string) => {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith(":")) return;
@@ -422,6 +585,9 @@ export async function enviarMensajeChat(params: EnviarMensajeChatParams): Promis
       const parsed = JSON.parse(jsonStr);
       const choice = parsed.choices?.[0];
       const delta = choice?.delta;
+
+      const deltasHerramientas = delta?.tool_calls ?? choice?.message?.tool_calls;
+      if (Array.isArray(deltasHerramientas)) acumularLlamadas(deltasHerramientas);
 
       const contentChunk =
         (typeof delta?.content === "string" ? delta.content : "") ||
@@ -494,6 +660,9 @@ export async function enviarMensajeChat(params: EnviarMensajeChatParams): Promis
     } else if (rawAccumulated.trim()) {
       try {
         const parsed = JSON.parse(rawAccumulated);
+        const fallbackTools = parsed.choices?.[0]?.message?.tool_calls;
+        if (Array.isArray(fallbackTools)) acumularLlamadas(fallbackTools);
+
         const fallback =
           parsed.choices?.[0]?.message?.content ||
           parsed.choices?.[0]?.delta?.content ||
@@ -516,11 +685,19 @@ export async function enviarMensajeChat(params: EnviarMensajeChatParams): Promis
     }
   }
 
-  if (!fullText.trim()) {
+  const llamadas: LlamadaHerramienta[] = llamadasAcumuladas
+    .filter((x) => x && x.name)
+    .map((x, i) => ({
+      id: x.id || `call_${i}`,
+      type: "function" as const,
+      function: { name: x.name, arguments: x.args },
+    }));
+
+  if (!fullText.trim() && llamadas.length === 0) {
     throw new Error(
       `El modelo "${model}" no devolvió texto en su respuesta. Te recomendamos cambiar a Llama 3.3 70B Versatile en Mi cuenta → Configuración de IA.`
     );
   }
 
-  return fullText;
+  return { texto: fullText, llamadas };
 }
