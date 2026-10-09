@@ -251,7 +251,7 @@ export default function ChatView({
                 className={`rounded-md shadow-xs ${
                   isUser
                     ? "max-w-[85%] sm:max-w-[75%] px-3 py-2 bg-finanzar-primary text-finanzar-surface font-medium"
-                    : "max-w-[90%] sm:max-w-[82%] px-3.5 py-2.5 bg-finanzar-surface border border-finanzar-border text-finanzar-text"
+                    : "w-full max-w-[90%] sm:max-w-[82%] px-3.5 py-2.5 bg-finanzar-surface border border-finanzar-border text-finanzar-text"
                 }`}
               >
                 {isUser ? (
@@ -282,7 +282,7 @@ export default function ChatView({
         {/* Mensaje en streaming en vivo */}
         {isGenerating && streamingContent && (
           <div className="flex flex-col items-start">
-            <div className="max-w-[90%] sm:max-w-[82%] rounded-md px-3.5 py-2.5 shadow-xs bg-finanzar-surface border border-finanzar-border text-finanzar-text">
+            <div className="w-full max-w-[90%] sm:max-w-[82%] rounded-md px-3.5 py-2.5 shadow-xs bg-finanzar-surface border border-finanzar-border text-finanzar-text">
               <MarkdownMessage content={streamingContent} />
               <span className="inline-block w-1.5 h-3 ml-1 bg-finanzar-accent animate-pulse" />
             </div>

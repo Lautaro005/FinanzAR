@@ -79,9 +79,17 @@ export async function buscarEnInternet(
 ): Promise<string> {
   const tema = args.tema === "general" ? "general" : "noticias";
 
-  let resultados = await llamarBuscador(args.consulta, tema, apiKey, DOMINIOS_REFERENCIA, signal);
+  // En noticias, la consulta lleva mes y año actuales: sin eso el buscador devuelve notas viejas.
+  const ahora = new Date();
+  const anio = String(ahora.getFullYear());
+  const consulta =
+    tema === "noticias" && !args.consulta.includes(anio)
+      ? `${args.consulta} ${ahora.toLocaleDateString("es-AR", { month: "long" })} ${anio}`
+      : args.consulta;
+
+  let resultados = await llamarBuscador(consulta, tema, apiKey, DOMINIOS_REFERENCIA, signal);
   if (resultados.length < MINIMO_RESULTADOS_PRIORITARIOS) {
-    const generales = await llamarBuscador(args.consulta, tema, apiKey, undefined, signal);
+    const generales = await llamarBuscador(consulta, tema, apiKey, undefined, signal);
     const vistas = new Set(resultados.map((r) => r.url));
     resultados = [...resultados, ...generales.filter((r) => !vistas.has(r.url))];
   }
