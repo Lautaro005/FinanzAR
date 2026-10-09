@@ -11,15 +11,25 @@ import {
 import { PuntoHistorico, RangoTemporal } from "../types";
 import { sliceByRange } from "../lib/dateRange";
 
+// Texto que acompaña a la variación del período según el rango elegido.
+const TEXTO_RANGO: Record<RangoTemporal, string> = {
+  "7d": "últimos 7 días",
+  "30d": "últimos 30 días",
+  "90d": "últimos 90 días",
+  "1a": "último año",
+  max: "todo el histórico",
+};
+
 interface InstrumentChartProps {
   data: PuntoHistorico[];
   titulo?: string;
   subtitulo?: string;
   valorActual?: number;
   unidad?: "TNA" | "precio_ars" | "precio_usd";
-  variacion?: number;
   activeRange?: RangoTemporal;
   onRangeChange?: (range: RangoTemporal) => void;
+  /** Histórico estimado o aún cargando: no se muestra variación del período (sería un dato inventado). */
+  esEstimacion?: boolean;
 }
 
 export default function InstrumentChart({
@@ -28,9 +38,9 @@ export default function InstrumentChart({
   subtitulo,
   valorActual,
   unidad = "TNA",
-  variacion,
   activeRange = "30d",
   onRangeChange,
+  esEstimacion = false,
 }: InstrumentChartProps) {
   const [selectedRange, setSelectedRange] = useState<RangoTemporal>(activeRange);
 
@@ -46,9 +56,6 @@ export default function InstrumentChart({
     setSelectedRange(r);
     onRangeChange?.(r);
   };
-
-  const hasVariation = variacion !== undefined && variacion !== null;
-  const isPositive = hasVariation && variacion! >= 0;
 
   // Formateo único para header y tooltip: evita que un `unidad` inesperado
   // (ej. un símbolo "$" pasado por error en vez del código interno) caiga
@@ -82,6 +89,17 @@ export default function InstrumentChart({
     return sliceByRange(base, selectedRange);
   }, [data, selectedRange]);
 
+  // Variación porcentual del rango visible: primer punto vs. último punto.
+  // Si la serie es de respaldo o estimada, no hay variación real que mostrar.
+  const variacionPeriodo = useMemo(() => {
+    if (esEstimacion || !data || data.length < 2 || displayedData.length < 2) return null;
+    const inicial = displayedData[0].valor;
+    const final = displayedData[displayedData.length - 1].valor;
+    if (!inicial) return null;
+    return ((final - inicial) / inicial) * 100;
+  }, [esEstimacion, data, displayedData]);
+  const isPositive = variacionPeriodo !== null && variacionPeriodo >= 0;
+
   // Con series largas (histórico real de 90-365 puntos) no queremos un
   // tick por cada punto: se muestran ~8 etiquetas como máximo en el eje X.
   const xAxisInterval = Math.max(0, Math.ceil(displayedData.length / 8) - 1);
@@ -108,16 +126,18 @@ export default function InstrumentChart({
                 {formatValue(valorActual)}
               </span>
 
-              {hasVariation && (
+              {variacionPeriodo !== null && (
                 <span
                   className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold tabular-nums border ${
                     isPositive
                       ? "bg-finanzar-positiveBg text-finanzar-positive border-finanzar-positiveBorder"
                       : "bg-finanzar-negativeBg text-finanzar-negative border-finanzar-negativeBorder"
                   }`}
+                  title={`Variación ${TEXTO_RANGO[selectedRange]}`}
                 >
                   <span className="mr-0.5 font-bold">{isPositive ? "↑" : "↓"}</span>
-                  <span>{Math.abs(variacion!).toFixed(2)}%</span>
+                  <span>{Math.abs(variacionPeriodo).toFixed(2)}%</span>
+                  <span className="ml-1.5 font-normal text-finanzar-textSecondary">· {TEXTO_RANGO[selectedRange]}</span>
                 </span>
               )}
             </div>
