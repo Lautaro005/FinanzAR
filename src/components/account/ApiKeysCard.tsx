@@ -5,7 +5,10 @@ import {
   DEFAULT_GROQ_MODELS,
   fetchGroqModelsWithStatus,
   fetchOpenRouterModels,
+  PROVEEDORES_IA,
+  claveDelProveedor,
   getAiConfig,
+  modeloDelProveedor,
   modoBusquedaActivo,
   saveAiConfig,
 } from "../../lib/aiConfig";
@@ -203,7 +206,87 @@ function CustomModelDropdown({
 }
 
 /**
- * Contenedor "API Keys" para Groq y OpenRouter.
+ * Configuración de un proveedor compatible con la API de OpenAI (Ollama Cloud, CheaperInference).
+ * Clave y modelo son campos de texto libre: estos proveedores no tienen un listado de modelos en la app.
+ */
+function ProveedorCompatible({
+  id,
+  config,
+  actualizarConfig,
+  ayuda,
+  placeholderClave,
+}: {
+  id: "ollama" | "cheaperinference";
+  config: AiConfig;
+  actualizarConfig: (parcial: Partial<AiConfig>) => void;
+  ayuda: { url: string; etiqueta: string; descripcion: string };
+  placeholderClave: string;
+}) {
+  const [mostrarClave, setMostrarClave] = useState(false);
+  const proveedor = PROVEEDORES_IA[id];
+  const clave = claveDelProveedor(config, id);
+
+  return (
+    <div className="space-y-5">
+      <div>
+        <div className="flex items-center justify-between mb-1">
+          <label className="block text-xs font-semibold text-finanzar-textMain">API Key de {proveedor.nombre}</label>
+          <a
+            href={ayuda.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[11px] text-finanzar-accent hover:underline inline-flex items-center gap-0.5"
+          >
+            <span>{ayuda.etiqueta}</span>
+            <span className="text-[9px]">↗</span>
+          </a>
+        </div>
+        <div className="relative">
+          <input
+            type={mostrarClave ? "text" : "password"}
+            className={`${inputClass} font-mono text-xs pr-16`}
+            placeholder={placeholderClave}
+            value={String(config[proveedor.campoClave] ?? "")}
+            onChange={(e) => actualizarConfig({ [proveedor.campoClave]: e.target.value } as Partial<AiConfig>)}
+            autoComplete="off"
+            spellCheck={false}
+          />
+          <button
+            type="button"
+            onClick={() => setMostrarClave((v) => !v)}
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[11px] text-finanzar-textMuted hover:text-finanzar-textSecondary font-medium"
+          >
+            {mostrarClave ? "Ocultar" : "Mostrar"}
+          </button>
+        </div>
+        <p className="text-[11px] text-finanzar-textMuted mt-1">
+          {clave ? "Tu clave se almacena únicamente en tu navegador." : ayuda.descripcion}
+        </p>
+      </div>
+
+      <div>
+        <label className="block text-xs font-semibold text-finanzar-textMain mb-1">Modelo</label>
+        <input
+          type="text"
+          className={`${inputClass} font-mono text-xs`}
+          placeholder={proveedor.modeloDefault}
+          value={String(config[proveedor.campoModelo] ?? "")}
+          onChange={(e) => actualizarConfig({ [proveedor.campoModelo]: e.target.value } as Partial<AiConfig>)}
+          autoComplete="off"
+          spellCheck={false}
+        />
+        <p className="text-[11px] text-finanzar-textMuted mt-1">
+          Modelo activo:{" "}
+          <strong className="font-mono text-finanzar-primary">{modeloDelProveedor(config, id)}</strong>. Escribí el ID exacto del
+          modelo que quieras usar.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Contenedor "API Keys" para los proveedores de IA.
  * Aparece en /account debajo de "Sincronización del portfolio" (solo usuarios logueados).
  * Dos columnas: izquierda selector de proveedor (Groq / OpenRouter), derecha API key y dropdown de modelos.
  */
@@ -362,6 +445,44 @@ export default function ApiKeysCard() {
             {activeProvider === "openrouter" && (
               <span className="w-1.5 h-1.5 rounded-full bg-finanzar-accent" />
             )}
+          </button>
+
+          {/* Opción Ollama Cloud */}
+          <button
+            type="button"
+            onClick={() => actualizarConfig({ activeProvider: "ollama" })}
+            className={`w-full text-left px-3 py-2.5 rounded-sm text-xs transition-all flex items-center justify-between ${
+              activeProvider === "ollama"
+                ? "bg-finanzar-bg border-l-2 border-finanzar-accent text-finanzar-primary font-bold shadow-2xs"
+                : "text-finanzar-textSecondary hover:text-finanzar-primary hover:bg-finanzar-surfaceHover border-l-2 border-transparent"
+            }`}
+          >
+            <div>
+              <span className="block font-medium">Ollama Cloud</span>
+              <span className="block text-[10px] text-finanzar-textMuted mt-0.5 font-normal">
+                {claveDelProveedor(config, "ollama") ? "Clave configurada" : "Sin clave"}
+              </span>
+            </div>
+            {activeProvider === "ollama" && <span className="w-1.5 h-1.5 rounded-full bg-finanzar-accent" />}
+          </button>
+
+          {/* Opción CheaperInference */}
+          <button
+            type="button"
+            onClick={() => actualizarConfig({ activeProvider: "cheaperinference" })}
+            className={`w-full text-left px-3 py-2.5 rounded-sm text-xs transition-all flex items-center justify-between ${
+              activeProvider === "cheaperinference"
+                ? "bg-finanzar-bg border-l-2 border-finanzar-accent text-finanzar-primary font-bold shadow-2xs"
+                : "text-finanzar-textSecondary hover:text-finanzar-primary hover:bg-finanzar-surfaceHover border-l-2 border-transparent"
+            }`}
+          >
+            <div>
+              <span className="block font-medium">CheaperInference</span>
+              <span className="block text-[10px] text-finanzar-textMuted mt-0.5 font-normal">
+                {claveDelProveedor(config, "cheaperinference") ? "Clave configurada" : "Sin clave"}
+              </span>
+            </div>
+            {activeProvider === "cheaperinference" && <span className="w-1.5 h-1.5 rounded-full bg-finanzar-accent" />}
           </button>
         </div>
 
@@ -559,6 +680,34 @@ export default function ApiKeysCard() {
                 </div>
               </div>
             </>
+          )}
+
+          {activeProvider === "ollama" && (
+            <ProveedorCompatible
+              id="ollama"
+              config={config}
+              actualizarConfig={actualizarConfig}
+              placeholderClave="Pegá tu API Key de Ollama"
+              ayuda={{
+                url: "https://ollama.com",
+                etiqueta: "ollama.com",
+                descripcion: "Pegá tu API Key de Ollama Cloud para usar sus modelos.",
+              }}
+            />
+          )}
+
+          {activeProvider === "cheaperinference" && (
+            <ProveedorCompatible
+              id="cheaperinference"
+              config={config}
+              actualizarConfig={actualizarConfig}
+              placeholderClave="Pegá tu API Key de CheaperInference"
+              ayuda={{
+                url: "https://cheaperinference.com",
+                etiqueta: "cheaperinference.com",
+                descripcion: "Pegá tu API Key de CheaperInference para usar sus modelos.",
+              }}
+            />
           )}
         </div>
       </div>
