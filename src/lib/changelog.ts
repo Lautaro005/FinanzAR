@@ -25,6 +25,8 @@ export const CHANGELOG: VersionChangelog[] = [
       "Chat IA: los valores de la app se identifican por moneda. Los montos en pesos se rotulan AR$ y los precios en dólares US$. Antes, las criptomonedas aparecían como US$ cuando la app las guarda en pesos.",
       "Chat IA: la IA convierte los montos a dólares con el dólar de referencia, porque el usuario piensa en US$, y aclara la cotización usada.",
       "Sidebar del Chat IA: al abrirlo en escritorio, la página se corre para dejar espacio y ya no queda tapada. El borde izquierdo del panel se puede arrastrar para cambiar el ancho, y el ancho elegido se recuerda en este navegador.",
+      "Chat IA: el ancho de las respuestas ya no cambia al desplegar el bloque de razonamiento; el mensaje ocupa siempre el mismo espacio, en el chat y en el widget.",
+      "Chat IA: la IA recibe la fecha de hoy en lenguaje natural (por ejemplo, 'viernes 9 de octubre de 2026') y, al buscar noticias, incluye el mes y el año actuales en la consulta. Así deja de traer noticias de meses anteriores, tanto con Tavily como con la búsqueda integrada de Groq.",
     ],
   },
   {

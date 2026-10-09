@@ -177,6 +177,10 @@ function precioTxt(i: Instrumento): string {
   return montoTxt(i.tasaORendimientoActual, "ARS");
 }
 
+// Evita que el modelo busque noticias de otros meses o años (pasó con búsquedas de marzo/abril).
+const REGLA_FECHA_BUSQUEDA =
+  "Al buscar, incluí en la consulta el mes y el año actuales y descartá resultados de fechas anteriores, salvo que el usuario pida historia. Si un resultado es de otro año, decilo.";
+
 export function construirPromptSistema(params: ContextoFinancieroParams): string {
   const {
     usuarioNombre = "Inversor",
@@ -193,6 +197,13 @@ export function construirPromptSistema(params: ContextoFinancieroParams): string
   } = params;
 
   const hoy = hoyISO();
+  // Fecha en lenguaje natural: el modelo la usa mejor que el formato ISO al armar búsquedas
+  const fechaLarga = new Date().toLocaleDateString("es-AR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
   // 1. Resumen de Mercado (Divisas, Tasas, Cripto, CEDEARs)
   const divisas = instruments.filter((i) => i.categoria === "divisas");
@@ -284,14 +295,14 @@ ${fciTxt}`;
 
   const actualidad =
     modoBusqueda === "tavily"
-      ? `Tenés la herramienta ${NOMBRE_HERRAMIENTA_BUSQUEDA}. Usala ante noticias, hechos recientes o cifras que no estén en el contexto de arriba (decisiones de la Fed, regulación, resultados de una empresa, etc.). Empezá con tema "noticias" y usá "general" para definiciones o contexto. Con cada dato que salga de una búsqueda, indicá la fuente y la fecha de publicación. Si la búsqueda no devuelve nada útil, decilo y respondé con el contexto disponible.`
+      ? `Tenés la herramienta ${NOMBRE_HERRAMIENTA_BUSQUEDA}. Usala ante noticias, hechos recientes o cifras que no estén en el contexto de arriba (decisiones de la Fed, regulación, resultados de una empresa, etc.). Empezá con tema "noticias" y usá "general" para definiciones o contexto. Con cada dato que salga de una búsqueda, indicá la fuente y la fecha de publicación. Si la búsqueda no devuelve nada útil, decilo y respondé con el contexto disponible. ${REGLA_FECHA_BUSQUEDA}`
       : modoBusqueda === "nativa"
-      ? `Tenés búsqueda en internet integrada en el modelo: podés consultar sitios cuando hace falta. Usala ante noticias, hechos recientes o cifras que no estén en el contexto de arriba. Con cada dato que salga de una búsqueda, indicá la fuente y la fecha de publicación. Si la búsqueda no devuelve nada útil, decilo y respondé con el contexto disponible.`
+      ? `Tenés búsqueda en internet integrada en el modelo: podés consultar sitios cuando hace falta. Usala ante noticias, hechos recientes o cifras que no estén en el contexto de arriba. Con cada dato que salga de una búsqueda, indicá la fuente y la fecha de publicación. Si la búsqueda no devuelve nada útil, decilo y respondé con el contexto disponible. ${REGLA_FECHA_BUSQUEDA}`
       : `En esta sesión no tenés búsqueda en internet: no podés leer noticias ni comunicados de hoy. Ante una pregunta de actualidad ("qué pasó con…", "por qué subió…"), respondé con el contexto de mercado y portfolio indicando su fecha, y señalá qué fuente verificar. Para que el usuario tenga búsqueda, puede cargar una clave de Tavily o usar un modelo gpt-oss de Groq, en Mi cuenta → API Keys.`;
 
   return `Sos FinanzAR IA, un analista patrimonial y asistente financiero de primer nivel para la aplicación FinanzAR (Argentina).
 Estás conversando con ${usuarioNombre}.
-Fecha actual: ${hoy}. Estado de datos en vivo: ${isLive ? "Conectado en tiempo real" : "Datos en caché"}.
+Hoy es ${fechaLarga} (${hoy}). Estado de datos en vivo: ${isLive ? "Conectado en tiempo real" : "Datos en caché"}.
 Dólar de referencia (venta, para convertir pesos a dólares): ${dolar ? `AR$ ${dolar.toLocaleString("es-AR")}` : "No informado"}.
 
 MONEDAS
