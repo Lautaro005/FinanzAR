@@ -6,6 +6,7 @@ import {
   fetchGroqModelsWithStatus,
   fetchOpenRouterModels,
   getAiConfig,
+  modoBusquedaActivo,
   saveAiConfig,
 } from "../../lib/aiConfig";
 import { inputClass } from "../portfolio/Modal";
@@ -603,9 +604,11 @@ export default function ApiKeysCard() {
             </button>
           </div>
           <p className="text-[11px] text-finanzar-textMuted">
-            {config.tavilyApiKey.trim()
-              ? "Activa: la IA puede buscar noticias y datos recientes en internet. Tu clave se guarda solo en tu navegador."
-              : "Sin clave, la IA responde solo con los datos de la app. Con clave, puede buscar noticias recientes en internet."}
+            {modoBusquedaActivo(config) === "tavily"
+              ? "Activa: la IA busca con Tavily y prioriza las fuentes de referencia. Tu clave se guarda solo en tu navegador."
+              : modoBusquedaActivo(config) === "nativa"
+              ? "Sin clave de Tavily, la IA usa la búsqueda integrada de Groq con el modelo gpt-oss activo."
+              : "Sin búsqueda: elegí un modelo gpt-oss de Groq (búsqueda integrada) o cargá una clave de Tavily."}
           </p>
         </div>
       </div>

@@ -14,7 +14,7 @@ import {
   loadChatSessions,
   setActiveChatId,
 } from "../../lib/aiChat";
-import { getAiConfig } from "../../lib/aiConfig";
+import { getAiConfig, modoBusquedaActivo } from "../../lib/aiConfig";
 import ChatView from "./ChatView";
 
 // Ancho del panel lateral (modo sidebar): se puede arrastrar y se recuerda en este navegador.
@@ -194,7 +194,7 @@ export default function FloatingChatWidget({
       monedaVista: portfolio.config.monedaVista,
       instruments,
       isLive,
-      busquedaWebDisponible: Boolean(getAiConfig().tavilyApiKey.trim()),
+      modoBusqueda: modoBusquedaActivo(getAiConfig()),
     });
 
     const conversationHistory = [

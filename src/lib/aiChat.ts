@@ -3,7 +3,7 @@
 // financiero en vivo (portfolio + mercado) y la comunicación por streaming con los LLMs.
 // Si el usuario cargó una clave de Tavily, el modelo puede usar la herramienta de búsqueda en internet.
 
-import { AiConfig, getAiConfig } from "./aiConfig";
+import { AiConfig, ModoBusqueda, getAiConfig, modoBusquedaActivo } from "./aiConfig";
 import { Instrumento, MonedaVista, PlazoFijo } from "../types";
 import {
   FondoComunValuado,
@@ -159,8 +159,8 @@ export interface ContextoFinancieroParams {
   monedaVista?: MonedaVista;
   instruments?: Instrumento[];
   isLive?: boolean;
-  /** Si hay clave de búsqueda configurada, la IA puede buscar en internet. */
-  busquedaWebDisponible?: boolean;
+  /** Cómo puede buscar en internet la IA en esta sesión (ver modoBusquedaActivo). */
+  modoBusqueda?: ModoBusqueda;
 }
 
 /** Monto en pesos con rótulo explícito (AR$) para que el modelo no lo confunda con dólares. */
@@ -189,7 +189,7 @@ export function construirPromptSistema(params: ContextoFinancieroParams): string
     monedaVista = "ARS",
     instruments = [],
     isLive = true,
-    busquedaWebDisponible = false,
+    modoBusqueda = null,
   } = params;
 
   const hoy = hoyISO();
@@ -282,9 +282,12 @@ FONDOS COMUNES DE INVERSIÓN (FCI):
 ${fciTxt}`;
   }
 
-  const actualidad = busquedaWebDisponible
-    ? `Tenés la herramienta ${NOMBRE_HERRAMIENTA_BUSQUEDA}. Usala ante noticias, hechos recientes o cifras que no estén en el contexto de arriba (decisiones de la Fed, regulación, resultados de una empresa, etc.). Empezá con tema "noticias" y usá "general" para definiciones o contexto. Con cada dato que salga de una búsqueda, indicá la fuente y la fecha de publicación. Si la búsqueda no devuelve nada útil, decilo y respondé con el contexto disponible.`
-    : `En esta sesión no tenés búsqueda en internet: no podés leer noticias ni comunicados de hoy. Ante una pregunta de actualidad ("qué pasó con…", "por qué subió…"), respondé con el contexto de mercado y portfolio indicando su fecha, y señalá qué fuente verificar. Si el usuario quiere búsqueda en internet, puede cargar su clave de Tavily en Mi cuenta → API Keys.`;
+  const actualidad =
+    modoBusqueda === "tavily"
+      ? `Tenés la herramienta ${NOMBRE_HERRAMIENTA_BUSQUEDA}. Usala ante noticias, hechos recientes o cifras que no estén en el contexto de arriba (decisiones de la Fed, regulación, resultados de una empresa, etc.). Empezá con tema "noticias" y usá "general" para definiciones o contexto. Con cada dato que salga de una búsqueda, indicá la fuente y la fecha de publicación. Si la búsqueda no devuelve nada útil, decilo y respondé con el contexto disponible.`
+      : modoBusqueda === "nativa"
+      ? `Tenés búsqueda en internet integrada en el modelo: podés consultar sitios cuando hace falta. Usala ante noticias, hechos recientes o cifras que no estén en el contexto de arriba. Con cada dato que salga de una búsqueda, indicá la fuente y la fecha de publicación. Si la búsqueda no devuelve nada útil, decilo y respondé con el contexto disponible.`
+      : `En esta sesión no tenés búsqueda en internet: no podés leer noticias ni comunicados de hoy. Ante una pregunta de actualidad ("qué pasó con…", "por qué subió…"), respondé con el contexto de mercado y portfolio indicando su fecha, y señalá qué fuente verificar. Para que el usuario tenga búsqueda, puede cargar una clave de Tavily o usar un modelo gpt-oss de Groq, en Mi cuenta → API Keys.`;
 
   return `Sos FinanzAR IA, un analista patrimonial y asistente financiero de primer nivel para la aplicación FinanzAR (Argentina).
 Estás conversando con ${usuarioNombre}.
@@ -358,21 +361,30 @@ export interface EnviarMensajeChatParams {
 /** Tope de rondas con herramientas: evita un bucle si el modelo sigue pidiendo búsquedas. */
 const MAX_RONDAS_HERRAMIENTAS = 3;
 const BLOQUE_RAZONAMIENTO_RE = /<think>[\s\S]*?<\/think>\s*/gi;
+// Búsqueda integrada de Groq (solo modelos gpt-oss): el proveedor la ejecuta del lado del servidor.
+const HERRAMIENTA_BUSQUEDA_NATIVA_GROQ = { type: "browser_search" as const };
 
 export async function enviarMensajeChat(params: EnviarMensajeChatParams): Promise<string> {
   const { messages, onChunk, signal } = params;
   const config: AiConfig = getAiConfig();
+  const modo = modoBusquedaActivo(config);
   const claveBusqueda = config.tavilyApiKey.trim();
+
+  // Herramientas que se envían en cada ronda según el modo de búsqueda
+  const herramientasDe = (ronda: number): unknown[] => {
+    if (modo === "tavily") return ronda < MAX_RONDAS_HERRAMIENTAS ? [DEFINICION_HERRAMIENTA_BUSQUEDA] : [];
+    if (modo === "nativa") return [HERRAMIENTA_BUSQUEDA_NATIVA_GROQ];
+    return [];
+  };
 
   const historial: ChatApiMessage[] = [...messages];
   let textoTotal = "";
 
   for (let ronda = 0; ; ronda++) {
-    const puedeBuscar = Boolean(claveBusqueda) && ronda < MAX_RONDAS_HERRAMIENTAS;
     const salida = await llamarModeloEnStream({
       config,
       messages: historial,
-      herramientas: puedeBuscar ? [DEFINICION_HERRAMIENTA_BUSQUEDA] : [],
+      herramientas: herramientasDe(ronda),
       onChunk,
       signal,
     });
@@ -506,6 +518,7 @@ async function llamarModeloEnStream(p: {
   if (!response.ok) {
     // Si el proveedor o el modelo no aceptan herramientas, se reintenta sin ellas.
     if (response.status === 400 && herramientas.length > 0) {
+      console.warn("El proveedor rechazó las herramientas del modelo; se reintenta sin búsqueda.");
       return llamarModeloEnStream({ ...p, herramientas: [] });
     }
 

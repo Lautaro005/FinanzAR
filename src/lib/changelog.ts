@@ -21,7 +21,7 @@ export const CHANGELOG: VersionChangelog[] = [
     fecha: "2026-10-09",
     titulo: "Chat IA con búsqueda en internet, montos en AR$ explícitos y sidebar que empuja el contenido",
     cambios: [
-      "Chat IA: nueva herramienta de búsqueda en internet (buscar_en_internet), con Tavily. La IA la usa para noticias y datos recientes, y prioriza las fuentes de referencia (organismos oficiales, research y prensa). Para activarla, cargá tu API Key de Tavily en Mi cuenta → API Keys, debajo de las claves de IA. Sin clave, la IA funciona como antes, con los datos de la app.",
+      "Chat IA: búsqueda en internet para noticias y datos recientes. Con una API Key de Tavily (Mi cuenta → API Keys, debajo de las claves de IA), la IA usa la herramienta buscar_en_internet y prioriza las fuentes de referencia (organismos oficiales, research y prensa). Sin clave de Tavily, con un modelo gpt-oss de Groq, la IA usa la búsqueda integrada de Groq. Sin ninguna de las dos, la IA responde con los datos de la app.",
       "Chat IA: los valores de la app se identifican por moneda. Los montos en pesos se rotulan AR$ y los precios en dólares US$. Antes, las criptomonedas aparecían como US$ cuando la app las guarda en pesos.",
       "Chat IA: la IA convierte los montos a dólares con el dólar de referencia, porque el usuario piensa en US$, y aclara la cotización usada.",
       "Sidebar del Chat IA: al abrirlo en escritorio, la página se corre para dejar espacio y ya no queda tapada. El borde izquierdo del panel se puede arrastrar para cambiar el ancho, y el ancho elegido se recuerda en este navegador.",

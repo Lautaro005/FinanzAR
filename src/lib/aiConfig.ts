@@ -72,6 +72,23 @@ export const DEFAULT_AI_CONFIG: AiConfig = {
   tavilyApiKey: "",
 };
 
+/** Modelos de Groq con búsqueda web integrada (browser_search). */
+export const MODELOS_GROQ_BUSQUEDA_NATIVA = ["openai/gpt-oss-120b", "openai/gpt-oss-20b"];
+
+/**
+ * Cómo busca la IA en internet:
+ * - "tavily": clave de Tavily cargada → herramienta buscar_en_internet (prioriza fuentes de referencia).
+ * - "nativa": modelo gpt-oss de Groq → búsqueda integrada del proveedor, sin clave extra.
+ * - null: sin búsqueda; la IA responde solo con los datos de la app.
+ */
+export type ModoBusqueda = "tavily" | "nativa" | null;
+
+export function modoBusquedaActivo(config: AiConfig): ModoBusqueda {
+  if (config.tavilyApiKey.trim()) return "tavily";
+  if (config.activeProvider === "groq" && MODELOS_GROQ_BUSQUEDA_NATIVA.includes(config.groqModel)) return "nativa";
+  return null;
+}
+
 export function getAiConfig(): AiConfig {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);

@@ -16,7 +16,7 @@ import {
   setActiveChatId,
 } from "../lib/aiChat";
 import ChatView from "../components/chat/ChatView";
-import { getAiConfig } from "../lib/aiConfig";
+import { getAiConfig, modoBusquedaActivo } from "../lib/aiConfig";
 
 const accionClass =
   "inline-block px-2.5 py-0.5 rounded-sm text-xs font-medium transition-colors text-finanzar-textSecondary hover:text-finanzar-primary hover:bg-finanzar-surfaceHover disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-finanzar-accent";
@@ -128,7 +128,7 @@ export default function ChatScreen({
       monedaVista: portfolio.config.monedaVista,
       instruments,
       isLive,
-      busquedaWebDisponible: Boolean(getAiConfig().tavilyApiKey.trim()),
+      modoBusqueda: modoBusquedaActivo(getAiConfig()),
     });
 
     const conversationHistory = [
