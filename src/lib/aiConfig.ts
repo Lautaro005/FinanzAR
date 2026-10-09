@@ -3,7 +3,7 @@
  * Las claves y modelos se guardan en localStorage del usuario.
  */
 
-export type AiProviderId = "groq" | "openrouter";
+export type AiProviderId = "groq" | "openrouter" | "ollama" | "cheaperinference";
 
 export interface AiModelInfo {
   id: string;
@@ -20,6 +20,10 @@ export interface AiConfig {
   openRouterApiKey: string;
   openRouterModel: string;
   openRouterOnlyFree: boolean;
+  ollamaApiKey: string;
+  ollamaModel: string;
+  cheaperinferenceApiKey: string;
+  cheaperinferenceModel: string;
   /** Opcional: habilita la búsqueda en internet de la IA (Tavily). Sin clave, la IA no tiene herramientas. */
   tavilyApiKey: string;
 }
@@ -69,8 +73,65 @@ export const DEFAULT_AI_CONFIG: AiConfig = {
   openRouterApiKey: "",
   openRouterModel: "meta-llama/llama-3.3-70b-instruct:free",
   openRouterOnlyFree: false,
+  ollamaApiKey: "",
+  ollamaModel: "",
+  cheaperinferenceApiKey: "",
+  cheaperinferenceModel: "",
   tavilyApiKey: "",
 };
+
+/**
+ * Proveedores que hablan la API de chat/completions de OpenAI (con streaming).
+ * Agregar uno nuevo es sumar una entrada acá y su UI en ApiKeysCard.
+ */
+export interface ProveedorIA {
+  nombre: string;
+  endpoint: string;
+  modeloDefault: string;
+  /** Campos de AiConfig donde se guardan la clave y el modelo de este proveedor. */
+  campoClave: keyof AiConfig;
+  campoModelo: keyof AiConfig;
+}
+
+export const PROVEEDORES_IA: Record<AiProviderId, ProveedorIA> = {
+  groq: {
+    nombre: "Groq",
+    endpoint: "https://api.groq.com/openai/v1/chat/completions",
+    modeloDefault: "llama-3.3-70b-versatile",
+    campoClave: "groqApiKey",
+    campoModelo: "groqModel",
+  },
+  openrouter: {
+    nombre: "OpenRouter",
+    endpoint: "https://openrouter.ai/api/v1/chat/completions",
+    modeloDefault: "meta-llama/llama-3.3-70b-instruct:free",
+    campoClave: "openRouterApiKey",
+    campoModelo: "openRouterModel",
+  },
+  ollama: {
+    nombre: "Ollama Cloud",
+    // Base indicada por el usuario (API compatible con OpenAI): base + /chat/completions
+    endpoint: "https://ollama.com/api/chat/completions",
+    modeloDefault: "gpt-oss:120b",
+    campoClave: "ollamaApiKey",
+    campoModelo: "ollamaModel",
+  },
+  cheaperinference: {
+    nombre: "CheaperInference",
+    endpoint: "https://api.cheaperinference.com/v1/chat/completions",
+    modeloDefault: "gpt-5.4",
+    campoClave: "cheaperinferenceApiKey",
+    campoModelo: "cheaperinferenceModel",
+  },
+};
+
+export function claveDelProveedor(config: AiConfig, id: AiProviderId = config.activeProvider): string {
+  return String(config[PROVEEDORES_IA[id].campoClave] ?? "").trim();
+}
+
+export function modeloDelProveedor(config: AiConfig, id: AiProviderId = config.activeProvider): string {
+  return String(config[PROVEEDORES_IA[id].campoModelo] ?? "").trim() || PROVEEDORES_IA[id].modeloDefault;
+}
 
 /** Modelos de Groq con búsqueda web integrada (browser_search). */
 export const MODELOS_GROQ_BUSQUEDA_NATIVA = ["openai/gpt-oss-120b", "openai/gpt-oss-20b"];

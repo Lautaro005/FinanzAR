@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ChatSession } from "../../lib/aiChat";
-import { getAiConfig } from "../../lib/aiConfig";
+import { PROVEEDORES_IA, claveDelProveedor, getAiConfig, modeloDelProveedor } from "../../lib/aiConfig";
 import MarkdownMessage from "./MarkdownMessage";
 
 interface ChatViewProps {
@@ -44,9 +44,8 @@ export default function ChatView({
   const infoRef = useRef<HTMLDivElement>(null);
 
   const aiConfig = getAiConfig();
-  const provider = aiConfig.activeProvider;
-  const activeModel = provider === "groq" ? aiConfig.groqModel : aiConfig.openRouterModel;
-  const hasApiKey = provider === "groq" ? Boolean(aiConfig.groqApiKey.trim()) : Boolean(aiConfig.openRouterApiKey.trim());
+  const activeModel = modeloDelProveedor(aiConfig);
+  const hasApiKey = claveDelProveedor(aiConfig) !== "";
 
   // Auto-scroll al final del historial
   useEffect(() => {
@@ -149,7 +148,7 @@ export default function ChatView({
                 </p>
                 <div className="mt-2 pt-2 border-t border-finanzar-borderSubtle flex items-center justify-between">
                   <span className="font-mono text-[10px] text-finanzar-textSecondary truncate max-w-[130px]" title={activeModel}>
-                    {provider === "groq" ? "Groq" : "OpenRouter"} · {activeModel.split("/").pop()}
+                    {PROVEEDORES_IA[aiConfig.activeProvider].nombre} · {activeModel.split("/").pop()}
                   </span>
                   <Link
                     to="/app/account"
@@ -166,7 +165,7 @@ export default function ChatView({
 
         <div className="flex items-center space-x-2 text-[11px] text-finanzar-textSecondary">
           <span className="font-mono truncate max-w-[140px] sm:max-w-[200px]" title={activeModel}>
-            {provider === "groq" ? "Groq" : "OpenRouter"} · {activeModel.split("/").pop()}
+            {PROVEEDORES_IA[aiConfig.activeProvider].nombre} · {activeModel.split("/").pop()}
           </span>
         </div>
       </div>

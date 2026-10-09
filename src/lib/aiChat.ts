@@ -3,7 +3,15 @@
 // financiero en vivo (portfolio + mercado) y la comunicación por streaming con los LLMs.
 // Si el usuario cargó una clave de Tavily, el modelo puede usar la herramienta de búsqueda en internet.
 
-import { AiConfig, ModoBusqueda, getAiConfig, modoBusquedaActivo } from "./aiConfig";
+import {
+  AiConfig,
+  ModoBusqueda,
+  PROVEEDORES_IA,
+  claveDelProveedor,
+  getAiConfig,
+  modeloDelProveedor,
+  modoBusquedaActivo,
+} from "./aiConfig";
 import { Instrumento, MonedaVista, PlazoFijo } from "../types";
 import {
   FondoComunValuado,
@@ -416,7 +424,7 @@ export async function enviarMensajeChat(params: EnviarMensajeChatParams): Promis
 
   if (!textoTotal.trim()) {
     throw new Error(
-      `El modelo "${config.activeProvider === "groq" ? config.groqModel : config.openRouterModel}" no devolvió texto en su respuesta. Te recomendamos cambiar a Llama 3.3 70B Versatile en Mi cuenta → Configuración de IA.`
+      `El modelo "${modeloDelProveedor(config)}" no devolvió texto en su respuesta. Te recomendamos cambiar a Llama 3.3 70B Versatile en Mi cuenta → Configuración de IA.`
     );
   }
   return textoTotal;
@@ -460,27 +468,19 @@ async function llamarModeloEnStream(p: {
 }): Promise<SalidaModelo> {
   const { config, messages, herramientas, onChunk, signal } = p;
 
-  const provider = config.activeProvider;
-  let apiKey = "";
-  let model = "";
-  let endpoint = "";
+  const proveedor = PROVEEDORES_IA[config.activeProvider];
+  const apiKey = claveDelProveedor(config);
+  const model = modeloDelProveedor(config);
+  const endpoint = proveedor.endpoint;
   const extraHeaders: Record<string, string> = {};
-
-  if (provider === "groq") {
-    apiKey = config.groqApiKey.trim();
-    model = config.groqModel || "llama-3.3-70b-versatile";
-    endpoint = "https://api.groq.com/openai/v1/chat/completions";
-  } else {
-    apiKey = config.openRouterApiKey.trim();
-    model = config.openRouterModel || "meta-llama/llama-3.3-70b-instruct:free";
-    endpoint = "https://openrouter.ai/api/v1/chat/completions";
+  if (config.activeProvider === "openrouter") {
     extraHeaders["HTTP-Referer"] = window.location.origin || "https://finanzar-delta.vercel.app";
     extraHeaders["X-Title"] = "FinanzAR";
   }
 
   if (!apiKey) {
     throw new Error(
-      `No tenés configurada tu API Key de ${provider === "groq" ? "Groq" : "OpenRouter"}. Por favor configurala en Mi cuenta → Configuración de IA.`
+      `No tenés configurada tu API Key de ${proveedor.nombre}. Por favor configurala en Mi cuenta → Configuración de IA.`
     );
   }
 
@@ -543,12 +543,12 @@ async function llamarModeloEnStream(p: {
 
     if (response.status === 401) {
       throw new Error(
-        `Clave de API de ${provider === "groq" ? "Groq" : "OpenRouter"} inválida o vencida. Verificala en Mi cuenta.`
+        `Clave de API de ${proveedor.nombre} inválida o vencida. Verificala en Mi cuenta.`
       );
     }
     if (response.status === 429) {
       throw new Error(
-        `Límite de peticiones excedido (rate limit) en ${provider === "groq" ? "Groq" : "OpenRouter"}. Aguardá unos segundos.`
+        `Límite de peticiones excedido (rate limit) en ${proveedor.nombre}. Aguardá unos segundos.`
       );
     }
     throw new Error(`Error del servicio de IA (${response.status}): ${errorDetail || "Error inesperado"}`);
