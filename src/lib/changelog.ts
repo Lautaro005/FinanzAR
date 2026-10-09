@@ -21,13 +21,13 @@ export const CHANGELOG: VersionChangelog[] = [
     fecha: "2026-10-09",
     titulo: "Chat IA con búsqueda en internet, montos en AR$ explícitos y sidebar que empuja el contenido",
     cambios: [
-      "Chat IA: búsqueda en internet para noticias y datos recientes. Con una API Key de Tavily (Mi cuenta → API Keys, debajo de las claves de IA), la IA usa la herramienta buscar_en_internet y prioriza las fuentes de referencia (organismos oficiales, research y prensa). Sin clave de Tavily, con un modelo gpt-oss de Groq, la IA usa la búsqueda integrada de Groq. Sin ninguna de las dos, la IA responde con los datos de la app.",
+      "Chat IA: búsqueda en internet para noticias y datos recientes. Con una API Key de Tavily (Mi cuenta → API Keys, debajo de las claves de IA), la IA usa la herramienta buscar_en_internet y prioriza las fuentes de referencia (organismos oficiales, research y prensa). Sin clave de Tavily, la IA responde con los datos de la app.",
       "Chat IA: los valores de la app se identifican por moneda. Los montos en pesos se rotulan AR$ y los precios en dólares US$. Antes, las criptomonedas aparecían como US$ cuando la app las guarda en pesos.",
       "Chat IA: la IA convierte los montos a dólares con el dólar de referencia, porque el usuario piensa en US$, y aclara la cotización usada.",
       "Sidebar del Chat IA: al abrirlo en escritorio, la página se corre para dejar espacio y ya no queda tapada. El borde izquierdo del panel se puede arrastrar para cambiar el ancho, y el ancho elegido se recuerda en este navegador.",
       "Chat IA: el ancho de las respuestas ya no cambia al desplegar el bloque de razonamiento; el mensaje ocupa siempre el mismo espacio, en el chat y en el widget.",
-      "Chat IA: la IA recibe la fecha de hoy en lenguaje natural (por ejemplo, 'viernes 9 de octubre de 2026') y, al buscar noticias, incluye el mes y el año actuales en la consulta. Así deja de traer noticias de meses anteriores, tanto con Tavily como con la búsqueda integrada de Groq.",
-      "Chat IA: dos proveedores nuevos, Ollama Cloud y CheaperInference, ambos con API compatible con OpenAI. Se eligen en Mi cuenta → API Keys, con su clave y el ID exacto del modelo. Ollama Cloud usa https://ollama.com/api y CheaperInference usa https://api.cheaperinference.com/v1. La búsqueda con Tavily funciona con ambos.",
+      "Chat IA: la IA recibe la fecha de hoy en lenguaje natural (por ejemplo, 'viernes 9 de octubre de 2026') y, al buscar noticias, incluye el mes y el año actuales en la consulta. Así deja de traer noticias de meses anteriores, con Tavily.",
+      "Chat IA: dos proveedores nuevos, Ollama Cloud y CheaperInference, ambos con API compatible con OpenAI. Se eligen en Mi cuenta → API Keys, con su clave y el ID exacto del modelo. Ollama Cloud usa https://ollama.com/v1 y CheaperInference usa https://api.cheaperinference.com/v1. Las llamadas a los dos pasan por /api/ia, porque ninguno permite llamadas directas desde el navegador. La búsqueda con Tavily funciona con ambos.",
     ],
   },
   {

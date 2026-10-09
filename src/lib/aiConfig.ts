@@ -91,6 +91,8 @@ export interface ProveedorIA {
   /** Campos de AiConfig donde se guardan la clave y el modelo de este proveedor. */
   campoClave: keyof AiConfig;
   campoModelo: keyof AiConfig;
+  /** true: la llamada pasa por /api/ia (el proveedor no permite CORS desde el navegador). */
+  viaProxy?: boolean;
 }
 
 export const PROVEEDORES_IA: Record<AiProviderId, ProveedorIA> = {
@@ -110,11 +112,12 @@ export const PROVEEDORES_IA: Record<AiProviderId, ProveedorIA> = {
   },
   ollama: {
     nombre: "Ollama Cloud",
-    // Base indicada por el usuario (API compatible con OpenAI): base + /chat/completions
-    endpoint: "https://ollama.com/api/chat/completions",
+    // Destino real en api/ia.ts. https://ollama.com/api/chat/completions responde 404.
+    endpoint: "https://ollama.com/v1/chat/completions",
     modeloDefault: "gpt-oss:120b",
     campoClave: "ollamaApiKey",
     campoModelo: "ollamaModel",
+    viaProxy: true,
   },
   cheaperinference: {
     nombre: "CheaperInference",
@@ -122,6 +125,7 @@ export const PROVEEDORES_IA: Record<AiProviderId, ProveedorIA> = {
     modeloDefault: "gpt-5.4",
     campoClave: "cheaperinferenceApiKey",
     campoModelo: "cheaperinferenceModel",
+    viaProxy: true,
   },
 };
 
@@ -133,21 +137,14 @@ export function modeloDelProveedor(config: AiConfig, id: AiProviderId = config.a
   return String(config[PROVEEDORES_IA[id].campoModelo] ?? "").trim() || PROVEEDORES_IA[id].modeloDefault;
 }
 
-/** Modelos de Groq con búsqueda web integrada (browser_search). */
-export const MODELOS_GROQ_BUSQUEDA_NATIVA = ["openai/gpt-oss-120b", "openai/gpt-oss-20b"];
-
 /**
- * Cómo busca la IA en internet:
- * - "tavily": clave de Tavily cargada → herramienta buscar_en_internet (prioriza fuentes de referencia).
- * - "nativa": modelo gpt-oss de Groq → búsqueda integrada del proveedor, sin clave extra.
- * - null: sin búsqueda; la IA responde solo con los datos de la app.
+ * Búsqueda en internet para la IA: solo con clave de Tavily (herramienta buscar_en_internet).
+ * Sin clave, la IA responde solo con los datos de la app.
  */
-export type ModoBusqueda = "tavily" | "nativa" | null;
+export type ModoBusqueda = "tavily" | null;
 
 export function modoBusquedaActivo(config: AiConfig): ModoBusqueda {
-  if (config.tavilyApiKey.trim()) return "tavily";
-  if (config.activeProvider === "groq" && MODELOS_GROQ_BUSQUEDA_NATIVA.includes(config.groqModel)) return "nativa";
-  return null;
+  return config.tavilyApiKey.trim() ? "tavily" : null;
 }
 
 export function getAiConfig(): AiConfig {

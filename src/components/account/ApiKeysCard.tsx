@@ -755,9 +755,7 @@ export default function ApiKeysCard() {
           <p className="text-[11px] text-finanzar-textMuted">
             {modoBusquedaActivo(config) === "tavily"
               ? "Activa: la IA busca con Tavily y prioriza las fuentes de referencia. Tu clave se guarda solo en tu navegador."
-              : modoBusquedaActivo(config) === "nativa"
-              ? "Sin clave de Tavily, la IA usa la búsqueda integrada de Groq con el modelo gpt-oss activo."
-              : "Sin búsqueda: elegí un modelo gpt-oss de Groq (búsqueda integrada) o cargá una clave de Tavily."}
+              : "Sin búsqueda: cargá una clave de Tavily para que la IA busque noticias en internet."}
           </p>
         </div>
       </div>
