@@ -17,6 +17,17 @@ export interface VersionChangelog {
 
 export const CHANGELOG: VersionChangelog[] = [
   {
+    version: "0.4.6",
+    fecha: "2026-10-09",
+    titulo: "Variación del período en el gráfico y fuentes de referencia para el Chat IA",
+    cambios: [
+      "Evolución Histórica: la variación porcentual del gráfico ahora corresponde al rango elegido (7D, 30D, 90D, 1A o MÁX) y se actualiza al cambiarlo, en lugar de mostrar siempre la variación de las últimas 24 h. La variación de 24 h sigue visible en la ficha del instrumento.",
+      "Cuando el histórico del gráfico es una estimación o todavía está cargando, no se muestra variación del período, para no presentar un número sin respaldo como dato real.",
+      "Chat IA: la IA cuenta con un registro de fuentes de referencia ordenadas por autoridad (organismos oficiales, research especializado y prensa financiera) y con un mapa de la fuente primaria que corresponde verificar según la categoría del activo.",
+      "Chat IA: el prompt del sistema se reescribió para eliminar directivas repetidas. La aclaración de que no es asesoramiento financiero formal aparece solo cuando se pide una decisión concreta, y la IA aclara que no lee noticias en vivo: ante preguntas de actualidad, primero usa el contexto de mercado y señala la fuente a verificar.",
+    ],
+  },
+  {
     version: "0.4.5",
     fecha: "2026-09-30",
     titulo: "Snapshot histórico automático con GitHub Actions y corrección de fechas",

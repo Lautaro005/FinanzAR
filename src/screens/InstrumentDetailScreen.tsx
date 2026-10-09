@@ -233,7 +233,7 @@ export default function InstrumentDetailScreen({
           }
           valorActual={instrument.tasaORendimientoActual}
           unidad={instrument.unidad}
-          variacion={instrument.variacion24h}
+          esEstimacion={historyState.loading || historyState.fuente === "estimacion"}
           data={displayHistory}
           activeRange={range}
           onRangeChange={(newRange) => setRange(newRange)}

@@ -249,7 +249,7 @@ function Home({
             }
             valorActual={detailInstrument.tasaORendimientoActual}
             unidad={detailInstrument.unidad}
-            variacion={detailInstrument.variacion24h}
+            esEstimacion={!quickHistory || quickHistory.fuente === "estimacion"}
             data={quickHistory?.data || detailInstrument.historico}
           />
         </div>
