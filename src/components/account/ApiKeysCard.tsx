@@ -209,6 +209,7 @@ function CustomModelDropdown({
 export default function ApiKeysCard() {
   const [config, setConfig] = useState<AiConfig>(getAiConfig);
   const [mostrarKey, setMostrarKey] = useState(false);
+  const [mostrarTavily, setMostrarTavily] = useState(false);
 
   // Modelos de Groq y estado de conexión
   const [groqModels, setGroqModels] = useState<AiModelInfo[]>(DEFAULT_GROQ_MODELS);
@@ -558,6 +559,54 @@ export default function ApiKeysCard() {
               </div>
             </>
           )}
+        </div>
+      </div>
+
+      {/* Búsqueda en internet (opcional): habilita la herramienta de búsqueda del Chat IA */}
+      <div className="mt-6 pt-5 border-t border-finanzar-borderSubtle grid grid-cols-1 sm:grid-cols-12 gap-6">
+        <div className="sm:col-span-4 lg:col-span-3 sm:border-r border-finanzar-borderSubtle sm:pr-4">
+          <span className="text-[11px] uppercase tracking-wider font-semibold text-finanzar-textMuted block mb-2">
+            Búsqueda en internet
+          </span>
+          <p className="text-xs text-finanzar-textSecondary">Opcional</p>
+        </div>
+
+        <div className="sm:col-span-8 lg:col-span-9 space-y-2">
+          <div className="flex items-center justify-between mb-1">
+            <label className="block text-xs font-semibold text-finanzar-textMain">API Key de Tavily</label>
+            <a
+              href="https://app.tavily.com/home"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[11px] text-finanzar-accent hover:underline inline-flex items-center gap-0.5"
+            >
+              <span>app.tavily.com</span>
+              <span className="text-[9px]">↗</span>
+            </a>
+          </div>
+          <div className="relative">
+            <input
+              type={mostrarTavily ? "text" : "password"}
+              className={`${inputClass} font-mono text-xs pr-16`}
+              placeholder="tvly-..."
+              value={config.tavilyApiKey}
+              onChange={(e) => actualizarConfig({ tavilyApiKey: e.target.value })}
+              autoComplete="off"
+              spellCheck={false}
+            />
+            <button
+              type="button"
+              onClick={() => setMostrarTavily((v) => !v)}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[11px] text-finanzar-textMuted hover:text-finanzar-textSecondary font-medium"
+            >
+              {mostrarTavily ? "Ocultar" : "Mostrar"}
+            </button>
+          </div>
+          <p className="text-[11px] text-finanzar-textMuted">
+            {config.tavilyApiKey.trim()
+              ? "Activa: la IA puede buscar noticias y datos recientes en internet. Tu clave se guarda solo en tu navegador."
+              : "Sin clave, la IA responde solo con los datos de la app. Con clave, puede buscar noticias recientes en internet."}
+          </p>
         </div>
       </div>
     </section>

@@ -808,9 +808,12 @@ function AppShellContent({
 function AppLayout({ instruments, isLive }: { instruments: Instrumento[]; isLive: boolean }) {
   const location = useLocation();
   const isChat = location.pathname.startsWith("/app/chat");
+  // Ancho que ocupa el panel lateral del Chat IA: la página se corre para no quedar tapada
+  const [anchoChatLateral, setAnchoChatLateral] = useState(0);
 
   return (
     <div
+      style={{ paddingRight: anchoChatLateral }}
       className={`flex flex-col bg-finanzar-bg text-finanzar-textMain font-sans ${
         isChat ? "h-[100dvh] max-h-[100dvh] overflow-hidden" : "min-h-screen"
       }`}
@@ -820,7 +823,7 @@ function AppLayout({ instruments, isLive }: { instruments: Instrumento[]; isLive
         <Outlet />
       </div>
       <Footer compact={isChat} />
-      <FloatingChatWidget instruments={instruments} isLive={isLive} />
+      <FloatingChatWidget instruments={instruments} isLive={isLive} onAnchoSidebarChange={setAnchoChatLateral} />
     </div>
   );
 }

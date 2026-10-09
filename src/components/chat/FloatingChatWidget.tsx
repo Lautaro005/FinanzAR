@@ -14,14 +14,33 @@ import {
   loadChatSessions,
   setActiveChatId,
 } from "../../lib/aiChat";
+import { getAiConfig } from "../../lib/aiConfig";
 import ChatView from "./ChatView";
+
+// Ancho del panel lateral (modo sidebar): se puede arrastrar y se recuerda en este navegador.
+const STORAGE_ANCHO_SIDEBAR_KEY = "finanzar_chat_sidebar_width_v1";
+const ANCHO_SIDEBAR_DEFAULT = 440;
+const ANCHO_SIDEBAR_MIN = 340;
+const ANCHO_SIDEBAR_MAX = 760;
+
+function leerAnchoSidebar(): number {
+  try {
+    const raw = Number(localStorage.getItem(STORAGE_ANCHO_SIDEBAR_KEY));
+    return Number.isFinite(raw) && raw > 0 ? raw : ANCHO_SIDEBAR_DEFAULT;
+  } catch {
+    return ANCHO_SIDEBAR_DEFAULT;
+  }
+}
 
 export default function FloatingChatWidget({
   instruments,
   isLive = true,
+  onAnchoSidebarChange,
 }: {
   instruments: Instrumento[];
   isLive?: boolean;
+  /** Informa el ancho ocupado por el panel lateral para que el layout empuje el contenido (0 si no está activo). */
+  onAnchoSidebarChange?: (px: number) => void;
 }) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -35,6 +54,8 @@ export default function FloatingChatWidget({
   // layout: "floating" (default) | "sidebar" (desktop) | "fullscreen" (tablet / mobile)
   const [layoutMode, setLayoutMode] = useState<"floating" | "sidebar" | "fullscreen">("floating");
   const [showHistory, setShowHistory] = useState(false);
+  const [anchoSidebar, setAnchoSidebar] = useState<number>(() => leerAnchoSidebar());
+  const [arrastrandoBorde, setArrastrandoBorde] = useState(false);
 
   // Sesiones de chat locales
   const [sessions, setSessions] = useState<ChatSession[]>(() => loadChatSessions());
@@ -62,6 +83,40 @@ export default function FloatingChatWidget({
   // En mobile siempre debe ser fullscreen como pide la especificación:
   // "en mobile view seria pantalla completa porque no tiene sentido hacerlo flotante"
   const currentEffectiveMode = isMobile ? "fullscreen" : layoutMode;
+
+  // Ancho efectivo: respeta el mínimo y no ocupa más del 70% de la pantalla (si la ventana se achica).
+  const anchoMaximoPantalla = Math.min(ANCHO_SIDEBAR_MAX, Math.round(windowWidth * 0.7));
+  const anchoEfectivo = Math.min(Math.max(anchoSidebar, ANCHO_SIDEBAR_MIN), Math.max(ANCHO_SIDEBAR_MIN, anchoMaximoPantalla));
+
+  // Empujar el contenido de la página mientras el panel lateral está abierto
+  const sidebarActivo = isOpen && currentEffectiveMode === "sidebar" && !location.pathname.startsWith("/app/chat");
+  useEffect(() => {
+    onAnchoSidebarChange?.(sidebarActivo ? anchoEfectivo : 0);
+  }, [sidebarActivo, anchoEfectivo, onAnchoSidebarChange]);
+  useEffect(() => () => onAnchoSidebarChange?.(0), [onAnchoSidebarChange]);
+
+  // Recordar el ancho elegido en este navegador
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_ANCHO_SIDEBAR_KEY, String(anchoEfectivo));
+    } catch {
+      /* ignorar: sin persistencia no rompe nada */
+    }
+  }, [anchoEfectivo]);
+
+  // Arrastrar el borde izquierdo del panel para cambiar su ancho
+  const iniciarResize = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setArrastrandoBorde(true);
+    const onMove = (ev: PointerEvent) => setAnchoSidebar(window.innerWidth - ev.clientX);
+    const onUp = () => {
+      setArrastrandoBorde(false);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+    };
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+  };
 
   // Sincronizar sesiones si cambian
   useEffect(() => {
@@ -139,6 +194,7 @@ export default function FloatingChatWidget({
       monedaVista: portfolio.config.monedaVista,
       instruments,
       isLive,
+      busquedaWebDisponible: Boolean(getAiConfig().tavilyApiKey.trim()),
     });
 
     const conversationHistory = [
@@ -237,14 +293,42 @@ export default function FloatingChatWidget({
       {/* Ventana de Chat */}
       {isOpen && (
         <div
-          className={`fixed z-50 flex flex-col bg-finanzar-surface border border-finanzar-border shadow-2xl transition-all duration-200 overflow-hidden ${
+          style={currentEffectiveMode === "sidebar" ? { width: anchoEfectivo } : undefined}
+          className={`fixed z-50 flex flex-col bg-finanzar-surface border border-finanzar-border shadow-2xl overflow-hidden ${
+            arrastrandoBorde ? "" : "transition-all duration-200"
+          } ${
             currentEffectiveMode === "fullscreen"
               ? "inset-0 rounded-none"
               : currentEffectiveMode === "sidebar"
-              ? "top-0 right-0 bottom-0 w-[440px] max-w-full rounded-none border-y-0 border-r-0 border-l"
+              ? "top-0 right-0 bottom-0 max-w-full rounded-none border-y-0 border-r-0 border-l"
               : "bottom-5 right-5 w-[420px] max-w-[calc(100vw-2.5rem)] h-[620px] max-h-[calc(100vh-3.5rem)] rounded-lg"
           }`}
         >
+          {/* Borde arrastrable del panel lateral (ancho ajustable) */}
+          {currentEffectiveMode === "sidebar" && (
+            <div
+              role="separator"
+              aria-orientation="vertical"
+              aria-label="Cambiar ancho del chat"
+              aria-valuenow={anchoEfectivo}
+              aria-valuemin={ANCHO_SIDEBAR_MIN}
+              aria-valuemax={anchoMaximoPantalla}
+              tabIndex={0}
+              onPointerDown={iniciarResize}
+              onKeyDown={(e) => {
+                if (e.key === "ArrowLeft") {
+                  e.preventDefault();
+                  setAnchoSidebar(anchoEfectivo + 16);
+                } else if (e.key === "ArrowRight") {
+                  e.preventDefault();
+                  setAnchoSidebar(anchoEfectivo - 16);
+                }
+              }}
+              className={`absolute left-0 top-0 bottom-0 w-2 -translate-x-1/2 z-10 cursor-col-resize touch-none focus-visible:outline-none focus-visible:bg-finanzar-accent/60 hover:bg-finanzar-accent/40 transition-colors ${
+                arrastrandoBorde ? "bg-finanzar-accent/40" : ""
+              }`}
+            />
+          )}
           {/* Header del Chat */}
           <header className="px-4 py-3 bg-finanzar-surface border-b border-finanzar-border flex items-center justify-between flex-shrink-0 select-none">
             <div className="flex items-center space-x-2.5 truncate">

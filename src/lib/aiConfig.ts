@@ -20,6 +20,8 @@ export interface AiConfig {
   openRouterApiKey: string;
   openRouterModel: string;
   openRouterOnlyFree: boolean;
+  /** Opcional: habilita la búsqueda en internet de la IA (Tavily). Sin clave, la IA no tiene herramientas. */
+  tavilyApiKey: string;
 }
 
 const STORAGE_KEY = "finanzar_ai_config_v1";
@@ -67,6 +69,7 @@ export const DEFAULT_AI_CONFIG: AiConfig = {
   openRouterApiKey: "",
   openRouterModel: "meta-llama/llama-3.3-70b-instruct:free",
   openRouterOnlyFree: false,
+  tavilyApiKey: "",
 };
 
 export function getAiConfig(): AiConfig {
