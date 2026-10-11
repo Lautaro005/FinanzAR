@@ -16,4 +16,4 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: node .github/probe/probe.mjs
+      - run: node .github/probe/probe2.mjs
