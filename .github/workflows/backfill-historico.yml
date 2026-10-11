@@ -1,0 +1,45 @@
+# Backfill del histórico anterior al snapshot (ver scripts/backfill-historico.mjs):
+# euro y real desde BCRA (2000+) y cripto anterior a CoinGecko (2023-02 → 2025).
+# Se corre a mano desde Actions. Commitea public/historico/ en la rama de la corrida.
+name: Backfill histórico
+
+on:
+  workflow_dispatch:
+  # Disparo temporal para validar en la rama de trabajo (se quita antes del merge).
+  push:
+    branches: [claude/festive-allen-9l6kq3]
+    paths: [".github/backfill/trigger"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: backfill-historico
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Backfill, commit y push
+        run: |
+          node scripts/backfill-historico.mjs
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/historico
+          if git diff --cached --quiet; then
+            echo "Sin cambios en public/historico."
+            exit 0
+          fi
+          git commit -m "chore: backfill histórico (euro, real y cripto anterior al snapshot)"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
