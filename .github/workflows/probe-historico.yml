@@ -2,6 +2,9 @@
 name: Probe histórico
 on:
   workflow_dispatch:
+  push:
+    branches: [claude/festive-allen-9l6kq3]
+    paths: [".github/probe/**", ".github/workflows/probe-historico.yml"]
 permissions:
   contents: read
 jobs:
