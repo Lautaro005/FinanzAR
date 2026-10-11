@@ -32,18 +32,16 @@
 // instrumentos de los esperables, el script sale con código 1 y NO escribe
 // ningún archivo, para no guardar un snapshot parcial como si fuera bueno.
 
-import { readFile, writeFile } from "node:fs/promises";
-import { fileURLToPath } from "node:url";
-import path from "node:path";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const HISTORICO_DIR = path.join(__dirname, "..", "public", "historico");
-
-// Cuántos puntos por instrumento se conservan como máximo en cada archivo
-// (≈ algo más de 1 año corrido de puntos diarios). Evita que los JSON
-// crezcan sin límite; el selector de rango "max" del gráfico igual sigue
-// mostrando todo lo que haya.
-const MAX_PUNTOS_POR_INSTRUMENTO = 400;
+import {
+  MAX_PUNTOS_POR_CATEGORIA,
+  MAX_PUNTOS_POR_INSTRUMENTO,
+  appendPoint,
+  cotizacionesBcra,
+  fetchJson,
+  readSnapshotFile,
+  today,
+  writeSnapshotFile,
+} from "./lib-historico.mjs";
 
 // ---- Helpers duplicados de src/lib/normalize.ts -----------------------
 // OJO: si cambia la lógica de limpieza de nombres/slugs en normalize.ts,
@@ -94,41 +92,6 @@ const USA_DIRECT_ALLOWED = new Set([
   "BKR", "JD", "BABA", "BIDU", "DOCU", "ANET", "HIMS",
 ]);
 
-// ---- Fetch helpers ------------------------------------------------------
-
-const FETCH_TIMEOUT_MS = 30_000;
-
-async function fetchJsonOnce(url) {
-  const res = await fetch(url, {
-    headers: { Accept: "application/json" },
-    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-  });
-  if (!res.ok) throw new Error(`${url} -> HTTP ${res.status}`);
-  return res.json();
-}
-
-// Con reintentos y backoff (2s, 4s, 8s) para errores de red o 5xx pasajeros.
-// Los 4xx (ej. 404 de una foto FCI que no existe ese día) no se reintentan.
-async function fetchJson(url, { reintentos = 3 } = {}) {
-  for (let intento = 0; ; intento++) {
-    try {
-      return await fetchJsonOnce(url);
-    } catch (e) {
-      const status = Number(/HTTP (\d{3})/.exec(e.message)?.[1]);
-      const reintentable = !status || status >= 500 || status === 429;
-      if (!reintentable || intento >= reintentos) throw e;
-      await new Promise((r) => setTimeout(r, 2000 * 2 ** intento));
-    }
-  }
-}
-
-// "Hoy" en hora de Buenos Aires. Antes se usaba la fecha UTC, y como la
-// rutina corre de noche (21 h o más tarde = 00 h UTC o más), cada punto
-// quedaba guardado con la fecha del día siguiente.
-function today() {
-  return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Argentina/Buenos_Aires" }).format(new Date());
-}
-
 function parseArgs(argv) {
   const args = { fecha: null, permitirParcial: false };
   for (let i = 0; i < argv.length; i++) {
@@ -147,45 +110,7 @@ function parseArgs(argv) {
 // Mínimo de instrumentos por archivo para considerar el snapshot completo.
 // Holgados a propósito (un día normal trae bastante más): sirven para
 // detectar una fuente caída o una respuesta vacía, no para vigilar el mercado.
-const MINIMOS = { pesos: 5, fci: 10, cedears: 50, acciones: 10, bonos: 10, eeuu: 10 };
-
-// ---- Snapshot store (lee/mergea/escribe cada JSON de public/historico) --
-
-async function readSnapshotFile(name) {
-  const filePath = path.join(HISTORICO_DIR, `${name}.json`);
-  try {
-    const raw = await readFile(filePath, "utf-8");
-    return JSON.parse(raw);
-  } catch {
-    return {};
-  }
-}
-
-async function writeSnapshotFile(name, data) {
-  const filePath = path.join(HISTORICO_DIR, `${name}.json`);
-  const sortedKeys = Object.keys(data).sort();
-  const sorted = {};
-  for (const k of sortedKeys) sorted[k] = data[k];
-  await writeFile(filePath, JSON.stringify(sorted, null, 2) + "\n", "utf-8");
-}
-
-function appendPoint(store, id, fecha, valor) {
-  if (!Number.isFinite(valor)) return;
-  if (!store[id]) store[id] = [];
-  const serie = store[id];
-  // Idempotente: si ya se guardó un punto para hoy (re-corrida manual el
-  // mismo día), se reemplaza en vez de duplicar.
-  const idx = serie.findIndex((p) => p.fecha === fecha);
-  if (idx >= 0) {
-    serie[idx] = { fecha, valor };
-  } else {
-    serie.push({ fecha, valor });
-  }
-  serie.sort((a, b) => (a.fecha < b.fecha ? -1 : a.fecha > b.fecha ? 1 : 0));
-  if (serie.length > MAX_PUNTOS_POR_INSTRUMENTO) {
-    serie.splice(0, serie.length - MAX_PUNTOS_POR_INSTRUMENTO);
-  }
-}
+const MINIMOS = { pesos: 5, fci: 10, cedears: 50, acciones: 10, bonos: 10, eeuu: 10, divisas: 0 };
 
 // ---- Por categoría -------------------------------------------------------
 
@@ -332,6 +257,25 @@ async function snapshotData912(fecha) {
   return out;
 }
 
+async function snapshotDivisas(fecha) {
+  const store = await readSnapshotFile("divisas");
+  const errores = [];
+  let ok = 0;
+  try {
+    // Mismo origen que el backfill (BCRA, cotización de referencia en ARS) para que la serie no tenga saltos.
+    const cotizaciones = await cotizacionesBcra(fecha);
+    for (const [moneda, valor] of Object.entries(cotizaciones)) {
+      appendPoint(store, `divisas-${moneda.toLowerCase()}-oficial`, fecha, valor, MAX_PUNTOS_POR_CATEGORIA.divisas);
+      ok++;
+    }
+    if (ok === 0) console.warn("[snapshot] divisas: el BCRA no publicó cotización para esta fecha (fin de semana o feriado).");
+  } catch (e) {
+    errores.push(`divisas: ${e.message}`);
+  }
+  console.log(`[snapshot] divisas (euro y real, BCRA): ${ok} monedas`);
+  return [{ file: "divisas", store, ok, errores }];
+}
+
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   const fecha = args.fecha || today();
@@ -341,6 +285,7 @@ async function main() {
     ...(await snapshotPlazoFijo(fecha)),
     ...(await snapshotFCI(fecha)),
     ...(await snapshotData912(fecha)),
+    ...(await snapshotDivisas(fecha)),
   ];
 
   // Validación: una fuente caída o una respuesta casi vacía invalida el snapshot.

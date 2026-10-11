@@ -614,3 +614,14 @@ export const getHistoricalArgBond = async (ticker: string): Promise<Data912Histo
   return fetchData912<Data912HistoricalRaw[]>(`/historical/bonds/${ticker}`);
 };
 
+// Acciones de EE.UU.: el histórico tiene otra forma (fechas y precios en arrays paralelos).
+export interface Data912UsaHistoricalRaw {
+  ticker: string;
+  dates: string[];
+  prices: number[];
+}
+
+export const getHistoricalUsaStock = async (ticker: string): Promise<Data912UsaHistoricalRaw> => {
+  return fetchData912<Data912UsaHistoricalRaw>(`/historical/usa_stocks/${ticker}`);
+};
+

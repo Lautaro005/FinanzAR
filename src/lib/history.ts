@@ -4,26 +4,33 @@ import {
   getHistoricalCedear,
   getHistoricalArgStock,
   getHistoricalArgBond,
+  getHistoricalUsaStock,
   Data912HistoricalRaw,
+  Data912UsaHistoricalRaw,
 } from "./api/data912";
 import { getDolarHistorico, DolarRaw } from "./api/argentinaDatos";
-import { getSnapshotHistory } from "./historicoSnapshot";
+import { getSnapshotHistory, getSnapshotSerieCruda } from "./historicoSnapshot";
 
 // Histórico real por instrumento, con fallback honesto a una estimación
 // cuando ninguna fuente ofrece serie histórica confiable para esa
 // categoría. El orden de intentos por instrumento es:
-//   1. Fuente "oficial" en vivo (data912 / CoinGecko / argentinadatos),
-//      solo si además pasa el chequeo de vigencia (ver isStale más abajo).
-//   2. Snapshot propio armado día a día (ver historicoSnapshot.ts) para
-//      las categorías sin fuente gratuita confiable.
+//   1. Fuente en vivo (data912 / CoinGecko / argentinadatos), solo si además
+//      pasa el chequeo de vigencia (ver esVigente más abajo). En cripto, el
+//      tramo anterior a CoinGecko viene del backfill ("reconstruido").
+//   2. Snapshot propio armado día a día y backfill (ver historicoSnapshot.ts).
 //   3. Estimación sintética ya calculada en normalize.ts (isEstimate: true).
 
-export type HistorySource = "oficial" | "propio" | "estimacion";
+export type HistorySource = "oficial" | "reconstruido" | "propio" | "estimacion";
 
 export interface HistoryResult {
   data: PuntoHistorico[];
   isEstimate: boolean;
   fuente: HistorySource;
+}
+
+interface LiveHistory {
+  data: PuntoHistorico[];
+  fuente: "oficial" | "reconstruido";
 }
 
 const memoryCache = new Map<string, HistoryResult>();
@@ -72,6 +79,20 @@ function fromData912Historical(rows: Data912HistoricalRaw[]): PuntoHistorico[] |
   return fechaValida.map((r) => ({ fecha: formatFecha(r.date), valor: Number(r.c!.toFixed(2)) }));
 }
 
+// Acciones de EE.UU.: fechas y precios vienen en arrays paralelos.
+function fromUsaHistorical(h: Data912UsaHistoricalRaw): PuntoHistorico[] | null {
+  if (!h || !Array.isArray(h.dates) || !Array.isArray(h.prices)) return null;
+  const filas = h.dates
+    .map((fecha, i) => ({ fecha, valor: h.prices[i] }))
+    .filter((r) => r.fecha && typeof r.valor === "number" && r.valor > 0);
+  if (filas.length === 0) return null;
+
+  const masReciente = fechaMasReciente(filas.map((r) => r.fecha));
+  if (!esVigente(masReciente)) return null;
+
+  return filas.map((r) => ({ fecha: formatFecha(r.fecha), valor: Number(r.valor.toFixed(2)) }));
+}
+
 function fromDolarHistorico(rows: DolarRaw[]): PuntoHistorico[] | null {
   if (!Array.isArray(rows) || rows.length === 0) return null;
   const fechaValida = rows.filter((r) => r && r.fecha && typeof r.venta === "number" && r.venta > 0);
@@ -96,10 +117,11 @@ function fromDolarHistorico(rows: DolarRaw[]): PuntoHistorico[] | null {
 // sumarla ahí en el futuro.
 const DOLAR_HISTORICO_CASAS = new Set(["oficial", "blue", "bolsa", "contadoconliqui", "cripto", "mayorista"]);
 
-async function fetchLiveHistory(instrument: Instrumento): Promise<PuntoHistorico[] | null> {
+async function fetchLiveHistory(instrument: Instrumento): Promise<LiveHistory | null> {
   if (instrument.categoria === "divisas" && instrument.ticker && DOLAR_HISTORICO_CASAS.has(instrument.ticker)) {
     const rows = await getDolarHistorico(instrument.ticker as any);
-    return fromDolarHistorico(rows);
+    const data = fromDolarHistorico(rows);
+    return data ? { data, fuente: "oficial" } : null;
   }
 
   if (instrument.categoria === "cripto" && instrument.id.startsWith("crypto-")) {
@@ -108,35 +130,46 @@ async function fetchLiveHistory(instrument: Instrumento): Promise<PuntoHistorico
     // el rango "1A" del selector; rangos más cortos se recortan en el cliente.
     const chart = await getCryptoMarketChart(coinId, 365, "ars");
     if (!chart?.prices?.length) return null;
-    return chart.prices.map(([ts, price]) => ({
+    const vivo = chart.prices.map(([ts, price]) => ({
       fecha: formatFecha(ts),
       valor: Number(price.toFixed(2)),
     }));
+    // Tramo anterior a la ventana de CoinGecko: reconstruido con Binance × dólar cripto
+    // (ver scripts/backfill-historico.mjs). Solo entra lo anterior al primer dato vivo.
+    const inicioVivo = new Date(chart.prices[0][0]).toISOString().slice(0, 10);
+    const previo = (await getSnapshotSerieCruda("cripto", instrument.id)) ?? [];
+    const prefijo = previo
+      .filter((p) => p.fecha < inicioVivo)
+      .map((p) => ({ fecha: formatFecha(p.fecha), valor: p.valor }));
+    return { data: [...prefijo, ...vivo], fuente: prefijo.length > 0 ? "reconstruido" : "oficial" };
   }
 
   if (!instrument.ticker) return null;
 
-  if (instrument.categoria === "cedears") {
-    return fromData912Historical(await getHistoricalCedear(instrument.ticker));
-  }
-  if (instrument.categoria === "acciones") {
-    return fromData912Historical(await getHistoricalArgStock(instrument.ticker));
-  }
-  if (instrument.categoria === "bonos") {
-    return fromData912Historical(await getHistoricalArgBond(instrument.ticker));
+  if (instrument.categoria === "eeuu") {
+    const data = fromUsaHistorical(await getHistoricalUsaStock(instrument.ticker));
+    return data ? { data, fuente: "oficial" } : null;
   }
 
-  // "pesos" (plazo fijo / criptopesos), "fci", "eeuu" (acciones de EE.UU.) y
-  // las variantes de "divisas" sin cobertura de argentinadatos.com (arriba):
-  // ninguna API gratuita usada hoy expone histórico por instrumento. Para
-  // estas cinco, fetchInstrumentHistory intenta después el snapshot propio
-  // (historicoSnapshot.ts) antes de resignarse a la estimación sintética.
-  return null;
+  // "pesos" (plazo fijo / criptopesos), "fci" y las variantes de "divisas" sin
+  // cobertura de argentinadatos.com (arriba): ninguna API gratuita usada hoy
+  // expone histórico por instrumento. Para estas, fetchInstrumentHistory
+  // intenta después el snapshot propio (historicoSnapshot.ts) antes de
+  // resignarse a la estimación sintética.
+  let data: PuntoHistorico[] | null = null;
+  if (instrument.categoria === "cedears") {
+    data = fromData912Historical(await getHistoricalCedear(instrument.ticker));
+  } else if (instrument.categoria === "acciones") {
+    data = fromData912Historical(await getHistoricalArgStock(instrument.ticker));
+  } else if (instrument.categoria === "bonos") {
+    data = fromData912Historical(await getHistoricalArgBond(instrument.ticker));
+  }
+  return data ? { data, fuente: "oficial" } : null;
 }
 
 /**
  * Devuelve el histórico real de un instrumento, probando en orden:
- * fuente oficial en vivo y vigente → snapshot propio armado día a día →
+ * fuente en vivo y vigente → snapshot propio (con backfill) →
  * estimación sintética ya calculada en normalize.ts (isEstimate: true).
  */
 export async function fetchInstrumentHistory(instrument: Instrumento): Promise<HistoryResult> {
@@ -146,13 +179,13 @@ export async function fetchInstrumentHistory(instrument: Instrumento): Promise<H
 
   try {
     const live = await fetchLiveHistory(instrument);
-    if (live && live.length >= 2) {
-      const result: HistoryResult = { data: live, isEstimate: false, fuente: "oficial" };
+    if (live && live.data.length >= 2) {
+      const result: HistoryResult = { data: live.data, isEstimate: false, fuente: live.fuente };
       memoryCache.set(cacheKey, result);
       return result;
     }
   } catch (e) {
-    console.warn(`[history] Sin histórico oficial vigente para ${instrument.id}, se prueba snapshot propio:`, e);
+    console.warn(`[history] Sin histórico en vivo para ${instrument.id}, se prueba snapshot propio:`, e);
   }
 
   try {

@@ -1,19 +1,13 @@
 import { PuntoHistorico, Categoria } from "../types";
 
-// Histórico "casero" armado por una rutina propia que corre 1 vez por día
-// (ver scripts/snapshot-historico.mjs y la sección correspondiente en
-// references/finanzar-REFERENCE.md) y va guardando en
-// public/historico/{categoria}.json un punto nuevo por instrumento cada
-// vez que corre. Existe porque, a la fecha, no encontramos una fuente
-// gratuita y con CORS habilitado que ofrezca histórico real para Plazos
-// Fijos, FCI, Bonos, CEDEARs/Acciones (el histórico que exponía data912
-// para estas tres últimas resultó estar congelado hace años, ver la nota
-// en history.ts) ni EE.UU. Arranca vacío / con muy pocos puntos y se va
-// llenando con el correr de los días — hasta que no haya al menos 2
-// puntos para un instrumento puntual, no hay nada útil que graficar y se
-// cae a la estimación sintética de siempre.
+// Histórico "casero" armado por la rutina de snapshot (scripts/snapshot-historico.mjs,
+// corre de lunes a viernes) y por el backfill (scripts/backfill-historico.mjs) en
+// public/historico/{archivo}.json: { [instrumentId]: [{ fecha: "YYYY-MM-DD", valor }] }.
+// Lo lee el navegador como archivo estático (sin rebuild de la app).
+// Si un instrumento tiene menos de 2 puntos, no hay nada útil que graficar.
 
-type SnapshotFile = Record<string, { fecha: string; valor: number }[]>;
+export type SnapshotPunto = { fecha: string; valor: number };
+type SnapshotFile = Record<string, SnapshotPunto[]>;
 
 const SNAPSHOT_FILE_BY_CATEGORIA: Partial<Record<Categoria, string>> = {
   pesos: "pesos",
@@ -22,12 +16,16 @@ const SNAPSHOT_FILE_BY_CATEGORIA: Partial<Record<Categoria, string>> = {
   acciones: "acciones",
   bonos: "bonos",
   eeuu: "eeuu",
+  divisas: "divisas",
 };
 
 const memoryCache = new Map<string, SnapshotFile | null>();
 
 function formatFechaISO(iso: string): string {
-  const d = new Date(iso);
+  // "YYYY-MM-DD" a secas se parsearía como medianoche UTC, que en Argentina cae en el día anterior.
+  // Se arma en hora local para mostrar la fecha que dice el dato.
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  const d = m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])) : new Date(iso);
   if (isNaN(d.getTime())) return iso;
   return d.toLocaleDateString("es-AR", { day: "2-digit", month: "2-digit", year: "2-digit" });
 }
@@ -36,10 +34,7 @@ async function loadSnapshotFile(fileKey: string): Promise<SnapshotFile | null> {
   if (memoryCache.has(fileKey)) return memoryCache.get(fileKey)!;
 
   try {
-    // Se sirve como archivo estático desde public/historico/ (Vercel lo
-    // despliega tal cual, sin necesidad de rebuildear la app cuando la
-    // rutina agrega un punto nuevo). cache: "no-store" para no quedarse
-    // con una copia vieja cacheada por el browser durante el día.
+    // cache: "no-store" para no quedarse con una copia vieja cacheada por el browser.
     const res = await fetch(`/historico/${fileKey}.json`, { cache: "no-store" });
     if (!res.ok) {
       memoryCache.set(fileKey, null);
@@ -56,9 +51,19 @@ async function loadSnapshotFile(fileKey: string): Promise<SnapshotFile | null> {
 }
 
 /**
- * Devuelve el histórico propio (armado día a día) de un instrumento, si la
- * categoría tiene un archivo de snapshot y ese instrumento ya acumuló datos.
- * null si no aplica o todavía no hay nada útil (menos de 2 puntos).
+ * Serie tal cual está en el archivo (fechas ISO), o null si no existe o tiene menos de 2 puntos.
+ * Sirve para combinar con otras fuentes (ej. el tramo previo de cripto antes de CoinGecko).
+ */
+export async function getSnapshotSerieCruda(fileKey: string, instrumentId: string): Promise<SnapshotPunto[] | null> {
+  const file = await loadSnapshotFile(fileKey);
+  if (!file) return null;
+  const series = file[instrumentId];
+  return series && series.length >= 2 ? series : null;
+}
+
+/**
+ * Devuelve el histórico propio de un instrumento, si la categoría tiene archivo de snapshot
+ * y ese instrumento ya acumuló datos. null si no aplica o no hay al menos 2 puntos.
  */
 export async function getSnapshotHistory(
   categoria: Categoria,
@@ -67,11 +72,8 @@ export async function getSnapshotHistory(
   const fileKey = SNAPSHOT_FILE_BY_CATEGORIA[categoria];
   if (!fileKey) return null;
 
-  const file = await loadSnapshotFile(fileKey);
-  if (!file) return null;
-
-  const series = file[instrumentId];
-  if (!series || series.length < 2) return null;
+  const series = await getSnapshotSerieCruda(fileKey, instrumentId);
+  if (!series) return null;
 
   return series.map((p) => ({ fecha: formatFechaISO(p.fecha), valor: p.valor }));
 }

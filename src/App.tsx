@@ -243,6 +243,8 @@ function Home({
                 ? "Cargando histórico…"
                 : quickHistory.fuente === "propio"
                 ? "Histórico propio — relevamiento diario"
+                : quickHistory.fuente === "reconstruido"
+                ? "Histórico reconstruido antes de CoinGecko — Binance × dólar cripto"
                 : quickHistory.fuente === "estimacion"
                 ? "Estimación — sin histórico oficial gratuito disponible"
                 : `Histórico oficial — ${detailInstrument.entidadOFuente}`
