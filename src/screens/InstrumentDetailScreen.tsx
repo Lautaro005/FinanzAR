@@ -227,6 +227,8 @@ export default function InstrumentDetailScreen({
               ? "Cargando histórico…"
               : historyState.fuente === "propio"
               ? "Histórico propio — relevamiento diario"
+              : historyState.fuente === "reconstruido"
+              ? "Histórico reconstruido antes de CoinGecko — Binance × dólar cripto"
               : historyState.fuente === "estimacion"
               ? "Estimación — sin histórico oficial gratuito disponible"
               : `Histórico oficial — ${instrument.entidadOFuente}`

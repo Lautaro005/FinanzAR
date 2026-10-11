@@ -5,10 +5,6 @@ name: Backfill histórico
 
 on:
   workflow_dispatch:
-  # Disparo temporal para validar en la rama de trabajo (se quita antes del merge).
-  push:
-    branches: [claude/festive-allen-9l6kq3]
-    paths: [".github/backfill/trigger"]
 
 permissions:
   contents: write

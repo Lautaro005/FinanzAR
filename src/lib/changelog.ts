@@ -17,6 +17,17 @@ export interface VersionChangelog {
 
 export const CHANGELOG: VersionChangelog[] = [
   {
+    version: "0.4.62",
+    fecha: "2026-10-11",
+    titulo: "Euro y real en el histórico, histórico anterior de EE.UU. y cripto, y fechas corregidas",
+    cambios: [
+      "Snapshot histórico: el euro y el real se guardan todos los días con la cotización de referencia del BCRA. Su serie arranca en 2000 (una muestra por semana) y sigue día a día.",
+      "Acciones de EE.UU.: el gráfico muestra el histórico desde 2016 (cuando la fuente lo tiene), en vez de solo desde el primer snapshot.",
+      "Cripto: el tramo anterior a CoinGecko (desde febrero de 2023 hasta hace un año) se reconstruye con el precio en USD de Binance × dólar cripto. Ese tramo se marca como histórico reconstruido en el gráfico. Antes de febrero de 2023 no hay dólar cripto confiable, así que no se reconstruye.",
+      "Corrección: las fechas del histórico propio se mostraban un día antes en Argentina. Ahora cada punto se muestra con la fecha de su dato.",
+    ],
+  },
+  {
     version: "0.4.61",
     fecha: "2026-10-09",
     titulo: "Chat IA con búsqueda en internet, montos en AR$ explícitos y sidebar que empuja el contenido",
